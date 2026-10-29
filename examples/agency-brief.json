@@ -1,0 +1,10 @@
+{
+  "goal": "Validate an onboarding automation offer before building a prototype",
+  "target_market": "Small B2B agencies with manual client onboarding",
+  "service": "CRM and client onboarding automation",
+  "constraints": [
+    "Draft outreach only until approved",
+    "Use sourced evidence; label assumptions",
+    "Build only after customer validation"
+  ]
+}
