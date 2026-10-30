@@ -2,35 +2,42 @@
 
 ### From market research to a customer-ready offer and prototype.
 
-VentureOS is a business operations harness that coordinates six specialized AI agents to turn a target market into an evidence-backed offer, tailored outreach, and a working prototype.
+VentureOS is a business operations harness that is designed to coordinate 6 specialized AI agents (planned) to turn a target market into an evidence-backed offer, tailored outreach, and a working prototype.
 
 Built for small B2B agencies and technical consultancies connecting research, sales preparation, and delivery across disconnected tools.
 
 > **Status: early scaffold.** The workflow preview runs locally without credentials. AI execution, live research, integrations, approvals, and persistence are planned; no business actions are executed yet.
 
-## How it works
+## Architecture
+
+**Postgres only by default, scale with optional adapters (planned).** Local disk holds files. The current implementation is a credential-free workflow preview; the runtime below is planned.
 
 ```mermaid
-flowchart TD
-    Goal[Business goal + constraints] --> Harness
-    subgraph Harness[Central Agent Harness]
-        Research[Web Intelligence] --> Strategy[Competitive Strategy]
-        Strategy --> Sales[Challenger Salesman: ICP + offer]
-        Sales --> Review[Human review]
-        Review --> Proposal[Presentation Builder]
-        Proposal --> Feedback[Customer validation]
-        Feedback --> Decision{Proceed?}
-        Decision -->|Revise| Strategy
-        Decision -->|Yes| Product[Product Builder]
-        Product --> Operations[Workflow Automation]
-    end
-    Operations --> Outcomes[Track outcomes]
-    Outcomes --> Strategy
+flowchart LR
+    User["User"] --> API["API + Auth (planned)<br/>API Keys / JWT"]
+    API --> Harness["Agent Harness<br/>Resume · Checkpoints · HITL (planned)"]
+    Harness --> Policies["Policies (planned)<br/>Budgets · Guardrails"]
+    Harness <--> Agents["Agents (planned)"]
+    Agents --> Models["Model Gateway + LLM Providers (planned)"]
+    Agents --> Tools["Tool Gateway (planned)"] --> MCP["MCP + Sandbox (planned, optional execution)"]
+    Agents --> RAG["RAG (planned)"]
+    Harness --> Storage["Storage Interfaces (planned)"]
+    RAG --> Storage
+    Storage --> PG[("PostgreSQL + pgvector (planned)<br/>State · Queue · Audit · Vectors")]
+    Storage -.-> Scale["Optional Adapters (planned)<br/>Kafka · Redis · Chroma · S3"]
 ```
 
-Each handoff should carry its evidence, assumptions, and acceptance criteria. Customer feedback determines whether to revise the offer or proceed to delivery.
+Cross-cutting: OpenTelemetry tracing · Offline eval harness as a CI release gate (planned)
 
-## Six agents. One harness.
+Architecture details:
+
+- [Storage defaults and interfaces](docs/architecture/storage.md)
+- [Optional adapters](docs/architecture/adapters.md)
+- [Safety and runtime policies](docs/architecture/safety.md)
+
+## 6 agents. 1 harness.
+
+Agent execution and deliverables below are (planned); role specifications and a fixed workflow preview exist today.
 
 | Agent | Responsibility | Deliverable |
 | --- | --- | --- |
@@ -41,7 +48,7 @@ Each handoff should carry its evidence, assumptions, and acceptance criteria. Cu
 | Product Builder | Build a scoped prototype, integrations, code, and tests | Tested prototype |
 | Workflow Automation | Execute approved email, CRM, onboarding, and delivery steps | Action records and outcome data |
 
-The harness owns planning, routing, shared state, tool permissions, evaluation, bounded retries, tracing, and human approval. Agents run only when needed. These runtime controls are design requirements, not implemented features.
+The harness currently returns a fixed workflow plan. Dynamic routing, shared state, permissions, runtime evaluation, bounded retries, tracing, and human approval are (planned).
 
 ## Quick start
 
@@ -58,7 +65,7 @@ This prints a JSON workflow plan showing agent assignments, review checkpoints, 
 ## Project structure
 
 ```text
-agents/                  Six agent instruction and output contracts
+agents/                  6 agent instruction and output contracts
 src/ventureos/
   agents.py              Agent registry
   contracts.py           Shared brief and workflow types
@@ -66,12 +73,13 @@ src/ventureos/
   __main__.py            Local preview command
 integrations/            Future model, research, email, and CRM adapters
 docs/architecture.md     Execution model and acceptance criteria
+docs/architecture/       Storage, adapters, and safety (planned)
 examples/agency-brief.json
 ```
 
 ## Roadmap
 
-- [x] Define six agent roles and workflow contracts
+- [x] Define 6 agent roles and workflow contracts
 - [x] Add a local workflow preview
 - [ ] Connect a model provider and sourced research tools
 - [ ] Implement persistent run state, evaluation, budgets, and recovery
