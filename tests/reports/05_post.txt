@@ -1,0 +1,14 @@
+test_nested_redaction_and_injection (test_safety.SafetyTests.test_nested_redaction_and_injection) ... ok
+test_offline_regression_fixtures (test_safety.SafetyTests.test_offline_regression_fixtures) ... ok
+test_tool_output_checked (test_safety.SafetyTests.test_tool_output_checked) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.007s
+
+OK
+test_span_export_without_exception_payload (test_telemetry.TelemetryTests.test_span_export_without_exception_payload) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+OK

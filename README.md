@@ -6,11 +6,11 @@ VentureOS is a business operations harness that is designed to coordinate 6 spec
 
 Built for small B2B agencies and technical consultancies connecting research, sales preparation, and delivery across disconnected tools.
 
-> **Status: early scaffold.** The workflow preview runs locally without credentials. AI execution, live research, integrations, approvals, and persistence are planned; no business actions are executed yet.
+> **Status: shared runtime foundations.** The credential-free preview remains dependency-free. Optional PostgreSQL execution adds task leases, checkpoints, approvals, budget reservations, validation, audit, and tracing interfaces. The 6 business agents, live integrations, and full production controls remain planned. See [Current State](docs/agents_todo.md#current-state).
 
 ## Architecture
 
-**Postgres only by default, scale with optional adapters (planned).** Local disk holds files. The current implementation is a credential-free workflow preview; the runtime below is planned.
+**Postgres only by default, scale with optional adapters (planned).** Local disk holds files. The default command is a credential-free preview. Shared runtime foundations are available separately; this diagram shows the target architecture, with remaining components labeled planned.
 
 ```mermaid
 flowchart LR
@@ -48,7 +48,7 @@ Agent execution and deliverables below are (planned); role specifications and a 
 | Product Builder | Build a scoped prototype, integrations, code, and tests | Tested prototype |
 | Workflow Automation | Execute approved email, CRM, onboarding, and delivery steps | Action records and outcome data |
 
-The harness currently returns a fixed workflow plan. Dynamic routing, shared state, permissions, runtime evaluation, bounded retries, tracing, and human approval are (planned).
+The preview harness returns a fixed workflow plan. The separate RuntimeHarness executes trusted registered plugins with PostgreSQL state, permissions, runtime validation, bounded retries, tracing interfaces, and task approval. Dynamic business-agent routing remains (planned).
 
 ## Quick start
 
@@ -82,8 +82,9 @@ examples/agency-brief.json
 - [x] Define 6 agent roles and workflow contracts
 - [x] Add a local workflow preview
 - [ ] Connect a model provider and sourced research tools
-- [ ] Implement persistent run state, evaluation, budgets, and recovery
-- [ ] Implement approval gates and customer-feedback branching
+- [x] Implement shared task state, runtime validation, budget reservations, and lease recovery
+- [x] Implement hash-bound task approval gates
+- [ ] Implement customer-feedback branching
 - [ ] Add email and CRM adapters with duplicate-action prevention
 - [ ] Publish a reproducible end-to-end example with cost and outcome data
 
@@ -94,3 +95,19 @@ Start with one workflow, agent contract, or adapter. Include a sample input, exp
 ## Inspiration
 
 README organization and architecture references: [MetaGPT](https://github.com/FoundationAgents/MetaGPT), [CrewAI](https://github.com/crewAIInc/crewAI), [AutoGen](https://github.com/microsoft/autogen) (historical reference), [LangGraph](https://github.com/langchain-ai/langgraph), and [Agency Swarm](https://github.com/VRSEN/agency-swarm). These are references, not dependencies or affiliations.
+
+## Optional shared runtime
+
+Install the optional dependencies in a virtual environment:
+
+```bash
+python3 -m pip install -e '.[runtime,test]'
+```
+
+Set `VENTUREOS_DATABASE_URL` to a PostgreSQL database dedicated to VentureOS, then run:
+
+```bash
+PYTHONPATH=src python3 -m ventureos --brief examples/agency-brief.json --execute-demo --tenant demo --run-id brief-1
+```
+
+This initializes the shared tables and executes a local brief demo, not the business agents. Repeating the same ID and input reuses the stored result. CLI tenant selection is operator-only, not authentication. See [testing instructions](tests/README.md) and [runtime limits](docs/agents_todo.md#current-state).

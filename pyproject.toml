@@ -9,6 +9,10 @@ description = "Business operations harness for six specialized agents (early sca
 requires-python = ">=3.10"
 dependencies = []
 
+[project.optional-dependencies]
+runtime = ["psycopg[binary]>=3.2,<4", "opentelemetry-api>=1.27,<2"]
+test = ["opentelemetry-sdk>=1.27,<2"]
+
 [project.scripts]
 ventureos = "ventureos.__main__:main"
 

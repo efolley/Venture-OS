@@ -2,7 +2,7 @@
 
 ## Current implementation
 
-A standard-library Python package loads a validated business brief and returns a fixed workflow plan. Six role specifications live in the registry; Markdown contracts describe intended agent behavior. No LLM, tools, persistence, approval enforcement, or runtime evaluation is connected.
+The dependency-free preview loads a validated business brief and returns a fixed workflow plan. A separate optional RuntimeHarness supports typed plugin execution, tenant-scoped model/read-only tool interfaces, PostgreSQL tasks with leases and checkpoints, approval binding, budget reservations, runtime validation, audit, basic content checks, and optional OpenTelemetry instrumentation. The CLI offers a local persistent brief demo. The 6 business agents and live provider integrations remain planned. See [Current State](agents_todo.md#current-state) for tested scope and limits.
 
 ## Intended execution model
 
@@ -33,4 +33,4 @@ Each future artifact must include a run/task identifier, producing agent, artifa
 5. Bounded retries, deadlines, and cost budgets; escalate on exhaustion.
 6. Duplicate-action prevention before enabling email, CRM writes, or deployment.
 
-These are planned requirements. The preview command does not implement them.
+These are target runtime requirements. Shared foundations implement a subset; the preview command does not execute them. See Current State for limitations.

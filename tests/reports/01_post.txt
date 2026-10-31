@@ -1,0 +1,8 @@
+test_invalid_envelopes (test_envelopes.EnvelopeTests.test_invalid_envelopes) ... ok
+test_protocol (test_envelopes.EnvelopeTests.test_protocol) ... ok
+test_roundtrip_and_identity (test_envelopes.EnvelopeTests.test_roundtrip_and_identity) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.000s
+
+OK

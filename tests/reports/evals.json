@@ -1,0 +1,26 @@
+{
+  "passed": 5,
+  "failed": 0,
+  "cases": [
+    {
+      "name": "ordinary evidence",
+      "passed": true
+    },
+    {
+      "name": "instruction override",
+      "passed": true
+    },
+    {
+      "name": "email redaction",
+      "passed": true
+    },
+    {
+      "name": "phone redaction",
+      "passed": true
+    },
+    {
+      "name": "role delimiter",
+      "passed": true
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+test_cli_without_credentials (test_preview.PreviewTests.test_cli_without_credentials) ... ok
+test_invalid_brief (test_preview.PreviewTests.test_invalid_brief) ... ok
+test_preview_contract (test_preview.PreviewTests.test_preview_contract) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.040s
+
+OK

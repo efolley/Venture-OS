@@ -1,0 +1,39 @@
+test_invalid_envelopes (test_envelopes.EnvelopeTests.test_invalid_envelopes) ... ok
+test_protocol (test_envelopes.EnvelopeTests.test_protocol) ... ok
+test_roundtrip_and_identity (test_envelopes.EnvelopeTests.test_roundtrip_and_identity) ... ok
+test_model_authorization_precedes_provider (test_gateways.GatewayTests.test_model_authorization_precedes_provider) ... ok
+test_provider_contract (test_gateways.GatewayTests.test_provider_contract) ... ok
+test_tool_scoped_and_side_effects_default_denied (test_gateways.GatewayTests.test_tool_scoped_and_side_effects_default_denied) ... ok
+test_cli_without_credentials (test_preview.PreviewTests.test_cli_without_credentials) ... ok
+test_invalid_brief (test_preview.PreviewTests.test_invalid_brief) ... ok
+test_preview_contract (test_preview.PreviewTests.test_preview_contract) ... ok
+test_approval_precedes_execution_and_result_not_replayed (test_runtime.RuntimeTests.test_approval_precedes_execution_and_result_not_replayed) ... ok
+test_budget_prevents_second_model_call (test_runtime.RuntimeTests.test_budget_prevents_second_model_call) ... ok
+test_content_checks_and_payload_free_audit (test_runtime.RuntimeTests.test_content_checks_and_payload_free_audit) ... ok
+test_controlled_replay_and_rejection (test_runtime.RuntimeTests.test_controlled_replay_and_rejection) ... ok
+test_deadline_and_authorization (test_runtime.RuntimeTests.test_deadline_and_authorization) ... ok
+test_input_injection_blocks_agent (test_runtime.RuntimeTests.test_input_injection_blocks_agent) ... ok
+test_invalid_output_not_accepted (test_runtime.RuntimeTests.test_invalid_output_not_accepted) ... ok
+test_retry_checkpoint_and_exhaustion (test_runtime.RuntimeTests.test_retry_checkpoint_and_exhaustion) ... ok
+test_unauthorized_agent_does_not_consume_work (test_runtime.RuntimeTests.test_unauthorized_agent_does_not_consume_work) ... ok
+test_wrong_identity_rejected (test_runtime.RuntimeTests.test_wrong_identity_rejected) ... ok
+test_missing_runtime_configuration_fails_cleanly (test_runtime_cli.RuntimeCliTests.test_missing_runtime_configuration_fails_cleanly) ... ok
+test_opt_in_demo_is_persistent_and_repeatable (test_runtime_cli.RuntimeCliTests.test_opt_in_demo_is_persistent_and_repeatable) ... ok
+test_preview_without_site_packages (test_runtime_cli.RuntimeCliTests.test_preview_without_site_packages) ... ok
+test_nested_redaction_and_injection (test_safety.SafetyTests.test_nested_redaction_and_injection) ... ok
+test_offline_regression_fixtures (test_safety.SafetyTests.test_offline_regression_fixtures) ... ok
+test_tool_output_checked (test_safety.SafetyTests.test_tool_output_checked) ... ok
+test_attempts_exhausted_on_crash (test_store.StoreTests.test_attempts_exhausted_on_crash) ... ok
+test_budget_atomic_and_checkpoint_json (test_store.StoreTests.test_budget_atomic_and_checkpoint_json) ... ok
+test_claim_is_exclusive_and_tenant_scoped (test_store.StoreTests.test_claim_is_exclusive_and_tenant_scoped) ... ok
+test_completed_task_identity_and_deadline (test_store.StoreTests.test_completed_task_identity_and_deadline) ... ok
+test_duplicate_submit_and_approval_binding (test_store.StoreTests.test_duplicate_submit_and_approval_binding) ... ok
+test_expired_worker_fenced_checkpoint_survives_restart (test_store.StoreTests.test_expired_worker_fenced_checkpoint_survives_restart) ... ok
+test_real_concurrent_claims_and_budget_reservations (test_store.StoreTests.test_real_concurrent_claims_and_budget_reservations) ... ok
+test_skip_locked_does_not_wait_for_locked_task (test_store.StoreTests.test_skip_locked_does_not_wait_for_locked_task) ... ok
+test_span_export_without_exception_payload (test_telemetry.TelemetryTests.test_span_export_without_exception_payload) ... ok
+
+----------------------------------------------------------------------
+Ran 34 tests in 0.599s
+
+OK

@@ -1,0 +1,11 @@
+test_attempts_exhausted_on_crash (test_store.StoreTests.test_attempts_exhausted_on_crash) ... ok
+test_budget_atomic_and_checkpoint_json (test_store.StoreTests.test_budget_atomic_and_checkpoint_json) ... ok
+test_claim_is_exclusive_and_tenant_scoped (test_store.StoreTests.test_claim_is_exclusive_and_tenant_scoped) ... ok
+test_duplicate_submit_and_approval_binding (test_store.StoreTests.test_duplicate_submit_and_approval_binding) ... ok
+test_expired_worker_fenced_checkpoint_survives_restart (test_store.StoreTests.test_expired_worker_fenced_checkpoint_survives_restart) ... ok
+test_skip_locked_does_not_wait_for_locked_task (test_store.StoreTests.test_skip_locked_does_not_wait_for_locked_task) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.154s
+
+OK

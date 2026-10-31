@@ -1,0 +1,42 @@
+test_safety (unittest.loader._FailedTest.test_safety) ... ERROR
+
+======================================================================
+ERROR: test_safety (unittest.loader._FailedTest.test_safety)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_safety
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py", line 433, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py", line 374, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/Users/egorfolley/tech_dev/venture_OS/tests/test_safety.py", line 2, in <module>
+    from ventureos.safety import ContentPolicy, UnsafeContent
+ModuleNotFoundError: No module named 'ventureos.safety'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)
+test_telemetry (unittest.loader._FailedTest.test_telemetry) ... ERROR
+
+======================================================================
+ERROR: test_telemetry (unittest.loader._FailedTest.test_telemetry)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_telemetry
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py", line 433, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py", line 374, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/Users/egorfolley/tech_dev/venture_OS/tests/test_telemetry.py", line 5, in <module>
+    from ventureos.telemetry import operation
+ModuleNotFoundError: No module named 'ventureos.telemetry'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

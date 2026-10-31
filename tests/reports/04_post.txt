@@ -1,0 +1,11 @@
+test_approval_precedes_execution_and_result_not_replayed (test_runtime.RuntimeTests.test_approval_precedes_execution_and_result_not_replayed) ... ok
+test_budget_prevents_second_model_call (test_runtime.RuntimeTests.test_budget_prevents_second_model_call) ... ok
+test_deadline_and_authorization (test_runtime.RuntimeTests.test_deadline_and_authorization) ... ok
+test_invalid_output_not_accepted (test_runtime.RuntimeTests.test_invalid_output_not_accepted) ... ok
+test_retry_checkpoint_and_exhaustion (test_runtime.RuntimeTests.test_retry_checkpoint_and_exhaustion) ... ok
+test_wrong_identity_rejected (test_runtime.RuntimeTests.test_wrong_identity_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.165s
+
+OK

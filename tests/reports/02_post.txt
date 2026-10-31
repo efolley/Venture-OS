@@ -1,0 +1,8 @@
+test_model_authorization_precedes_provider (test_gateways.GatewayTests.test_model_authorization_precedes_provider) ... ok
+test_provider_contract (test_gateways.GatewayTests.test_provider_contract) ... ok
+test_tool_scoped_and_side_effects_default_denied (test_gateways.GatewayTests.test_tool_scoped_and_side_effects_default_denied) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.000s
+
+OK

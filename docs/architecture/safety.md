@@ -1,6 +1,6 @@
 # Safety
 
-The controls and execution paths below are (planned). The current harness only previews a workflow and rejects execution.
+The diagram shows target integration paths. RuntimeHarness implements task permissions, budget reservations, validation, and basic heuristic injection/PII checks. RAG and live tool adapters remain planned. The preview harness still rejects execution.
 
 ```mermaid
 flowchart LR
@@ -12,4 +12,4 @@ flowchart LR
 
 Content checks apply to retrieved material and tool outputs. They supplement scoped permissions, tenant isolation, and isolated execution; detection cannot guarantee prompt injection prevention. External content is evidence, not authority to change instructions.
 
-HITL approval, action receipts, audit logging, and duplicate-action prevention are (planned). Offline regression and security evals are a CI release gate (planned), separate from runtime output validation.
+Hash-bound task approval and payload-free audit records are implemented. External action receipts and duplicate-action reconciliation remain (planned); writes are disabled. Small offline content-policy regression fixtures run in the configured CI gate, separately from runtime output validation. Hosted CI execution is not yet verified.
