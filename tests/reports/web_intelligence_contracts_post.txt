@@ -1,0 +1,78 @@
+test_invalid_artifact (test_web_intelligence.ResearchContractTests.test_invalid_artifact) ... ok
+test_request_defaults_and_validation (test_web_intelligence.ResearchContractTests.test_request_defaults_and_validation) ... ok
+test_changed_content_fails_validation (test_web_intelligence.ResearchExecutionTests.test_changed_content_fails_validation) ... ERROR
+test_fetch_failure_no_model_without_evidence (test_web_intelligence.ResearchExecutionTests.test_fetch_failure_no_model_without_evidence) ... ERROR
+test_hallucinated_citation_rejected (test_web_intelligence.ResearchExecutionTests.test_hallucinated_citation_rejected) ... ERROR
+test_injection_blocks_analysis (test_web_intelligence.ResearchExecutionTests.test_injection_blocks_analysis) ... ERROR
+test_missing_or_malformed_analysis_rejected (test_web_intelligence.ResearchExecutionTests.test_missing_or_malformed_analysis_rejected) ... ERROR
+test_sourced_output_and_bounded_fetch (test_web_intelligence.ResearchExecutionTests.test_sourced_output_and_bounded_fetch) ... ERROR
+test_runtime_acceptance_and_scoped_memory (test_web_intelligence.ResearchIntegrationTests.test_runtime_acceptance_and_scoped_memory) ... skipped 'requires disposable PostgreSQL'
+
+======================================================================
+ERROR: test_changed_content_fails_validation (test_web_intelligence.ResearchExecutionTests.test_changed_content_fails_validation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/egorfolley/tech_dev/venture_OS/tests/test_web_intelligence.py", line 102, in test_changed_content_fails_validation
+    artifact = WebIntelligenceAgent('small').execute(context())
+  File "/Users/egorfolley/tech_dev/venture_OS/src/ventureos/web_intelligence.py", line 63, in execute
+    raise NotImplementedError
+NotImplementedError
+
+======================================================================
+ERROR: test_fetch_failure_no_model_without_evidence (test_web_intelligence.ResearchExecutionTests.test_fetch_failure_no_model_without_evidence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/egorfolley/tech_dev/venture_OS/tests/test_web_intelligence.py", line 90, in test_fetch_failure_no_model_without_evidence
+    WebIntelligenceAgent('small').execute(context(services))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/egorfolley/tech_dev/venture_OS/src/ventureos/web_intelligence.py", line 63, in execute
+    raise NotImplementedError
+NotImplementedError
+
+======================================================================
+ERROR: test_hallucinated_citation_rejected (test_web_intelligence.ResearchExecutionTests.test_hallucinated_citation_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/egorfolley/tech_dev/venture_OS/tests/test_web_intelligence.py", line 79, in test_hallucinated_citation_rejected
+    WebIntelligenceAgent('small').execute(context(services))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/egorfolley/tech_dev/venture_OS/src/ventureos/web_intelligence.py", line 63, in execute
+    raise NotImplementedError
+NotImplementedError
+
+======================================================================
+ERROR: test_injection_blocks_analysis (test_web_intelligence.ResearchExecutionTests.test_injection_blocks_analysis)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/egorfolley/tech_dev/venture_OS/tests/test_web_intelligence.py", line 99, in test_injection_blocks_analysis
+    WebIntelligenceAgent('small').execute(context(services))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/egorfolley/tech_dev/venture_OS/src/ventureos/web_intelligence.py", line 63, in execute
+    raise NotImplementedError
+NotImplementedError
+
+======================================================================
+ERROR: test_missing_or_malformed_analysis_rejected (test_web_intelligence.ResearchExecutionTests.test_missing_or_malformed_analysis_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/egorfolley/tech_dev/venture_OS/tests/test_web_intelligence.py", line 85, in test_missing_or_malformed_analysis_rejected
+    WebIntelligenceAgent('small').execute(context(services))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/egorfolley/tech_dev/venture_OS/src/ventureos/web_intelligence.py", line 63, in execute
+    raise NotImplementedError
+NotImplementedError
+
+======================================================================
+ERROR: test_sourced_output_and_bounded_fetch (test_web_intelligence.ResearchExecutionTests.test_sourced_output_and_bounded_fetch)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/egorfolley/tech_dev/venture_OS/tests/test_web_intelligence.py", line 65, in test_sourced_output_and_bounded_fetch
+    artifact = WebIntelligenceAgent('small').execute(context(services))
+  File "/Users/egorfolley/tech_dev/venture_OS/src/ventureos/web_intelligence.py", line 63, in execute
+    raise NotImplementedError
+NotImplementedError
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.001s
+
+FAILED (errors=6, skipped=1)

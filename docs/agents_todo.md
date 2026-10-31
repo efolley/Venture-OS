@@ -4,9 +4,9 @@ Checked items are implemented shared foundations. Unchecked agent items remain p
 
 ## Current State
 
-VentureOS has shared runtime foundations and an optional PostgreSQL demo, but the 6 business agents and live integrations are not connected yet.
-From the repository root, run `PYTHONPATH=src python3 -m ventureos --brief examples/agency-brief.json` without credentials or extra dependencies.
-Expect a JSON workflow preview showing planned tasks, agent assignments, and review checkpoints; this command does not research companies, call models, or perform external actions.
+VentureOS now includes a simple Web Intelligence plugin that gathers evidence through injected web tools, validates model-generated findings, and exposes accepted PostgreSQL results as tenant-scoped company memory; live search/fetch and model providers must still be supplied.
+Run `PYTHONPATH=src python3 -m ventureos --brief examples/agency-brief.json` for the credential-free workflow preview, or follow [Web Intelligence setup](web_intelligence.md) to register the plugin.
+Expect structured findings with sources and retrieval timestamps when adapters are configured; the default preview performs no research, and the other 5 business agents remain planned.
 
 ## Shared prerequisites
 
@@ -19,15 +19,15 @@ Expect a JSON workflow preview showing planned tasks, agent assignments, and rev
 
 ## Web Intelligence
 
-- [ ] Define company research input and structured evidence output schemas.
+- [x] Define company research input and structured evidence output schemas.
 - [ ] Add web search and fetch adapters with timeouts, rate limits, source timestamps, and safe URL handling.
 - [ ] Gather company pages, news, job postings, and credible supporting sources.
-- [ ] Extract problems, trends, and buying signals with structured model output.
+- [x] Extract problems, trends, and buying signals with validated structured model output through an injected provider.
 - [ ] Attach evidence and distinguish observed facts from inferences and unknowns.
 - [ ] Store runs, source records, and structured findings in PostgreSQL; use BlobStore for large snapshots.
-- [ ] Implement tenant-scoped save, retrieve, and refresh operations without RAG.
+- [x] Save accepted results through the runtime; retrieve tenant-scoped company memory with freshness limits and refresh via new tasks without RAG.
 - [ ] Validate evidence coverage, freshness, conflicting findings, and output structure.
-- [ ] Integrate harness checkpoints, bounded retries, deadlines, budgets, and accepted handoffs.
+- [x] Integrate runtime checkpoints, deadline/budget checks, and accepted artifact handoffs; retries use existing harness policy.
 - [ ] Add evals for extraction quality, stale sources, source failures, prompt injection, PII handling, and tenant isolation.
 
 ## Competitive Strategy

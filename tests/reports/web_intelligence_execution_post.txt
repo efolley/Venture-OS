@@ -1,0 +1,14 @@
+test_invalid_artifact (test_web_intelligence.ResearchContractTests.test_invalid_artifact) ... ok
+test_request_defaults_and_validation (test_web_intelligence.ResearchContractTests.test_request_defaults_and_validation) ... ok
+test_changed_content_fails_validation (test_web_intelligence.ResearchExecutionTests.test_changed_content_fails_validation) ... ok
+test_fetch_failure_no_model_without_evidence (test_web_intelligence.ResearchExecutionTests.test_fetch_failure_no_model_without_evidence) ... ok
+test_hallucinated_citation_rejected (test_web_intelligence.ResearchExecutionTests.test_hallucinated_citation_rejected) ... ok
+test_injection_blocks_analysis (test_web_intelligence.ResearchExecutionTests.test_injection_blocks_analysis) ... ok
+test_missing_or_malformed_analysis_rejected (test_web_intelligence.ResearchExecutionTests.test_missing_or_malformed_analysis_rejected) ... ok
+test_sourced_output_and_bounded_fetch (test_web_intelligence.ResearchExecutionTests.test_sourced_output_and_bounded_fetch) ... ok
+test_runtime_acceptance_and_scoped_memory (test_web_intelligence.ResearchIntegrationTests.test_runtime_acceptance_and_scoped_memory) ... skipped 'requires disposable PostgreSQL'
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.001s
+
+OK (skipped=1)

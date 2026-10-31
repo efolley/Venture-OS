@@ -6,7 +6,7 @@ VentureOS is a business operations harness that is designed to coordinate 6 spec
 
 Built for small B2B agencies and technical consultancies connecting research, sales preparation, and delivery across disconnected tools.
 
-> **Status: shared runtime foundations.** The credential-free preview remains dependency-free. Optional PostgreSQL execution adds task leases, checkpoints, approvals, budget reservations, validation, audit, and tracing interfaces. The 6 business agents, live integrations, and full production controls remain planned. See [Current State](docs/agents_todo.md#current-state).
+> **Status: shared runtime foundations.** The credential-free preview remains dependency-free. Optional PostgreSQL execution adds task leases, checkpoints, approvals, budget reservations, validation, audit, and tracing interfaces. A simple Web Intelligence plugin is implemented with injected providers; the other 5 business agents, live integrations, and full production controls remain planned. See [Current State](docs/agents_todo.md#current-state).
 
 ## Architecture
 
@@ -111,3 +111,5 @@ PYTHONPATH=src python3 -m ventureos --brief examples/agency-brief.json --execute
 ```
 
 This initializes the shared tables and executes a local brief demo, not the business agents. Repeating the same ID and input reuses the stored result. CLI tenant selection is operator-only, not authentication. See [testing instructions](tests/README.md) and [runtime limits](docs/agents_todo.md#current-state).
+
+See [Web Intelligence setup and limits](docs/web_intelligence.md) for the first research plugin.

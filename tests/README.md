@@ -28,3 +28,7 @@ Reports in reports/ preserve the existing per-task pre-implementation failures a
 Tests cover negative authorization, invalid artifacts, duplicate submission, competing claims, locked rows, expired leases, restart checkpoints, atomic budget reservations, approval changes, retries, deadlines, content filtering, and payload-free tracing. The offline fixtures are a small content-policy regression set, not a benchmark of business agent quality.
 
 .github/workflows/tests.yml runs tests with PostgreSQL, offline fixtures, and a dependency-free preview on Python 3.10. Hosted CI has not been run locally. Exporters, live providers, external writes, and production deployment are not tested by this suite.
+
+## Web Intelligence
+
+All 12 module cases live in test_web_intelligence.py. Reports web_intelligence_pre.txt, web_intelligence_contracts_post.txt, web_intelligence_execution_post.txt, and web_intelligence_full_post.txt preserve incremental results. The final full suite passed 46 tests including real PostgreSQL persistence with fake web/model adapters. Earlier partial reports intentionally include pending failures or skips.
