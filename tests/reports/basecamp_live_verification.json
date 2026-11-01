@@ -1,0 +1,12 @@
+{
+  "company": "Basecamp",
+  "provider": "ollama",
+  "model": "qwen3:8b",
+  "mode": "live",
+  "status": "succeeded",
+  "source_count": 3,
+  "schema_valid": true,
+  "postgresql_verified": true,
+  "memory_read_verified": true,
+  "regression_tests_passed": 80
+}

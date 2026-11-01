@@ -1,0 +1,11 @@
+test_midnight_uses_new_york_date (test_logging.DailyLogTests.test_midnight_uses_new_york_date) ... ok
+test_processes_append_to_same_file (test_logging.DailyLogTests.test_processes_append_to_same_file) ... ok
+test_console_file_and_no_payloads (test_logging.LoggingTests.test_console_file_and_no_payloads) ... ok
+test_contextmanager_behavior_preserved (test_logging.LoggingTests.test_contextmanager_behavior_preserved) ... VENTUREOS 2026-11-01T09:31:06.266-05:00 INFO pid=72439 thread=MainThread function=test_logging.LoggingTests.test_contextmanager_behavior_preserved.<locals>.scope event=started
+VENTUREOS 2026-11-01T09:31:06.266-05:00 INFO pid=72439 thread=MainThread function=test_logging.LoggingTests.test_contextmanager_behavior_preserved.<locals>.scope event=completed duration_ms=0.00
+ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.046s
+
+OK

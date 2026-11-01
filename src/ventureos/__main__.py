@@ -1,4 +1,5 @@
 """Print a credential-free reference workflow as JSON."""
+from ventureos.logging_utils import logged
 
 import argparse
 from dataclasses import asdict
@@ -10,6 +11,7 @@ from .contracts import BusinessBrief
 from .harness import AgentHarness
 
 
+@logged
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--brief", type=Path, required=True, help="Business brief JSON file")

@@ -1,0 +1,38 @@
+{
+  "passed": 8,
+  "failed": 0,
+  "cases": [
+    {
+      "name": "quoted fact",
+      "passed": true
+    },
+    {
+      "name": "inference is explicit",
+      "passed": true
+    },
+    {
+      "name": "fabricated quote",
+      "passed": true
+    },
+    {
+      "name": "unsupported source",
+      "passed": true
+    },
+    {
+      "name": "unknown basis rejected",
+      "passed": true
+    },
+    {
+      "name": "instruction injection blocked",
+      "passed": true
+    },
+    {
+      "name": "PII redaction preserves evidence",
+      "passed": true
+    },
+    {
+      "name": "stale publication identified",
+      "passed": true
+    }
+  ]
+}

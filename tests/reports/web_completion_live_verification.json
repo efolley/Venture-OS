@@ -1,0 +1,28 @@
+{
+  "company": "Basecamp",
+  "status": "succeeded",
+  "source_count": 5,
+  "finding_count": 4,
+  "source_types": [
+    "company",
+    "jobs",
+    "news",
+    "supporting"
+  ],
+  "snapshots_verified": true,
+  "postgresql_verified": true,
+  "quoted_evidence_validated": true,
+  "quality": {
+    "stale_source_ids": [
+      "s3"
+    ],
+    "undated_source_ids": [
+      "s1",
+      "s2",
+      "s4",
+      "s5"
+    ],
+    "max_source_age_days": 365,
+    "missing_source_types": []
+  }
+}

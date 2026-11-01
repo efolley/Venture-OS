@@ -1,4 +1,5 @@
 """Local operator-only runtime demo; no model, web, or external actions."""
+from ventureos.logging_utils import logged
 from .execution import Task, Artifact
 from .gateways import Principal
 from .runtime import RuntimeHarness
@@ -6,12 +7,14 @@ from .store import PostgresStore
 
 
 class BriefDemoAgent:
+    @logged
     def execute(self, context):
         task = context.task
         context.services.checkpoint({'brief_validated':True})
         return Artifact(task.tenant_id,task.run_id,task.task_id,'brief_demo',{'goal':task.payload['goal'],'demo':True})
 
 
+@logged
 def execute_demo(dsn, brief, tenant, run_id):
     store=PostgresStore(dsn)
     store.initialize()

@@ -6,7 +6,7 @@ VentureOS is a business operations harness that is designed to coordinate 6 spec
 
 Built for small B2B agencies and technical consultancies connecting research, sales preparation, and delivery across disconnected tools.
 
-> **Status: shared runtime foundations.** The credential-free preview remains dependency-free. Optional PostgreSQL execution adds task leases, checkpoints, approvals, budget reservations, validation, audit, and tracing interfaces. A simple Web Intelligence plugin is implemented with injected providers; the other 5 business agents, live integrations, and full production controls remain planned. See [Current State](docs/agents_todo.md#current-state).
+> **Status: shared runtime foundations.** The credential-free preview remains dependency-free. Optional PostgreSQL execution adds task leases, checkpoints, approvals, budget reservations, validation, audit, and tracing interfaces. Web Intelligence is implemented with categorized web searches, quoted evidence, quality flags, PostgreSQL records, and local snapshots; the other 5 business agents and full production controls remain planned. See [Current State](docs/agents_todo.md#current-state).
 
 ## Architecture
 
@@ -113,3 +113,22 @@ PYTHONPATH=src python3 -m ventureos --brief examples/agency-brief.json --execute
 This initializes the shared tables and executes a local brief demo, not the business agents. Repeating the same ID and input reuses the stored result. CLI tenant selection is operator-only, not authentication. See [testing instructions](tests/README.md) and [runtime limits](docs/agents_todo.md#current-state).
 
 See [Web Intelligence setup and limits](docs/web_intelligence.md) for the first research plugin.
+
+Try the synthetic research sample without credentials:
+
+```bash
+PYTHONPATH=src python3 -m ventureos.research --fixture
+```
+
+For live Tavily + Claude research with PostgreSQL results, follow [Web Intelligence setup](docs/web_intelligence.md#run-live-research).
+
+## Simple UI
+
+```bash
+python3 -m pip install -e '.[runtime,ui]'
+PYTHONPATH=src:. python3 -m streamlit run UI/app.py --server.address 127.0.0.1
+```
+
+Open http://localhost:8501 and enable Demo mode to try it without credentials. For real company research, see [UI setup](UI/README.md).
+
+Application function logs go to the terminal and ignored `logs/YYYY-MM-DD.log` files shared by all processes for each day; see [logging details](UI/README.md#terminal-and-file-logs).

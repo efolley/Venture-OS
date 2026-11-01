@@ -29,7 +29,7 @@ Provide current, sourced company intelligence for downstream agents.
 
 Research company problems, trends, and buying signals; refresh relevant information; organize evidence.
 
-### Architecture (planned)
+### Architecture
 
 Input: Company name, website, business brief, research questions, and freshness requirements.
 
@@ -39,9 +39,11 @@ Output: Company profile, problems, trends, buying signals, sources, timestamps, 
 
 Handoff: Competitive Strategy, then other authorized agents through accepted artifacts.
 
-### Functionality (planned)
+### Functionality
 
 Search and page-fetch tools gather information. Agent reasoning performs extraction and analysis; separate analysis tools are optional. Save, retrieve, and refresh research by tenant and company. This memory is structured persistence, not RAG.
+
+See [implementation, limits, and verification](web_intelligence.md#completed-research-workflow).
 
 ## Competitive Strategy
 

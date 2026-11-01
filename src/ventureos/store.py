@@ -1,4 +1,5 @@
 """PostgreSQL task ledger. Each mutation is tenant-scoped and transactional."""
+from ventureos.logging_utils import logged
 from dataclasses import dataclass
 import hashlib
 import json
@@ -10,6 +11,7 @@ class LeaseLost(RuntimeError):
     pass
 
 
+@logged
 def task_hash(task: Task) -> str:
     return hashlib.sha256(json.dumps(task.to_dict(),sort_keys=True).encode()).hexdigest()
 
@@ -40,13 +42,26 @@ CREATE TABLE IF NOT EXISTS ventureos_audit (
  id bigserial PRIMARY KEY, tenant_id text NOT NULL, task_id text NOT NULL,
  event text NOT NULL, created_at timestamptz NOT NULL DEFAULT now()
 );
+CREATE TABLE IF NOT EXISTS ventureos_research_sources (
+ tenant_id text NOT NULL, task_id text NOT NULL, source_id text NOT NULL,
+ source jsonb NOT NULL, PRIMARY KEY(tenant_id,task_id,source_id),
+ FOREIGN KEY(tenant_id,task_id) REFERENCES ventureos_tasks(tenant_id,task_id)
+);
+CREATE TABLE IF NOT EXISTS ventureos_research_findings (
+ tenant_id text NOT NULL, task_id text NOT NULL, category text NOT NULL,
+ finding_index integer NOT NULL, finding jsonb NOT NULL,
+ PRIMARY KEY(tenant_id,task_id,category,finding_index),
+ FOREIGN KEY(tenant_id,task_id) REFERENCES ventureos_tasks(tenant_id,task_id)
+);
 '''
 
 
 class PostgresStore:
+    @logged
     def __init__(self, dsn: str):
         self.dsn = dsn
 
+    @logged
     def connect(self):
         try:
             import psycopg
@@ -55,14 +70,17 @@ class PostgresStore:
             raise RuntimeError('Install ventureos[runtime] for PostgreSQL execution') from error
         return psycopg.connect(self.dsn, row_factory=dict_row)
 
+    @logged
     def initialize(self):
         with self.connect() as conn:
             conn.execute(SCHEMA)
 
     @staticmethod
+    @logged
     def _audit(conn, tenant, task, event):
         conn.execute('INSERT INTO ventureos_audit(tenant_id,task_id,event) VALUES (%s,%s,%s)',(tenant,task,event))
 
+    @logged
     def submit(self, task: Task):
         # Roundtrip makes persisted input independent of mutable caller payloads.
         task = Task.from_dict(json.loads(json.dumps(task.to_dict())))
@@ -80,11 +98,13 @@ class PostgresStore:
                 if old['task_hash'] != task_hash(task):
                     raise ValueError('task ID already bound to different input')
 
+    @logged
     def get(self, tenant: str, task: str):
         with self.connect() as conn:
             return conn.execute('SELECT * FROM ventureos_tasks WHERE tenant_id=%s AND task_id=%s',(tenant,task)).fetchone()
 
-    def claim(self, tenant: str, worker: str, lease_seconds: float = 60, allowed_agents: tuple[str, ...] | None = None):
+    @logged
+    def claim(self, tenant: str, worker: str, lease_seconds: float = 60, allowed_agents: tuple[str, ...] | None = None, task_id: str | None = None):
         if lease_seconds <= 0:
             raise ValueError('lease duration must be positive')
         if allowed_agents == ():
@@ -98,6 +118,7 @@ class PostgresStore:
                 OR (attempts>=max_attempts AND (status='ready' OR lease_until<=extract(epoch FROM clock_timestamp()))))''',(tenant,))
             row = conn.execute('''WITH candidate AS (
                 SELECT tenant_id,task_id FROM ventureos_tasks WHERE tenant_id=%s
+                AND (%s::text IS NULL OR task_id=%s)
                 AND (%s::text[] IS NULL OR task->>'agent_id'=ANY(%s::text[]))
                 AND attempts<max_attempts AND (deadline IS NULL OR deadline>extract(epoch FROM clock_timestamp()))
                 AND ((status='ready' AND available_at<=extract(epoch FROM clock_timestamp()))
@@ -106,12 +127,13 @@ class PostgresStore:
                 UPDATE ventureos_tasks t SET status='running', attempts=t.attempts+1,
                 lease_token=%s, worker=%s, lease_until=extract(epoch FROM clock_timestamp())+%s
                 FROM candidate c WHERE t.tenant_id=c.tenant_id AND t.task_id=c.task_id RETURNING t.*''',
-                (tenant,list(allowed_agents) if allowed_agents is not None else None,list(allowed_agents) if allowed_agents is not None else None,token,worker,lease_seconds)).fetchone()
+                (tenant,task_id,task_id,list(allowed_agents) if allowed_agents is not None else None,list(allowed_agents) if allowed_agents is not None else None,token,worker,lease_seconds)).fetchone()
             if row:
                 self._audit(conn,tenant,row['task_id'],'claimed')
                 return Lease(Task.from_dict(row['task']),token,row['attempts'],row['checkpoint'])
         return None
 
+    @logged
     def _locked(self, conn, lease: Lease):
         row = conn.execute('''SELECT *, extract(epoch FROM clock_timestamp()) AS now_epoch
             FROM ventureos_tasks WHERE tenant_id=%s AND task_id=%s FOR UPDATE''',
@@ -121,6 +143,7 @@ class PostgresStore:
             raise LeaseLost('stale or expired task lease')
         return row
 
+    @logged
     def checkpoint(self, lease: Lease, value: dict):
         json_payload(value)
         with self.connect() as conn:
@@ -129,6 +152,7 @@ class PostgresStore:
                          (json.dumps(value),lease.task.tenant_id,lease.task.task_id))
             self._audit(conn,lease.task.tenant_id,lease.task.task_id,'checkpoint')
 
+    @logged
     def heartbeat(self, lease: Lease, seconds: float = 60):
         if seconds<=0: raise ValueError('lease duration must be positive')
         with self.connect() as conn:
@@ -136,6 +160,7 @@ class PostgresStore:
             conn.execute('UPDATE ventureos_tasks SET lease_until=extract(epoch FROM clock_timestamp())+%s WHERE tenant_id=%s AND task_id=%s',
                          (seconds,lease.task.tenant_id,lease.task.task_id))
 
+    @logged
     def reserve(self, lease: Lease, units: int):
         if type(units) is not int or units<0: raise ValueError('units must be nonnegative')
         with self.connect() as conn:
@@ -147,6 +172,7 @@ class PostgresStore:
                          (units,lease.task.tenant_id,lease.task.task_id))
             self._audit(conn,lease.task.tenant_id,lease.task.task_id,'budget_reserved')
 
+    @logged
     def complete(self, lease: Lease, artifact: Artifact):
         if (artifact.tenant_id,artifact.run_id,artifact.task_id)!=(lease.task.tenant_id,lease.task.run_id,lease.task.task_id):
             raise ValueError('artifact identity mismatch')
@@ -156,8 +182,19 @@ class PostgresStore:
                 raise ValueError('deadline exceeded')
             conn.execute("UPDATE ventureos_tasks SET status='succeeded',artifact=%s::jsonb,lease_token=NULL WHERE tenant_id=%s AND task_id=%s",
                          (json.dumps(artifact.to_dict()),lease.task.tenant_id,lease.task.task_id))
+            if artifact.kind=='web_intelligence':
+                for source in artifact.content.get('sources',[]):
+                    conn.execute('INSERT INTO ventureos_research_sources VALUES (%s,%s,%s,%s::jsonb)',
+                        (artifact.tenant_id,artifact.task_id,source['id'],json.dumps(source)))
+                for category in ('company_summary','problems','trends','buying_signals','conflicts'):
+                    values=artifact.content.get(category,[])
+                    if isinstance(values,dict): values=[values]
+                    for index,finding in enumerate(values):
+                        conn.execute('INSERT INTO ventureos_research_findings VALUES (%s,%s,%s,%s,%s::jsonb)',
+                            (artifact.tenant_id,artifact.task_id,category,index,json.dumps(finding)))
             self._audit(conn,lease.task.tenant_id,lease.task.task_id,'succeeded')
 
+    @logged
     def fail(self, lease: Lease, *, retryable: bool, delay: float = 0):
         if delay<0: raise ValueError('retry delay must be nonnegative')
         with self.connect() as conn:
@@ -168,16 +205,19 @@ class PostgresStore:
                          (status,delay,lease.task.tenant_id,lease.task.task_id))
             self._audit(conn,lease.task.tenant_id,lease.task.task_id,'retry_scheduled' if retry else 'failed')
 
+    @logged
     def approve(self, tenant: str, task: str, digest: str):
         with self.connect() as conn:
             row = conn.execute("UPDATE ventureos_tasks SET status='ready',approved=true WHERE tenant_id=%s AND task_id=%s AND task_hash=%s AND status='waiting_approval' RETURNING task_id",(tenant,task,digest)).fetchone()
             if row: self._audit(conn,tenant,task,'approved')
             return bool(row)
 
+    @logged
     def audit(self, tenant: str, task: str):
         with self.connect() as conn:
             return conn.execute('SELECT event FROM ventureos_audit WHERE tenant_id=%s AND task_id=%s ORDER BY id',(tenant,task)).fetchall()
 
+    @logged
     def reject(self, tenant: str, task: str, digest: str):
         with self.connect() as conn:
             row = conn.execute("UPDATE ventureos_tasks SET status='rejected' WHERE tenant_id=%s AND task_id=%s AND task_hash=%s AND status='waiting_approval' RETURNING task_id",(tenant,task,digest)).fetchone()

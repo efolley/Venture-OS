@@ -32,3 +32,5 @@ Tests cover negative authorization, invalid artifacts, duplicate submission, com
 ## Web Intelligence
 
 All 12 module cases live in test_web_intelligence.py. Reports web_intelligence_pre.txt, web_intelligence_contracts_post.txt, web_intelligence_execution_post.txt, and web_intelligence_full_post.txt preserve incremental results. The final full suite passed 46 tests including real PostgreSQL persistence with fake web/model adapters. Earlier partial reports intentionally include pending failures or skips.
+
+Live adapter and research CLI coverage stays in test_web_intelligence.py. Reports web_intelligence_live_pre.txt and web_intelligence_live_full_post.txt capture before/after results. The full suite passed 54 cases; paid provider calls remain unverified.

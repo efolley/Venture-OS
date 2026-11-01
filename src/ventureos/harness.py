@@ -1,10 +1,12 @@
 """Central planning boundary. This scaffold never executes external actions."""
+from ventureos.logging_utils import logged
 
 from .agents import AGENTS
 from .contracts import BusinessBrief, WorkflowPlan, WorkflowStep
 
 
 class AgentHarness:
+    @logged
     def plan(self, brief: BusinessBrief) -> WorkflowPlan:
         """Return a fixed reference workflow, not an AI-generated execution plan."""
         research, strategy, sales, proposal, product, automation = AGENTS
@@ -20,6 +22,7 @@ class AgentHarness:
             WorkflowStep("outcomes", "human", "Compare outcomes to baseline; revise strategy", ("operations",)),
         ))
 
+    @logged
     def execute(self, plan: WorkflowPlan) -> None:
         raise NotImplementedError(
             "Preview only: providers, evaluation, approvals, and durable execution are not implemented."

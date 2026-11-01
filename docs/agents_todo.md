@@ -1,12 +1,12 @@
 # Agent TODO lists
 
-Checked items are implemented shared foundations. Unchecked agent items remain planned. The 6 business agents are not implemented; the optional runtime currently supports trusted registered plugins and a local brief demo. Complete an item only when implemented and verified.
+Checked items are implemented shared foundations. Unchecked agent items remain planned. Web Intelligence is implemented; the other 5 business agents remain planned. Complete an item only when implemented and verified.
 
 ## Current State
 
-VentureOS now includes a simple Web Intelligence plugin that gathers evidence through injected web tools, validates model-generated findings, and exposes accepted PostgreSQL results as tenant-scoped company memory; live search/fetch and model providers must still be supplied.
-Run `PYTHONPATH=src python3 -m ventureos --brief examples/agency-brief.json` for the credential-free workflow preview, or follow [Web Intelligence setup](web_intelligence.md) to register the plugin.
-Expect structured findings with sources and retrieval timestamps when adapters are configured; the default preview performs no research, and the other 5 business agents remain planned.
+Web Intelligence now searches company, news, jobs, and supporting sources; produces quoted findings with fact/inference labels, freshness warnings, and conflicts; and saves reports, source/finding records, and parsed-text snapshots locally.
+Run `PYTHONPATH=src:. python3 -m streamlit run UI/app.py --server.address 127.0.0.1` to research a company or browse Data Management, with Tavily, local Ollama qwen3:8b, and PostgreSQL configured in .env.
+All Web Intelligence backlog items are complete for this bounded implementation and verified by 96 regression tests, 8 golden evidence evals, and a real Basecamp run; source coverage can be incomplete and quotation matches do not prove semantic accuracy.
 
 ## Shared prerequisites
 
@@ -20,15 +20,15 @@ Expect structured findings with sources and retrieval timestamps when adapters a
 ## Web Intelligence
 
 - [x] Define company research input and structured evidence output schemas.
-- [ ] Add web search and fetch adapters with timeouts, rate limits, source timestamps, and safe URL handling.
-- [ ] Gather company pages, news, job postings, and credible supporting sources.
+- [x] Add Tavily search and bounded HTTPS fetching with public-address pinning, bounded redirect validation, socket timeouts, local request pacing, and source timestamps.
+- [x] Gather company pages, news, job postings, and credible supporting sources.
 - [x] Extract problems, trends, and buying signals with validated structured model output through an injected provider.
-- [ ] Attach evidence and distinguish observed facts from inferences and unknowns.
-- [ ] Store runs, source records, and structured findings in PostgreSQL; use BlobStore for large snapshots.
+- [x] Attach evidence and distinguish observed facts from inferences and unknowns.
+- [x] Store runs, source records, and structured findings in PostgreSQL; use BlobStore for large snapshots.
 - [x] Save accepted results through the runtime; retrieve tenant-scoped company memory with freshness limits and refresh via new tasks without RAG.
-- [ ] Validate evidence coverage, freshness, conflicting findings, and output structure.
+- [x] Validate evidence coverage, freshness, conflicting findings, and output structure.
 - [x] Integrate runtime checkpoints, deadline/budget checks, and accepted artifact handoffs; retries use existing harness policy.
-- [ ] Add evals for extraction quality, stale sources, source failures, prompt injection, PII handling, and tenant isolation.
+- [x] Add evals for extraction quality, stale sources, source failures, prompt injection, PII handling, and tenant isolation.
 
 ## Competitive Strategy
 

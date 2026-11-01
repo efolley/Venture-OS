@@ -1,4 +1,5 @@
 """Shared planning contracts; execution contracts will extend these types."""
+from ventureos.logging_utils import logged
 
 from dataclasses import dataclass
 
@@ -10,6 +11,7 @@ class BusinessBrief:
     service: str
     constraints: list[str]
 
+    @logged
     def __post_init__(self) -> None:
         for field in ("goal", "target_market", "service"):
             value = getattr(self, field)

@@ -1,4 +1,5 @@
 """Small deterministic content checks, not a complete injection or DLP defense."""
+from ventureos.logging_utils import logged
 import re
 from .execution import json_payload
 
@@ -12,6 +13,7 @@ class ContentPolicy:
     email = re.compile(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b',re.I)
     phone = re.compile(r'(?<!\w)(?:\+1[ .-]?)?\(?\d{3}\)?[ .-]\d{3}[ .-]\d{4}(?!\w)')
 
+    @logged
     def check(self, value):
         if isinstance(value,str):
             if self.injection.search(value): raise UnsafeContent('content policy blocked instruction pattern')

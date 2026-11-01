@@ -1,0 +1,12 @@
+test_demo_and_safe_arguments (test_ui.ServiceTests.test_demo_and_safe_arguments) ... ok
+test_failure_does_not_leak_provider_error (test_ui.ServiceTests.test_failure_does_not_leak_provider_error) ... ok
+test_missing_configuration (test_ui.ServiceTests.test_missing_configuration) ... ok
+test_form_validation_and_synthetic_summary (test_ui.StreamlitTests.test_form_validation_and_synthetic_summary) ... 2026-11-01 08:38:18.413 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_live_submission_summary_and_input_changes_do_not_rerun (test_ui.StreamlitTests.test_live_submission_summary_and_input_changes_do_not_rerun) ... 2026-11-01 08:38:18.569 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.287s
+
+OK

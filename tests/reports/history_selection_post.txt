@@ -1,0 +1,591 @@
+test_dates_and_oldest_first_iteration_numbers (test_ui.HistoryLabelTests.test_dates_and_oldest_first_iteration_numbers) ... VENTUREOS 2026-11-01T13:04:00.478-05:00 INFO pid=86243 thread=MainThread function=UI.service.history_labels event=started
+VENTUREOS 2026-11-01T13:04:00.479-05:00 INFO pid=86243 thread=MainThread function=UI.service.history_labels event=completed duration_ms=0.02
+ok
+test_new_york_date_boundary (test_ui.HistoryLabelTests.test_new_york_date_boundary) ... VENTUREOS 2026-11-01T13:04:00.479-05:00 INFO pid=86243 thread=MainThread function=UI.service.history_labels event=started
+VENTUREOS 2026-11-01T13:04:00.479-05:00 INFO pid=86243 thread=MainThread function=UI.service.history_labels event=completed duration_ms=0.01
+ok
+test_empty_history (test_ui.HistoryPageTests.test_empty_history) ... 2026-11-01 13:04:00.617 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+VENTUREOS 2026-11-01T13:04:00.683-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=UI.service.missing_configuration event=started
+VENTUREOS 2026-11-01T13:04:00.683-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=ventureos.config.load_local_env event=started
+VENTUREOS 2026-11-01T13:04:00.684-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=ventureos.config.load_local_env event=completed duration_ms=1.14
+VENTUREOS 2026-11-01T13:04:00.684-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=UI.service.missing_configuration event=completed duration_ms=1.40
+VENTUREOS 2026-11-01T13:04:00.690-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=__main__.select_page event=started
+VENTUREOS 2026-11-01T13:04:00.690-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=__main__.select_page event=completed duration_ms=0.05
+ok
+test_saved_report_navigation (test_ui.HistoryPageTests.test_saved_report_navigation) ... VENTUREOS 2026-11-01T13:04:00.691-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run event=started
+VENTUREOS 2026-11-01T13:04:00.692-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.Task.__post_init__ event=started
+VENTUREOS 2026-11-01T13:04:00.692-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:00.692-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:00.692-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.json_payload event=started
+VENTUREOS 2026-11-01T13:04:00.692-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.json_payload event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:00.692-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.Task.__post_init__ event=completed duration_ms=0.38
+VENTUREOS 2026-11-01T13:04:00.692-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.WebIntelligenceAgent.__init__ event=started
+VENTUREOS 2026-11-01T13:04:00.692-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:00.692-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:00.692-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.WebIntelligenceAgent.__init__ event=completed duration_ms=0.17
+VENTUREOS 2026-11-01T13:04:00.693-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.WebIntelligenceAgent.execute event=started
+VENTUREOS 2026-11-01T13:04:00.693-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.ResearchRequest.__post_init__ event=started
+VENTUREOS 2026-11-01T13:04:00.693-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:00.693-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:00.693-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:00.693-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.02
+VENTUREOS 2026-11-01T13:04:00.693-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.ResearchRequest.__post_init__ event=completed duration_ms=0.37
+VENTUREOS 2026-11-01T13:04:00.693-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=started
+VENTUREOS 2026-11-01T13:04:00.693-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=completed duration_ms=0.08
+VENTUREOS 2026-11-01T13:04:00.693-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.tool event=started
+VENTUREOS 2026-11-01T13:04:00.694-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.tool event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:00.694-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=started
+VENTUREOS 2026-11-01T13:04:00.694-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:00.694-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:00.694-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:00.694-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.tool event=started
+VENTUREOS 2026-11-01T13:04:00.694-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.tool event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:00.694-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.content event=started
+VENTUREOS 2026-11-01T13:04:00.694-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:00.694-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:00.694-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:00.694-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:00.695-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:00.695-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:00.695-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:00.695-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:00.695-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:00.695-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=completed duration_ms=0.72
+VENTUREOS 2026-11-01T13:04:00.695-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.content event=completed duration_ms=0.89
+VENTUREOS 2026-11-01T13:04:00.695-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:00.695-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:00.695-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:00.695-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:00.696-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.checkpoint event=started
+VENTUREOS 2026-11-01T13:04:00.696-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.checkpoint event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:00.696-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=started
+VENTUREOS 2026-11-01T13:04:00.696-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:00.696-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.model event=started
+VENTUREOS 2026-11-01T13:04:00.696-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.model event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:00.696-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.Artifact.__post_init__ event=started
+VENTUREOS 2026-11-01T13:04:00.696-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:00.696-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:00.696-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.json_payload event=started
+VENTUREOS 2026-11-01T13:04:00.697-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.json_payload event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:00.697-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.Artifact.__post_init__ event=completed duration_ms=0.35
+VENTUREOS 2026-11-01T13:04:00.697-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=started
+VENTUREOS 2026-11-01T13:04:00.697-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:00.697-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.valid_research event=started
+VENTUREOS 2026-11-01T13:04:00.697-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.ResearchRequest.__post_init__ event=started
+VENTUREOS 2026-11-01T13:04:00.697-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:00.697-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:00.697-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:00.697-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:00.697-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.ResearchRequest.__post_init__ event=completed duration_ms=0.33
+VENTUREOS 2026-11-01T13:04:00.697-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:00.697-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:00.698-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:00.698-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:00.698-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:00.698-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:00.698-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:00.698-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:00.698-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:00.698-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:00.698-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.valid_research event=completed duration_ms=1.32
+VENTUREOS 2026-11-01T13:04:00.698-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.WebIntelligenceAgent.execute event=completed duration_ms=5.68
+VENTUREOS 2026-11-01T13:04:00.698-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.Artifact.to_dict event=started
+VENTUREOS 2026-11-01T13:04:00.699-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.Artifact.to_dict event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:00.699-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run event=completed duration_ms=6.98
+2026-11-01 13:04:00.699 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+VENTUREOS 2026-11-01T13:04:00.726-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=UI.service.missing_configuration event=started
+VENTUREOS 2026-11-01T13:04:00.726-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=ventureos.config.load_local_env event=started
+VENTUREOS 2026-11-01T13:04:00.726-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=ventureos.config.load_local_env event=completed duration_ms=0.13
+VENTUREOS 2026-11-01T13:04:00.726-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=UI.service.missing_configuration event=completed duration_ms=0.33
+VENTUREOS 2026-11-01T13:04:00.729-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=__main__.select_page event=started
+VENTUREOS 2026-11-01T13:04:00.729-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=__main__.select_page event=completed duration_ms=0.02
+VENTUREOS 2026-11-01T13:04:00.730-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=UI.service.history_labels event=started
+VENTUREOS 2026-11-01T13:04:00.730-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=UI.service.history_labels event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:00.735-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=UI.service.history_labels event=started
+VENTUREOS 2026-11-01T13:04:00.735-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=UI.service.history_labels event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:00.735-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=UI.views.render_report event=started
+VENTUREOS 2026-11-01T13:04:00.737-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=UI.views.render_report event=completed duration_ms=1.77
+ok
+test_phase_channel_and_unknown_phase (test_ui.ProgressTests.test_phase_channel_and_unknown_phase) ... VENTUREOS 2026-11-01T13:04:00.738-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=started
+VENTUREOS 2026-11-01T13:04:00.738-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=completed duration_ms=0.11
+VENTUREOS 2026-11-01T13:04:00.738-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=started
+VENTUREOS 2026-11-01T13:04:00.738-05:00 ERROR pid=86243 thread=MainThread function=ventureos.progress.report_phase event=failed duration_ms=0.00 exception=ValueError
+ok
+test_worker_phase_reaches_main_thread (test_ui.ProgressTests.test_worker_phase_reaches_main_thread) ... VENTUREOS 2026-11-01T13:04:00.739-05:00 INFO pid=86243 thread=MainThread function=UI.service.research event=started
+VENTUREOS 2026-11-01T13:04:01.343-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.research.fixture_run event=started
+VENTUREOS 2026-11-01T13:04:01.344-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.execution.Task.__post_init__ event=started
+VENTUREOS 2026-11-01T13:04:01.344-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.344-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.execution.identity event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.345-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.execution.json_payload event=started
+VENTUREOS 2026-11-01T13:04:01.345-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.execution.json_payload event=completed duration_ms=0.02
+VENTUREOS 2026-11-01T13:04:01.345-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.execution.Task.__post_init__ event=completed duration_ms=0.84
+VENTUREOS 2026-11-01T13:04:01.345-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.web_intelligence.WebIntelligenceAgent.__init__ event=started
+VENTUREOS 2026-11-01T13:04:01.345-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.345-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.346-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.web_intelligence.WebIntelligenceAgent.__init__ event=completed duration_ms=0.32
+VENTUREOS 2026-11-01T13:04:01.346-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.web_intelligence.WebIntelligenceAgent.execute event=started
+VENTUREOS 2026-11-01T13:04:01.346-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.web_intelligence.ResearchRequest.__post_init__ event=started
+VENTUREOS 2026-11-01T13:04:01.346-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.346-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.346-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.347-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.web_intelligence.public_url event=completed duration_ms=0.04
+VENTUREOS 2026-11-01T13:04:01.347-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.web_intelligence.ResearchRequest.__post_init__ event=completed duration_ms=0.68
+VENTUREOS 2026-11-01T13:04:01.347-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.progress.report_phase event=started
+VENTUREOS 2026-11-01T13:04:01.347-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.progress.report_phase event=completed duration_ms=0.02
+VENTUREOS 2026-11-01T13:04:01.347-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.research.fixture_run.<locals>.FixtureServices.tool event=started
+VENTUREOS 2026-11-01T13:04:01.347-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.research.fixture_run.<locals>.FixtureServices.tool event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.348-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.progress.report_phase event=started
+VENTUREOS 2026-11-01T13:04:01.348-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.progress.report_phase event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.348-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.348-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.web_intelligence.public_url event=completed duration_ms=0.02
+VENTUREOS 2026-11-01T13:04:01.348-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.research.fixture_run.<locals>.FixtureServices.tool event=started
+VENTUREOS 2026-11-01T13:04:01.348-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.research.fixture_run.<locals>.FixtureServices.tool event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.349-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.research.fixture_run.<locals>.FixtureServices.content event=started
+VENTUREOS 2026-11-01T13:04:01.349-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:01.349-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:01.349-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.safety.ContentPolicy.check event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.349-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:01.349-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.safety.ContentPolicy.check event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.350-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:01.350-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.safety.ContentPolicy.check event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.350-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:01.350-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.safety.ContentPolicy.check event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.350-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.safety.ContentPolicy.check event=completed duration_ms=1.28
+VENTUREOS 2026-11-01T13:04:01.350-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.research.fixture_run.<locals>.FixtureServices.content event=completed duration_ms=1.59
+VENTUREOS 2026-11-01T13:04:01.351-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.351-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.web_intelligence.public_url event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.351-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.351-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.web_intelligence.public_url event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.351-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.research.fixture_run.<locals>.FixtureServices.checkpoint event=started
+VENTUREOS 2026-11-01T13:04:01.351-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.research.fixture_run.<locals>.FixtureServices.checkpoint event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.351-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.progress.report_phase event=started
+VENTUREOS 2026-11-01T13:04:01.352-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.progress.report_phase event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.352-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.research.fixture_run.<locals>.FixtureServices.model event=started
+VENTUREOS 2026-11-01T13:04:01.352-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.research.fixture_run.<locals>.FixtureServices.model event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.352-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.execution.Artifact.__post_init__ event=started
+VENTUREOS 2026-11-01T13:04:01.352-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.352-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.353-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.execution.json_payload event=started
+VENTUREOS 2026-11-01T13:04:01.353-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.execution.json_payload event=completed duration_ms=0.02
+VENTUREOS 2026-11-01T13:04:01.353-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.execution.Artifact.__post_init__ event=completed duration_ms=0.63
+VENTUREOS 2026-11-01T13:04:01.353-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.progress.report_phase event=started
+VENTUREOS 2026-11-01T13:04:01.353-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.progress.report_phase event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.353-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.web_intelligence.valid_research event=started
+VENTUREOS 2026-11-01T13:04:01.353-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.web_intelligence.ResearchRequest.__post_init__ event=started
+VENTUREOS 2026-11-01T13:04:01.354-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.354-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.354-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.354-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.web_intelligence.public_url event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.354-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.web_intelligence.ResearchRequest.__post_init__ event=completed duration_ms=0.58
+VENTUREOS 2026-11-01T13:04:01.354-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.354-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.355-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.355-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.web_intelligence.public_url event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.355-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.355-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.355-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.355-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.355-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.356-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.356-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.web_intelligence.valid_research event=completed duration_ms=2.31
+VENTUREOS 2026-11-01T13:04:01.356-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.web_intelligence.WebIntelligenceAgent.execute event=completed duration_ms=9.90
+VENTUREOS 2026-11-01T13:04:01.356-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.execution.Artifact.to_dict event=started
+VENTUREOS 2026-11-01T13:04:01.356-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.execution.Artifact.to_dict event=completed duration_ms=0.02
+VENTUREOS 2026-11-01T13:04:01.356-05:00 INFO pid=86243 thread=ThreadPoolExecutor-7_0 function=ventureos.research.fixture_run event=completed duration_ms=12.62
+VENTUREOS 2026-11-01T13:04:01.364-05:00 INFO pid=86243 thread=MainThread function=UI.service.research event=completed duration_ms=625.60
+ok
+test_http_upgraded_to_https (test_ui.ResearchErrorTests.test_http_upgraded_to_https) ... VENTUREOS 2026-11-01T13:04:01.365-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run event=started
+VENTUREOS 2026-11-01T13:04:01.365-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.Task.__post_init__ event=started
+VENTUREOS 2026-11-01T13:04:01.365-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.365-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.365-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.json_payload event=started
+VENTUREOS 2026-11-01T13:04:01.366-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.json_payload event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.366-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.Task.__post_init__ event=completed duration_ms=0.60
+VENTUREOS 2026-11-01T13:04:01.366-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.WebIntelligenceAgent.__init__ event=started
+VENTUREOS 2026-11-01T13:04:01.366-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.366-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.366-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.WebIntelligenceAgent.__init__ event=completed duration_ms=0.29
+VENTUREOS 2026-11-01T13:04:01.366-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.WebIntelligenceAgent.execute event=started
+VENTUREOS 2026-11-01T13:04:01.367-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.ResearchRequest.__post_init__ event=started
+VENTUREOS 2026-11-01T13:04:01.367-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.367-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.367-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.367-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.367-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.ResearchRequest.__post_init__ event=completed duration_ms=0.54
+VENTUREOS 2026-11-01T13:04:01.367-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=started
+VENTUREOS 2026-11-01T13:04:01.368-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.368-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.tool event=started
+VENTUREOS 2026-11-01T13:04:01.368-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.tool event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.368-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=started
+VENTUREOS 2026-11-01T13:04:01.368-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.368-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.368-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.368-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.tool event=started
+VENTUREOS 2026-11-01T13:04:01.369-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.tool event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.369-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.content event=started
+VENTUREOS 2026-11-01T13:04:01.369-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:01.369-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:01.369-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.369-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:01.369-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.370-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:01.370-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.370-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:01.370-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.370-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=completed duration_ms=1.06
+VENTUREOS 2026-11-01T13:04:01.370-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.content event=completed duration_ms=1.32
+VENTUREOS 2026-11-01T13:04:01.370-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.370-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.371-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.371-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.371-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.checkpoint event=started
+VENTUREOS 2026-11-01T13:04:01.371-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.checkpoint event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.371-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=started
+VENTUREOS 2026-11-01T13:04:01.371-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.371-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.model event=started
+VENTUREOS 2026-11-01T13:04:01.372-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.model event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.372-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.Artifact.__post_init__ event=started
+VENTUREOS 2026-11-01T13:04:01.372-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.372-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.372-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.json_payload event=started
+VENTUREOS 2026-11-01T13:04:01.372-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.json_payload event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.372-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.Artifact.__post_init__ event=completed duration_ms=0.52
+VENTUREOS 2026-11-01T13:04:01.372-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=started
+VENTUREOS 2026-11-01T13:04:01.373-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.373-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.valid_research event=started
+VENTUREOS 2026-11-01T13:04:01.373-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.ResearchRequest.__post_init__ event=started
+VENTUREOS 2026-11-01T13:04:01.373-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.373-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.373-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.373-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.373-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.ResearchRequest.__post_init__ event=completed duration_ms=0.52
+VENTUREOS 2026-11-01T13:04:01.374-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.374-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.374-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.374-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.374-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.374-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.374-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.375-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.375-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.375-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.375-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.valid_research event=completed duration_ms=2.04
+VENTUREOS 2026-11-01T13:04:01.375-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.WebIntelligenceAgent.execute event=completed duration_ms=8.36
+VENTUREOS 2026-11-01T13:04:01.375-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.Artifact.to_dict event=started
+VENTUREOS 2026-11-01T13:04:01.375-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.Artifact.to_dict event=completed duration_ms=0.02
+VENTUREOS 2026-11-01T13:04:01.375-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run event=completed duration_ms=10.43
+VENTUREOS 2026-11-01T13:04:01.376-05:00 INFO pid=86243 thread=MainThread function=UI.service.research event=started
+VENTUREOS 2026-11-01T13:04:01.376-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.ResearchRequest.__post_init__ event=started
+VENTUREOS 2026-11-01T13:04:01.376-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.376-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.376-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.376-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.02
+VENTUREOS 2026-11-01T13:04:01.376-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.ResearchRequest.__post_init__ event=completed duration_ms=0.50
+VENTUREOS 2026-11-01T13:04:01.377-05:00 INFO pid=86243 thread=MainThread function=UI.service.missing_configuration event=started
+VENTUREOS 2026-11-01T13:04:01.377-05:00 INFO pid=86243 thread=MainThread function=UI.service.missing_configuration event=completed duration_ms=0.09
+VENTUREOS 2026-11-01T13:04:01.377-05:00 INFO pid=86243 thread=MainThread function=UI.service.research event=completed duration_ms=1.38
+ok
+test_missing_model_error_is_actionable (test_ui.ResearchErrorTests.test_missing_model_error_is_actionable) ... VENTUREOS 2026-11-01T13:04:01.378-05:00 INFO pid=86243 thread=MainThread function=UI.service.research event=started
+VENTUREOS 2026-11-01T13:04:01.378-05:00 ERROR pid=86243 thread=MainThread function=UI.service.research event=failed duration_ms=0.23 exception=ValueError
+ok
+test_demo_and_safe_arguments (test_ui.ServiceTests.test_demo_and_safe_arguments) ... VENTUREOS 2026-11-01T13:04:01.378-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run event=started
+VENTUREOS 2026-11-01T13:04:01.378-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.Task.__post_init__ event=started
+VENTUREOS 2026-11-01T13:04:01.378-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.379-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.379-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.json_payload event=started
+VENTUREOS 2026-11-01T13:04:01.379-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.json_payload event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.379-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.Task.__post_init__ event=completed duration_ms=0.49
+VENTUREOS 2026-11-01T13:04:01.379-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.WebIntelligenceAgent.__init__ event=started
+VENTUREOS 2026-11-01T13:04:01.379-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.379-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.379-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.WebIntelligenceAgent.__init__ event=completed duration_ms=0.24
+VENTUREOS 2026-11-01T13:04:01.380-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.WebIntelligenceAgent.execute event=started
+VENTUREOS 2026-11-01T13:04:01.380-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.ResearchRequest.__post_init__ event=started
+VENTUREOS 2026-11-01T13:04:01.380-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.380-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.380-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.380-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.380-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.ResearchRequest.__post_init__ event=completed duration_ms=0.48
+VENTUREOS 2026-11-01T13:04:01.380-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=started
+VENTUREOS 2026-11-01T13:04:01.380-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.381-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.tool event=started
+VENTUREOS 2026-11-01T13:04:01.381-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.tool event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.381-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=started
+VENTUREOS 2026-11-01T13:04:01.381-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.381-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.381-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.381-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.tool event=started
+VENTUREOS 2026-11-01T13:04:01.381-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.tool event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.382-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.content event=started
+VENTUREOS 2026-11-01T13:04:01.382-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:01.382-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:01.382-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.382-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:01.382-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.382-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:01.382-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.382-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:01.383-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.383-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=completed duration_ms=0.93
+VENTUREOS 2026-11-01T13:04:01.383-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.content event=completed duration_ms=1.16
+VENTUREOS 2026-11-01T13:04:01.383-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.383-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.383-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.383-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.383-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.checkpoint event=started
+VENTUREOS 2026-11-01T13:04:01.384-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.checkpoint event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.384-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=started
+VENTUREOS 2026-11-01T13:04:01.384-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.384-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.model event=started
+VENTUREOS 2026-11-01T13:04:01.384-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.model event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.384-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.Artifact.__post_init__ event=started
+VENTUREOS 2026-11-01T13:04:01.384-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.384-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.384-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.json_payload event=started
+VENTUREOS 2026-11-01T13:04:01.385-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.json_payload event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.385-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.Artifact.__post_init__ event=completed duration_ms=0.45
+VENTUREOS 2026-11-01T13:04:01.385-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=started
+VENTUREOS 2026-11-01T13:04:01.385-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.385-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.valid_research event=started
+VENTUREOS 2026-11-01T13:04:01.385-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.ResearchRequest.__post_init__ event=started
+VENTUREOS 2026-11-01T13:04:01.385-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.385-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.385-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.386-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.386-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.ResearchRequest.__post_init__ event=completed duration_ms=0.48
+VENTUREOS 2026-11-01T13:04:01.386-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.386-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.386-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.386-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.386-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.386-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.387-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.387-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.387-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.387-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.387-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.valid_research event=completed duration_ms=1.84
+VENTUREOS 2026-11-01T13:04:01.387-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.WebIntelligenceAgent.execute event=completed duration_ms=7.45
+VENTUREOS 2026-11-01T13:04:01.387-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.Artifact.to_dict event=started
+VENTUREOS 2026-11-01T13:04:01.387-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.Artifact.to_dict event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.387-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run event=completed duration_ms=9.17
+VENTUREOS 2026-11-01T13:04:01.388-05:00 INFO pid=86243 thread=MainThread function=UI.service.research event=started
+VENTUREOS 2026-11-01T13:04:01.388-05:00 INFO pid=86243 thread=MainThread function=UI.service.research event=completed duration_ms=0.23
+ok
+test_failure_does_not_leak_provider_error (test_ui.ServiceTests.test_failure_does_not_leak_provider_error) ... VENTUREOS 2026-11-01T13:04:01.388-05:00 INFO pid=86243 thread=MainThread function=UI.service.research event=started
+VENTUREOS 2026-11-01T13:04:01.389-05:00 ERROR pid=86243 thread=MainThread function=UI.service.research event=failed duration_ms=0.19 exception=ValueError
+ok
+test_missing_configuration (test_ui.ServiceTests.test_missing_configuration) ... VENTUREOS 2026-11-01T13:04:01.389-05:00 INFO pid=86243 thread=MainThread function=UI.service.research event=started
+VENTUREOS 2026-11-01T13:04:01.389-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.ResearchRequest.__post_init__ event=started
+VENTUREOS 2026-11-01T13:04:01.389-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.390-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.390-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.390-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.390-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.ResearchRequest.__post_init__ event=completed duration_ms=0.45
+VENTUREOS 2026-11-01T13:04:01.390-05:00 INFO pid=86243 thread=MainThread function=UI.service.missing_configuration event=started
+VENTUREOS 2026-11-01T13:04:01.390-05:00 INFO pid=86243 thread=MainThread function=UI.service.missing_configuration event=completed duration_ms=0.06
+VENTUREOS 2026-11-01T13:04:01.390-05:00 ERROR pid=86243 thread=MainThread function=UI.service.research event=failed duration_ms=0.97 exception=ValueError
+ok
+test_structured_error_reaches_ui (test_ui.SpecificFailureTests.test_structured_error_reaches_ui) ... VENTUREOS 2026-11-01T13:04:01.391-05:00 INFO pid=86243 thread=MainThread function=UI.service.research event=started
+VENTUREOS 2026-11-01T13:04:01.391-05:00 ERROR pid=86243 thread=MainThread function=UI.service.research event=failed duration_ms=0.18 exception=ValueError
+ok
+test_form_validation_and_synthetic_summary (test_ui.StreamlitTests.test_form_validation_and_synthetic_summary) ... 2026-11-01 13:04:01.391 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+VENTUREOS 2026-11-01T13:04:01.425-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=UI.service.missing_configuration event=started
+VENTUREOS 2026-11-01T13:04:01.425-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=ventureos.config.load_local_env event=started
+VENTUREOS 2026-11-01T13:04:01.425-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=ventureos.config.load_local_env event=completed duration_ms=0.16
+VENTUREOS 2026-11-01T13:04:01.425-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=UI.service.missing_configuration event=completed duration_ms=0.41
+VENTUREOS 2026-11-01T13:04:01.430-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=UI.service.missing_configuration event=started
+VENTUREOS 2026-11-01T13:04:01.430-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=ventureos.config.load_local_env event=started
+VENTUREOS 2026-11-01T13:04:01.430-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=ventureos.config.load_local_env event=completed duration_ms=0.11
+VENTUREOS 2026-11-01T13:04:01.430-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=UI.service.missing_configuration event=completed duration_ms=0.33
+VENTUREOS 2026-11-01T13:04:01.491-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=UI.service.research event=started
+VENTUREOS 2026-11-01T13:04:01.492-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=__main__.show_phase event=started
+VENTUREOS 2026-11-01T13:04:01.492-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=__main__.show_phase event=completed duration_ms=0.17
+VENTUREOS 2026-11-01T13:04:01.532-05:00 INFO pid=86246 thread=MainThread function=__main__.main event=started
+VENTUREOS 2026-11-01T13:04:01.538-05:00 INFO pid=86246 thread=MainThread function=__main__.fixture_run event=started
+VENTUREOS 2026-11-01T13:04:01.538-05:00 INFO pid=86246 thread=MainThread function=ventureos.execution.Task.__post_init__ event=started
+VENTUREOS 2026-11-01T13:04:01.538-05:00 INFO pid=86246 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.539-05:00 INFO pid=86246 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.539-05:00 INFO pid=86246 thread=MainThread function=ventureos.execution.json_payload event=started
+VENTUREOS 2026-11-01T13:04:01.539-05:00 INFO pid=86246 thread=MainThread function=ventureos.execution.json_payload event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.539-05:00 INFO pid=86246 thread=MainThread function=ventureos.execution.Task.__post_init__ event=completed duration_ms=0.44
+VENTUREOS 2026-11-01T13:04:01.539-05:00 INFO pid=86246 thread=MainThread function=ventureos.web_intelligence.WebIntelligenceAgent.__init__ event=started
+VENTUREOS 2026-11-01T13:04:01.539-05:00 INFO pid=86246 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.539-05:00 INFO pid=86246 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.539-05:00 INFO pid=86246 thread=MainThread function=ventureos.web_intelligence.WebIntelligenceAgent.__init__ event=completed duration_ms=0.20
+VENTUREOS 2026-11-01T13:04:01.539-05:00 INFO pid=86246 thread=MainThread function=ventureos.web_intelligence.WebIntelligenceAgent.execute event=started
+VENTUREOS 2026-11-01T13:04:01.539-05:00 INFO pid=86246 thread=MainThread function=ventureos.web_intelligence.ResearchRequest.__post_init__ event=started
+VENTUREOS 2026-11-01T13:04:01.540-05:00 INFO pid=86246 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.540-05:00 INFO pid=86246 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.540-05:00 INFO pid=86246 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.540-05:00 INFO pid=86246 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.03
+VENTUREOS 2026-11-01T13:04:01.540-05:00 INFO pid=86246 thread=MainThread function=ventureos.web_intelligence.ResearchRequest.__post_init__ event=completed duration_ms=0.67
+VENTUREOS 2026-11-01T13:04:01.540-05:00 INFO pid=86246 thread=MainThread function=ventureos.progress.report_phase event=started
+VENTUREOS 2026-11-01T13:04:01.541-05:00 INFO pid=86246 thread=MainThread function=ventureos.progress.report_phase event=completed duration_ms=0.34
+VENTUREOS 2026-11-01T13:04:01.541-05:00 INFO pid=86246 thread=MainThread function=__main__.fixture_run.<locals>.FixtureServices.tool event=started
+VENTUREOS 2026-11-01T13:04:01.541-05:00 INFO pid=86246 thread=MainThread function=__main__.fixture_run.<locals>.FixtureServices.tool event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.541-05:00 INFO pid=86246 thread=MainThread function=ventureos.progress.report_phase event=started
+VENTUREOS 2026-11-01T13:04:01.541-05:00 INFO pid=86246 thread=MainThread function=ventureos.progress.report_phase event=completed duration_ms=0.08
+VENTUREOS 2026-11-01T13:04:01.542-05:00 INFO pid=86246 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.542-05:00 INFO pid=86246 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.542-05:00 INFO pid=86246 thread=MainThread function=__main__.fixture_run.<locals>.FixtureServices.tool event=started
+VENTUREOS 2026-11-01T13:04:01.542-05:00 INFO pid=86246 thread=MainThread function=__main__.fixture_run.<locals>.FixtureServices.tool event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.542-05:00 INFO pid=86246 thread=MainThread function=__main__.fixture_run.<locals>.FixtureServices.content event=started
+VENTUREOS 2026-11-01T13:04:01.542-05:00 INFO pid=86246 thread=MainThread function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:01.542-05:00 INFO pid=86246 thread=MainThread function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:01.542-05:00 INFO pid=86246 thread=MainThread function=ventureos.safety.ContentPolicy.check event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.542-05:00 INFO pid=86246 thread=MainThread function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:01.542-05:00 INFO pid=86246 thread=MainThread function=ventureos.safety.ContentPolicy.check event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.543-05:00 INFO pid=86246 thread=MainThread function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:01.543-05:00 INFO pid=86246 thread=MainThread function=ventureos.safety.ContentPolicy.check event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.543-05:00 INFO pid=86246 thread=MainThread function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:01.543-05:00 INFO pid=86246 thread=MainThread function=ventureos.safety.ContentPolicy.check event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.543-05:00 INFO pid=86246 thread=MainThread function=ventureos.safety.ContentPolicy.check event=completed duration_ms=0.78
+VENTUREOS 2026-11-01T13:04:01.543-05:00 INFO pid=86246 thread=MainThread function=__main__.fixture_run.<locals>.FixtureServices.content event=completed duration_ms=1.06
+VENTUREOS 2026-11-01T13:04:01.543-05:00 INFO pid=86246 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.543-05:00 INFO pid=86246 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.543-05:00 INFO pid=86246 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.544-05:00 INFO pid=86246 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.544-05:00 INFO pid=86246 thread=MainThread function=__main__.fixture_run.<locals>.FixtureServices.checkpoint event=started
+VENTUREOS 2026-11-01T13:04:01.544-05:00 INFO pid=86246 thread=MainThread function=__main__.fixture_run.<locals>.FixtureServices.checkpoint event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.544-05:00 INFO pid=86246 thread=MainThread function=ventureos.progress.report_phase event=started
+VENTUREOS 2026-11-01T13:04:01.544-05:00 INFO pid=86246 thread=MainThread function=ventureos.progress.report_phase event=completed duration_ms=0.07
+VENTUREOS 2026-11-01T13:04:01.544-05:00 INFO pid=86246 thread=MainThread function=__main__.fixture_run.<locals>.FixtureServices.model event=started
+VENTUREOS 2026-11-01T13:04:01.544-05:00 INFO pid=86246 thread=MainThread function=__main__.fixture_run.<locals>.FixtureServices.model event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.545-05:00 INFO pid=86246 thread=MainThread function=ventureos.execution.Artifact.__post_init__ event=started
+VENTUREOS 2026-11-01T13:04:01.545-05:00 INFO pid=86246 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.545-05:00 INFO pid=86246 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.545-05:00 INFO pid=86246 thread=MainThread function=ventureos.execution.json_payload event=started
+VENTUREOS 2026-11-01T13:04:01.545-05:00 INFO pid=86246 thread=MainThread function=ventureos.execution.json_payload event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.545-05:00 INFO pid=86246 thread=MainThread function=ventureos.execution.Artifact.__post_init__ event=completed duration_ms=0.41
+VENTUREOS 2026-11-01T13:04:01.545-05:00 INFO pid=86246 thread=MainThread function=ventureos.progress.report_phase event=started
+VENTUREOS 2026-11-01T13:04:01.545-05:00 INFO pid=86246 thread=MainThread function=ventureos.progress.report_phase event=completed duration_ms=0.06
+VENTUREOS 2026-11-01T13:04:01.545-05:00 INFO pid=86246 thread=MainThread function=ventureos.web_intelligence.valid_research event=started
+VENTUREOS 2026-11-01T13:04:01.545-05:00 INFO pid=86246 thread=MainThread function=ventureos.web_intelligence.ResearchRequest.__post_init__ event=started
+VENTUREOS 2026-11-01T13:04:01.546-05:00 INFO pid=86246 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.546-05:00 INFO pid=86246 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.546-05:00 INFO pid=86246 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.546-05:00 INFO pid=86246 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.546-05:00 INFO pid=86246 thread=MainThread function=ventureos.web_intelligence.ResearchRequest.__post_init__ event=completed duration_ms=0.39
+VENTUREOS 2026-11-01T13:04:01.546-05:00 INFO pid=86246 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.546-05:00 INFO pid=86246 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.546-05:00 INFO pid=86246 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.546-05:00 INFO pid=86246 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.546-05:00 INFO pid=86246 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.547-05:00 INFO pid=86246 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.547-05:00 INFO pid=86246 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.547-05:00 INFO pid=86246 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.547-05:00 INFO pid=86246 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.547-05:00 INFO pid=86246 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.547-05:00 INFO pid=86246 thread=MainThread function=ventureos.web_intelligence.valid_research event=completed duration_ms=1.54
+VENTUREOS 2026-11-01T13:04:01.547-05:00 INFO pid=86246 thread=MainThread function=ventureos.web_intelligence.WebIntelligenceAgent.execute event=completed duration_ms=7.65
+VENTUREOS 2026-11-01T13:04:01.547-05:00 INFO pid=86246 thread=MainThread function=ventureos.execution.Artifact.to_dict event=started
+VENTUREOS 2026-11-01T13:04:01.547-05:00 INFO pid=86246 thread=MainThread function=ventureos.execution.Artifact.to_dict event=completed duration_ms=0.02
+VENTUREOS 2026-11-01T13:04:01.547-05:00 INFO pid=86246 thread=MainThread function=__main__.fixture_run event=completed duration_ms=9.14
+VENTUREOS 2026-11-01T13:04:01.548-05:00 INFO pid=86246 thread=MainThread function=__main__.main event=completed duration_ms=15.03
+VENTUREOS 2026-11-01T13:04:01.598-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=UI.service.research event=completed duration_ms=106.54
+VENTUREOS 2026-11-01T13:04:01.599-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=UI.views.render_report event=started
+VENTUREOS 2026-11-01T13:04:01.600-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=UI.views.render_report event=completed duration_ms=1.30
+ok
+test_live_submission_summary_and_input_changes_do_not_rerun (test_ui.StreamlitTests.test_live_submission_summary_and_input_changes_do_not_rerun) ... VENTUREOS 2026-11-01T13:04:01.602-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run event=started
+VENTUREOS 2026-11-01T13:04:01.602-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.Task.__post_init__ event=started
+VENTUREOS 2026-11-01T13:04:01.602-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.602-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.602-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.json_payload event=started
+VENTUREOS 2026-11-01T13:04:01.602-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.json_payload event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.603-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.Task.__post_init__ event=completed duration_ms=0.40
+VENTUREOS 2026-11-01T13:04:01.603-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.WebIntelligenceAgent.__init__ event=started
+VENTUREOS 2026-11-01T13:04:01.603-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.603-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.603-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.WebIntelligenceAgent.__init__ event=completed duration_ms=0.17
+VENTUREOS 2026-11-01T13:04:01.603-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.WebIntelligenceAgent.execute event=started
+VENTUREOS 2026-11-01T13:04:01.603-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.ResearchRequest.__post_init__ event=started
+VENTUREOS 2026-11-01T13:04:01.603-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.603-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.603-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.603-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.02
+VENTUREOS 2026-11-01T13:04:01.604-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.ResearchRequest.__post_init__ event=completed duration_ms=0.37
+VENTUREOS 2026-11-01T13:04:01.604-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=started
+VENTUREOS 2026-11-01T13:04:01.604-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.604-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.tool event=started
+VENTUREOS 2026-11-01T13:04:01.604-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.tool event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.604-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=started
+VENTUREOS 2026-11-01T13:04:01.604-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.604-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.604-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.604-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.tool event=started
+VENTUREOS 2026-11-01T13:04:01.604-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.tool event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.605-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.content event=started
+VENTUREOS 2026-11-01T13:04:01.605-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:01.605-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:01.605-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.605-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:01.605-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.605-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:01.605-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.605-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=started
+VENTUREOS 2026-11-01T13:04:01.605-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.605-05:00 INFO pid=86243 thread=MainThread function=ventureos.safety.ContentPolicy.check event=completed duration_ms=0.69
+VENTUREOS 2026-11-01T13:04:01.606-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.content event=completed duration_ms=0.86
+VENTUREOS 2026-11-01T13:04:01.606-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.606-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.606-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.606-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.606-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.checkpoint event=started
+VENTUREOS 2026-11-01T13:04:01.606-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.checkpoint event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.606-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=started
+VENTUREOS 2026-11-01T13:04:01.606-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.606-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.model event=started
+VENTUREOS 2026-11-01T13:04:01.607-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run.<locals>.FixtureServices.model event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.607-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.Artifact.__post_init__ event=started
+VENTUREOS 2026-11-01T13:04:01.607-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.607-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.607-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.json_payload event=started
+VENTUREOS 2026-11-01T13:04:01.607-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.json_payload event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.607-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.Artifact.__post_init__ event=completed duration_ms=0.35
+VENTUREOS 2026-11-01T13:04:01.607-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=started
+VENTUREOS 2026-11-01T13:04:01.607-05:00 INFO pid=86243 thread=MainThread function=ventureos.progress.report_phase event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.607-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.valid_research event=started
+VENTUREOS 2026-11-01T13:04:01.607-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.ResearchRequest.__post_init__ event=started
+VENTUREOS 2026-11-01T13:04:01.608-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.608-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.608-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.608-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.608-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.ResearchRequest.__post_init__ event=completed duration_ms=0.37
+VENTUREOS 2026-11-01T13:04:01.608-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.608-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.608-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=started
+VENTUREOS 2026-11-01T13:04:01.608-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.public_url event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.608-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.608-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.609-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.609-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.609-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=started
+VENTUREOS 2026-11-01T13:04:01.609-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.identity event=completed duration_ms=0.00
+VENTUREOS 2026-11-01T13:04:01.609-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.valid_research event=completed duration_ms=1.52
+VENTUREOS 2026-11-01T13:04:01.609-05:00 INFO pid=86243 thread=MainThread function=ventureos.web_intelligence.WebIntelligenceAgent.execute event=completed duration_ms=5.96
+VENTUREOS 2026-11-01T13:04:01.609-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.Artifact.to_dict event=started
+VENTUREOS 2026-11-01T13:04:01.609-05:00 INFO pid=86243 thread=MainThread function=ventureos.execution.Artifact.to_dict event=completed duration_ms=0.01
+VENTUREOS 2026-11-01T13:04:01.609-05:00 INFO pid=86243 thread=MainThread function=ventureos.research.fixture_run event=completed duration_ms=7.35
+2026-11-01 13:04:01.610 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+VENTUREOS 2026-11-01T13:04:01.638-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=UI.service.missing_configuration event=started
+VENTUREOS 2026-11-01T13:04:01.638-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=ventureos.config.load_local_env event=started
+VENTUREOS 2026-11-01T13:04:01.638-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=ventureos.config.load_local_env event=completed duration_ms=0.16
+VENTUREOS 2026-11-01T13:04:01.638-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=UI.service.missing_configuration event=completed duration_ms=0.38
+VENTUREOS 2026-11-01T13:04:01.642-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=UI.service.missing_configuration event=started
+VENTUREOS 2026-11-01T13:04:01.642-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=ventureos.config.load_local_env event=started
+VENTUREOS 2026-11-01T13:04:01.642-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=ventureos.config.load_local_env event=completed duration_ms=0.12
+VENTUREOS 2026-11-01T13:04:01.642-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=UI.service.missing_configuration event=completed duration_ms=0.37
+VENTUREOS 2026-11-01T13:04:01.698-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=UI.views.render_report event=started
+VENTUREOS 2026-11-01T13:04:01.699-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=UI.views.render_report event=completed duration_ms=0.95
+VENTUREOS 2026-11-01T13:04:01.705-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=UI.service.missing_configuration event=started
+VENTUREOS 2026-11-01T13:04:01.705-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=ventureos.config.load_local_env event=started
+VENTUREOS 2026-11-01T13:04:01.705-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=ventureos.config.load_local_env event=completed duration_ms=0.16
+VENTUREOS 2026-11-01T13:04:01.705-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=UI.service.missing_configuration event=completed duration_ms=0.43
+VENTUREOS 2026-11-01T13:04:01.706-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=UI.views.render_report event=started
+VENTUREOS 2026-11-01T13:04:01.707-05:00 INFO pid=86243 thread=ScriptRunner.scriptThread function=UI.views.render_report event=completed duration_ms=0.82
+ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 1.230s
+
+OK

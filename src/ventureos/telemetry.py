@@ -1,8 +1,10 @@
 """Optional OpenTelemetry API instrumentation; the host configures exporters."""
+from ventureos.logging_utils import logged
 from contextlib import contextmanager
 
 
 @contextmanager
+@logged
 def operation(name: str, attributes: dict, *, tracer=None):
     if tracer is None:
         try:

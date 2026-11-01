@@ -1,4 +1,5 @@
 """Injected providers and read-only tools, authorized before invocation."""
+from ventureos.logging_utils import logged
 from dataclasses import dataclass
 from typing import Callable, Protocol
 from .execution import identity, json_payload
@@ -11,6 +12,7 @@ class Principal:
     tenant_id: str
     scopes: frozenset[str]
 
+    @logged
     def authorize(self, tenant_id: str, scope: str):
         identity(self.tenant_id, tenant_id)
         if self.tenant_id != tenant_id or scope not in self.scopes:
@@ -28,10 +30,12 @@ class ModelProvider(Protocol):
 
 
 class ModelGateway:
+    @logged
     def __init__(self, provider: ModelProvider):
         self.provider = provider
         self.policy = ContentPolicy()
 
+    @logged
     def generate(self, principal: Principal, tenant_id: str, model: str, prompt: str, max_units: int, timeout: float = 30) -> ModelReply:
         principal.authorize(tenant_id, 'model:' + model)
         if type(max_units) is not int or max_units < 1:
@@ -46,15 +50,18 @@ class ModelGateway:
 
 
 class ToolGateway:
+    @logged
     def __init__(self):
         self.tools: dict[str, tuple[Callable, bool]] = {}
         self.policy = ContentPolicy()
 
+    @logged
     def register(self, name: str, handler: Callable, *, side_effect: bool):
         if name in self.tools:
             raise ValueError('duplicate tool')
         self.tools[name] = (handler, side_effect)
 
+    @logged
     def invoke(self, principal: Principal, tenant_id: str, name: str, arguments: dict):
         principal.authorize(tenant_id, 'tool:' + name)
         json_payload(arguments)

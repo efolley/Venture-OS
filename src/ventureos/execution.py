@@ -1,10 +1,12 @@
 """Provider-neutral execution contracts. JSON payloads cross persistence boundaries."""
+from ventureos.logging_utils import logged
 from dataclasses import asdict, dataclass, field
 import json
 import math
 from typing import Any, Protocol, runtime_checkable
 
 
+@logged
 def json_payload(value: Any) -> None:
     try:
         if not isinstance(value, dict):
@@ -14,6 +16,7 @@ def json_payload(value: Any) -> None:
         raise ValueError('payload must be a finite JSON object') from error
 
 
+@logged
 def identity(*values: str) -> None:
     if any(not isinstance(v, str) or not v.strip() for v in values):
         raise ValueError('identifiers must be nonempty strings')
@@ -31,6 +34,7 @@ class Task:
     deadline: float | None = None
     requires_approval: bool = False
 
+    @logged
     def __post_init__(self):
         identity(self.tenant_id, self.run_id, self.task_id, self.agent_id)
         json_payload(self.payload)
@@ -43,10 +47,12 @@ class Task:
         if type(self.requires_approval) is not bool:
             raise ValueError('requires_approval must be boolean')
 
+    @logged
     def to_dict(self):
         return asdict(self)
 
     @classmethod
+    @logged
     def from_dict(cls, value):
         return cls(**value)
 
@@ -60,16 +66,19 @@ class Artifact:
     content: dict
     sources: tuple[str, ...] = ()
 
+    @logged
     def __post_init__(self):
         identity(self.tenant_id, self.run_id, self.task_id, self.kind)
         json_payload(self.content)
         if not isinstance(self.sources, tuple) or any(not isinstance(s, str) or not s.strip() for s in self.sources):
             raise ValueError('sources must be a tuple of nonempty references')
 
+    @logged
     def to_dict(self):
         return asdict(self)
 
     @classmethod
+    @logged
     def from_dict(cls, value):
         return cls(**{**value, 'sources': tuple(value.get('sources', ()))})
 

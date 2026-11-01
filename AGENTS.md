@@ -4,7 +4,7 @@
 
 VentureOS is a business operations harness for 6 specialized agents, initially serving small B2B agencies and technical consultancies.
 
-The default CLI validates a brief and prints a fixed workflow plan. AgentHarness.execute deliberately raises NotImplementedError. A separate optional RuntimeHarness and PostgreSQL demo implement shared foundations documented in docs/agents_todo.md under Current State. Web Intelligence is implemented as an adapter-based plugin; the other 5 business agents and live integrations remain unimplemented. Never describe planned behavior as working software.
+The default CLI validates a brief and prints a fixed workflow plan. AgentHarness.execute deliberately raises NotImplementedError. A separate optional RuntimeHarness and PostgreSQL demo implement shared foundations documented in docs/agents_todo.md under Current State. Web Intelligence is implemented as an adapter-based plugin; the other 5 business agents remain unimplemented. Tavily, bounded HTTPS, Ollama, source/finding persistence, and local snapshots are implemented; see docs/web_intelligence.md for limits. Never describe planned behavior as working software.
 
 ## Read before changing behavior
 
