@@ -50,6 +50,7 @@ def main():
     parser.add_argument('--fixture', action='store_true', help='Synthetic sample; no keys, database, or network')
     parser.add_argument('--company')
     parser.add_argument('--website')
+    parser.add_argument('--alias', action='append', default=[], help='Other name for the company or product, e.g. 37signals for Basecamp')
     parser.add_argument('--provider', choices=('anthropic','ollama'), help='Model provider; defaults to MODEL_PROVIDER or anthropic')
     parser.add_argument('--model', help='Model ID; Ollama defaults to qwen3:8b')
     parser.add_argument('--tenant', default='local', help='Local operator scope, not authentication')
@@ -75,7 +76,7 @@ def main():
         if not all((args.company,args.website,args.model)):
             parser.error('--company, --website, and --model are required for live research')
         try:
-            request = ResearchRequest(args.company,args.website,max_pages=args.max_pages)
+            request = ResearchRequest(args.company,args.website,max_pages=args.max_pages,aliases=args.alias)
             from dataclasses import asdict
             from .web_live import TavilySearch, WebFetch, AnthropicModel, OllamaModel
             from .store import PostgresStore

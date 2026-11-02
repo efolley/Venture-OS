@@ -6,7 +6,7 @@ Checked items are implemented shared foundations. Unchecked agent items remain p
 
 Web Intelligence now searches company, news, jobs, and supporting sources; produces quoted findings with fact/inference labels, freshness warnings, and conflicts; and saves reports, source/finding records, and parsed-text snapshots locally.
 Run `PYTHONPATH=src:. python3 -m streamlit run UI/app.py --server.address 127.0.0.1` to research a company or browse Data Management, with Tavily, local Ollama qwen3:8b, and PostgreSQL configured in .env.
-All Web Intelligence backlog items are complete for this bounded implementation and verified by 96 regression tests, 8 golden evidence evals, and a real Basecamp run; source coverage can be incomplete and quotation matches do not prove semantic accuracy.
+All Web Intelligence backlog items are complete for this bounded implementation and covered by 120 regression tests (97 without PostgreSQL) and 11 evidence evals that check validator contracts. The one real Basecamp run predates the entity gate and claim verification, so live accuracy is unmeasured; quotation matches do not prove semantic accuracy.
 
 ## Shared prerequisites
 

@@ -105,12 +105,12 @@ class PageText(HTMLParser):
         attributes=dict(attrs)
         if tag=='meta' and attributes.get('property',attributes.get('name','')).lower() in ('article:published_time','date','datepublished','pubdate'):
             self.published_at=attributes.get('content')
-        if tag in ('script','style','noscript'):
+        if tag in ('script','style','noscript','nav','footer'):
             self.hidden += 1
 
     @logged
     def handle_endtag(self, tag):
-        if tag in ('script','style','noscript'):
+        if tag in ('script','style','noscript','nav','footer'):
             self.hidden = max(0,self.hidden-1)
 
     @logged

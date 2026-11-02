@@ -27,20 +27,30 @@ def evaluate_research_file(path):
     """Golden acceptance/evidence regressions, not a model accuracy benchmark."""
     from datetime import datetime, timezone
     from .execution import Artifact
-    from .web_intelligence import valid_research, assess_quality
+    from .web_intelligence import ResearchRequest, valid_research, assess_quality, entity_match
     cases=json.loads(Path(path).read_text())
     results=[]
     for case in cases:
-        source={'id':'s1','url':'https://example.com','text':case['text'],'kind':'company',
-                'published_at':case.get('published_at'),'retrieved_at':datetime.now(timezone.utc).isoformat()}
+        company,website=case.get('company','Acme'),case.get('website','https://example.com')
+        url,aliases=case.get('url',website),case.get('aliases',[])
+        request=ResearchRequest(company,website,aliases=aliases)
+        source={'id':'s1','url':url,'text':case['text'],'kind':case.get('kind','company'),
+                'published_at':case.get('published_at'),'retrieved_at':datetime.now(timezone.utc).isoformat(),
+                'entity_match':entity_match(request,url,case['text']) or 'none'}
         finding={'text':case['claim'],'basis':case['basis'],'source_ids':[case.get('source_id','s1')],
                  'evidence':[{'source_id':case.get('source_id','s1'),'quote':case['quote']}]}
-        content={'company':'Acme','website':'https://example.com','sources':[source],
-                 'problems':[finding],'trends':[],'buying_signals':[],'conflicts':[],
-                 'uncertainties':[],'schema_version':2,'quality':assess_quality([source],365)}
+        if 'date' in case: finding['date']=case['date']
+        if 'signal_status' in case: finding['signal_status']=case['signal_status']
+        content={'company':company,'website':website,'sources':[source],
+                 'problems':[],'trends':[],'buying_signals':[],'conflicts':[],
+                 'uncertainties':[],'schema_version':3,'quality':assess_quality([source],365)}
+        if aliases: content['aliases']=aliases
+        category=case.get('category','problems')
+        if category.startswith('gtm.'): content['gtm']={category[4:]:[finding]}
+        else: content[category]=[finding]
         try:
             content=ContentPolicy().check(content)
-            accepted=valid_research(Artifact('eval','eval','eval','web_intelligence',content,('https://example.com',)))
+            accepted=valid_research(Artifact('eval','eval','eval','web_intelligence',content,(url,)))
             passed=accepted==case['accepted'] and not case.get('blocked',False)
             if case.get('stale'):
                 passed=passed and content['quality']['stale_source_ids']==['s1']

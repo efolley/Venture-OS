@@ -66,5 +66,42 @@
     "published_at": "2020-01-01T00:00:00+00:00",
     "accepted": true,
     "stale": true
+  },
+  {
+    "name": "wrong entity: Basecamp Outdoor jobs page is not Basecamp",
+    "company": "Basecamp",
+    "website": "https://basecamp.com",
+    "url": "https://www.wearetheoutdoorindustry.com/jobs",
+    "kind": "jobs",
+    "text": "Jobs — Basecamp Outdoor Work With Us Events Jobs Networking Career Coaching Office Hours Register & FAQ Backbone Cotopaxi CU Boulder Vail Resorts Arc'teryx AutoCamp Outward Bound Title Nine About Coming Soon: Basecamp Match Job Board Resources Hiring?",
+    "quote": "Coming Soon: Basecamp Match Job Board Resources Hiring?",
+    "claim": "Basecamp is hiring across several employers.",
+    "basis": "fact",
+    "accepted": false,
+    "source_run": "runs/basecamp-complete-v2-final.json#s2"
+  },
+  {
+    "name": "boilerplate quote: cookie banner cannot support a claim",
+    "company": "Basecamp",
+    "website": "https://basecamp.com",
+    "url": "https://basecamp.com",
+    "text": "Basecamp Skip to main content We’d like to use cookies to help understand if our ads are working or not. No, thanks Yes, that’s fine Have an account? Sign in",
+    "quote": "We’d like to use cookies to help understand if our ads are working or not.",
+    "claim": "Basecamp is a project management tool known for its simplicity.",
+    "basis": "fact",
+    "accepted": false,
+    "source_run": "runs/basecamp-complete-v2-final.json#s1"
+  },
+  {
+    "name": "golden Basecamp fact: Basecamp 5 has over 100 improvements",
+    "company": "Basecamp",
+    "website": "https://basecamp.com",
+    "url": "https://basecamp.com/5",
+    "text": "Basecamp 5 is all new for 2026 With well over 100 significant improvements, Basecamp 5 is faster, simpler, and more capable than ever before.",
+    "quote": "With well over 100 significant improvements, Basecamp 5 is faster, simpler, and more capable than ever before.",
+    "claim": "Basecamp 5 ships with well over 100 improvements.",
+    "basis": "fact",
+    "accepted": true,
+    "source_run": "runs/basecamp-complete-v2-final.json#s5"
   }
 ]

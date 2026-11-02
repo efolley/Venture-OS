@@ -417,7 +417,7 @@ class CompletionRegressionTests(unittest.TestCase):
         from ventureos.evals import evaluate_research_file
         report=evaluate_research_file('tests/fixtures/web_intelligence_evals.json')
         self.assertEqual(report['failed'],0,report)
-        self.assertEqual(report['passed'],8)
+        self.assertEqual(report['passed'],11)
 
     def test_conflict_needs_two_existing_sources(self):
         artifact=WebIntelligenceAgent('small').execute(context())
@@ -487,3 +487,268 @@ class QualityBoundaryTests(unittest.TestCase):
         prompt=next(value for name,value in services.calls if name=='model')
         self.assertNotIn('person@example.com',prompt)
         self.assertIn('[EMAIL]',prompt)
+
+
+BASECAMP = {'company': 'Basecamp', 'website': 'https://basecamp.com', 'max_pages': 6}
+COOKIE = 'We’d like to use cookies to help understand if our ads are working or not.'
+
+
+class ScriptedServices(Services):
+    """Per-URL pages and per-query search results; the model answers analysis and entailment prompts."""
+    def __init__(self, pages, search=None, analysis=None, verdicts=None):
+        super().__init__()
+        self.pages, self.search = pages, search or {}
+        self.analysis, self.verdicts = analysis or {}, verdicts
+
+    def tool(self, name, arguments, units=1):
+        self.calls.append((name, arguments))
+        if name == 'web_search':
+            urls = next((u for k, u in self.search.items() if k in arguments['query']), [])
+            return {'urls': urls}
+        page = self.pages[arguments['url']]
+        return {'url': arguments['url'], **(page if isinstance(page, dict) else {'text': page})}
+
+    def model(self, model, prompt, max_units):
+        self.calls.append(('model', prompt))
+        if prompt.startswith('Judge each claim'):
+            if self.verdicts is None:
+                return ModelReply('not json', 1)
+            items = json.loads(prompt.split('Items: ', 1)[1])
+            return ModelReply(json.dumps({'verdicts': [{'id': i['id'], 'supported': self.verdicts(i)} for i in items]}), 1)
+        return ModelReply(json.dumps({'trends': [], 'problems': [], 'buying_signals': [], 'uncertainties': [], **self.analysis}), 5)
+
+
+def run_agent(services, payload=None, aliases=()):
+    payload = {**(payload or BASECAMP), **({'aliases': list(aliases)} if aliases else {})}
+    task = Task('tenant', 'run', 'research', 'web_intelligence', payload)
+    return WebIntelligenceAgent('small').execute(AgentContext(task, services=services))
+
+
+def finding(text, quote, source='s1', **extra):
+    return {'text': text, 'basis': 'fact', 'source_ids': [source], 'evidence': [{'source_id': source, 'quote': quote}], **extra}
+
+
+class EntityGateTests(unittest.TestCase):
+    OUTDOOR = 'https://www.wearetheoutdoorindustry.com/jobs'
+    OUTDOOR_TEXT = 'Jobs — Basecamp Outdoor Work With Us Events Jobs Networking Basecamp Match Job Board Hiring?'
+
+    def test_entity_match_reasons(self):
+        from ventureos.web_intelligence import entity_match
+        request = ResearchRequest('Basecamp', 'https://basecamp.com', aliases=['37signals'])
+        self.assertEqual(entity_match(request, 'https://app.basecamp.com/x', ''), 'domain')
+        self.assertEqual(entity_match(request, 'https://www.smartsuite.com/blog/basecamp-review', 'x'), 'slug')
+        self.assertEqual(entity_match(request, 'https://example.org/post', 'visit basecamp.com today'), 'host_mention')
+        self.assertEqual(entity_match(request, 'https://leadiq.com/c/x', 'About 37signals, maker of HEY'), 'alias')
+        self.assertIsNone(entity_match(request, self.OUTDOOR, self.OUTDOOR_TEXT))
+        self.assertIsNone(entity_match(request, 'https://notbasecamp.com/', 'hello'))
+
+    def test_wrong_entity_source_is_rejected_and_coverage_stays_honest(self):
+        services = ScriptedServices(
+            {'https://basecamp.com': 'Basecamp is project management software.', self.OUTDOOR: self.OUTDOOR_TEXT},
+            search={'careers': [self.OUTDOOR]})
+        artifact = run_agent(services)
+        self.assertEqual([s['url'] for s in artifact.content['sources']], ['https://basecamp.com'])
+        self.assertIn('jobs', artifact.content['quality']['missing_source_types'])
+        self.assertTrue(any('rejected' in u and 'wearetheoutdoorindustry' in u for u in artifact.content['uncertainties']))
+
+    def test_alias_resolves_company_vs_product_name(self):
+        leadiq = 'https://leadiq.com/c/37signals/5a1d'
+        pages = {'https://basecamp.com': 'Basecamp is project management software.',
+                 leadiq: '37signals has a diversified product portfolio with Basecamp, HEY, and Fizzy.'}
+        search = {'independent': [leadiq]}
+        without = run_agent(ScriptedServices(pages, search))
+        self.assertEqual(len(without.content['sources']), 1)
+        with_alias = run_agent(ScriptedServices(pages, search), aliases=['37signals'])
+        self.assertEqual([s['entity_match'] for s in with_alias.content['sources']], ['domain', 'slug'])
+        self.assertTrue(valid_research(with_alias))
+
+    def test_validator_rejects_wrong_entity_source_in_v3_artifact(self):
+        from ventureos.web_intelligence import assess_quality
+        artifact = run_agent(ScriptedServices({'https://basecamp.com': 'Basecamp is project management software.'}))
+        content = artifact.content
+        content['sources'].append({**content['sources'][0], 'id': 's2', 'url': self.OUTDOOR, 'text': self.OUTDOOR_TEXT})
+        content['quality'] = assess_quality(content['sources'], 365)
+        forged = Artifact(artifact.tenant_id, artifact.run_id, artifact.task_id, 'web_intelligence', content,
+                          tuple(s['url'] for s in content['sources']))
+        self.assertFalse(valid_research(forged))
+
+    def test_own_site_is_not_independent_support_and_urls_are_deduped(self):
+        pages = {'https://basecamp.com': 'Basecamp is project management software.',
+                 'https://basecamp.com/pricing': 'Basecamp pricing is flat.'}
+        services = ScriptedServices(pages, search={'independent': ['https://basecamp.com/pricing'], 'official': ['https://basecamp.com/pricing/', 'https://basecamp.com/']})
+        pages['https://basecamp.com/pricing/'] = pages['https://basecamp.com/pricing']
+        pages['https://basecamp.com/'] = pages['https://basecamp.com']
+        artifact = run_agent(services)
+        urls = [s['url'] for s in artifact.content['sources']]
+        self.assertEqual(urls, ['https://basecamp.com', 'https://basecamp.com/pricing'])
+        self.assertEqual({s['kind'] for s in artifact.content['sources']}, {'company'})
+        self.assertIn('supporting', artifact.content['quality']['missing_source_types'])
+
+
+class BoilerplateTests(unittest.TestCase):
+    def test_strip_and_detect(self):
+        from ventureos.web_intelligence import strip_boilerplate, is_boilerplate
+        text = 'Basecamp Skip to main content ' + COOKIE + ' No, thanks Yes, that’s fine Basecamp 5 is all new for 2026.'
+        cleaned = strip_boilerplate(text)
+        self.assertNotIn('cookies', cleaned)
+        self.assertNotIn('Skip to', cleaned)
+        self.assertIn('Basecamp 5 is all new for 2026.', cleaned)
+        self.assertTrue(is_boilerplate(COOKIE))
+        self.assertFalse(is_boilerplate('Basecamp 5 is all new for 2026.'))
+
+    def test_boilerplate_is_not_offered_as_a_quote_option(self):
+        from ventureos.web_intelligence import research_schema
+        sources = [{'id': 's1', 'text': 'Basecamp. ' + COOKIE + ' Pricing is flat and simple for every team.'}]
+        schema = research_schema(['s1'], sources)
+        options = schema['properties']['problems']['items']['properties']['evidence']['items']['anyOf'][0]['properties']['quote']['enum']
+        self.assertFalse(any('cookies' in o for o in options))
+        self.assertIn('Pricing is flat and simple for every team.', options)
+
+    def test_validator_rejects_boilerplate_and_tiny_quotes_in_v3(self):
+        for quote in (COOKIE, 'a'):
+            with self.subTest(quote=quote):
+                artifact = run_agent(ScriptedServices({'https://basecamp.com': 'a ' + COOKIE + ' Basecamp is project management software.'}))
+                artifact.content['problems'] = [finding('Basecamp is a tool', quote)]
+                self.assertFalse(valid_research(artifact))
+
+    def test_cookie_quote_drops_the_claim_but_not_the_run(self):
+        page = 'a ' + COOKIE + ' Basecamp pricing is a free plan plus paid upgrades.'
+        analysis = {'problems': [finding('Basecamp is simple', COOKIE),
+                                 finding('Basecamp has a free plan', 'Basecamp pricing is a free plan plus paid upgrades.')]}
+        artifact = run_agent(ScriptedServices({'https://basecamp.com': page}, analysis=analysis, verdicts=lambda i: True))
+        self.assertEqual([p['text'] for p in artifact.content['problems']], ['Basecamp has a free plan'])
+        self.assertTrue(any('boilerplate' in u for u in artifact.content['uncertainties']))
+
+    def test_page_text_drops_nav_and_footer(self):
+        from ventureos.web_live import PageText
+        parser = PageText()
+        parser.feed('<nav>Menu Pricing</nav><main>Real content.</main><footer>Terms</footer>')
+        self.assertEqual(' '.join(parser.parts).strip(), 'Real content.')
+
+    def test_truncation_is_reported(self):
+        services = ScriptedServices({'https://basecamp.com': 'Basecamp ' + 'word ' * 2000})
+        artifact = run_agent(services)
+        self.assertTrue(artifact.content['sources'][0]['truncated'])
+        self.assertTrue(any('truncated' in u for u in artifact.content['uncertainties']))
+
+
+class EntailmentTests(unittest.TestCase):
+    PAGE = 'Basecamp 5 has well over 100 significant improvements. Pricing is a free plan plus paid upgrades.'
+
+    def run_with(self, claims, verdicts):
+        services = ScriptedServices({'https://basecamp.com': self.PAGE},
+                                    analysis={'problems': claims}, verdicts=verdicts)
+        return services, run_agent(services)
+
+    def test_claim_unsupported_by_its_quote_is_dropped_with_note(self):
+        claim = finding('Basecamp has well over 100 improvements', 'Basecamp 5 has well over 100 significant improvements.')
+        services, artifact = self.run_with([claim], lambda item: False)
+        self.assertEqual(artifact.content['problems'], [])
+        self.assertTrue(any('Claim removed' in u for u in artifact.content['uncertainties']))
+
+    def test_supported_claim_is_marked_verified(self):
+        claim = finding('Basecamp has well over 100 improvements', 'Basecamp 5 has well over 100 significant improvements.')
+        services, artifact = self.run_with([claim], lambda item: True)
+        self.assertEqual(artifact.content['problems'][0]['evidence_status'], 'entailment_verified')
+        self.assertTrue(valid_research(artifact))
+
+    def test_zero_overlap_claim_is_dropped_without_a_model_call(self):
+        claim = finding('Customers complain about outages and billing disputes', 'Pricing is a free plan plus paid upgrades.')
+        services, artifact = self.run_with([claim], lambda item: True)
+        self.assertEqual(artifact.content['problems'], [])
+        self.assertFalse(any(n == 'model' and p.startswith('Judge') for n, p in services.calls))
+
+    def test_unavailable_verifier_keeps_claim_labeled_unverified(self):
+        claim = finding('Basecamp has well over 100 improvements', 'Basecamp 5 has well over 100 significant improvements.')
+        services, artifact = self.run_with([claim], None)
+        self.assertEqual(artifact.content['problems'][0]['evidence_status'], 'quote_matched_not_entailment_verified')
+        self.assertTrue(any('not entailment-verified' in u for u in artifact.content['uncertainties']))
+
+    def test_unsupported_summary_is_removed(self):
+        summary = finding('Basecamp is loved by millions.', 'Pricing is a free plan plus paid upgrades.')
+        services = ScriptedServices({'https://basecamp.com': self.PAGE}, analysis={'company_summary': summary}, verdicts=lambda i: False)
+        artifact = run_agent(services)
+        self.assertNotIn('company_summary', artifact.content)
+        self.assertTrue(valid_research(artifact))
+
+
+class UndatedSignalTests(unittest.TestCase):
+    PAGE = 'Basecamp is hiring a head of growth this quarter.'
+
+    def signal_artifact(self, published_at):
+        page = {'text': self.PAGE, 'published_at': published_at}
+        signal = finding('Basecamp is hiring a head of growth', 'Basecamp is hiring a head of growth this quarter.')
+        return run_agent(ScriptedServices({'https://basecamp.com': page}, analysis={'buying_signals': [signal]}, verdicts=lambda i: True))
+
+    def test_undated_source_signal_becomes_hypothesis(self):
+        artifact = self.signal_artifact(None)
+        signal = artifact.content['buying_signals'][0]
+        self.assertEqual((signal['basis'], signal['signal_status']), ('inference', 'hypothesis'))
+        self.assertTrue(valid_research(artifact))
+
+    def test_validator_rejects_confirmed_signal_on_undated_source(self):
+        artifact = self.signal_artifact(None)
+        del artifact.content['buying_signals'][0]['signal_status']
+        self.assertFalse(valid_research(artifact))
+
+    def test_fresh_dated_source_keeps_confirmed_signal(self):
+        from datetime import datetime, timezone
+        artifact = self.signal_artifact(datetime.now(timezone.utc).isoformat())
+        self.assertNotIn('signal_status', artifact.content['buying_signals'][0])
+        self.assertEqual(artifact.content['buying_signals'][0]['basis'], 'fact')
+
+
+class CapsAndGtmTests(unittest.TestCase):
+    def test_schema_caps_and_optional_gtm(self):
+        from ventureos.web_intelligence import research_schema
+        schema = research_schema(['s1', 's2'])
+        problem = schema['properties']['problems']['items']['properties']
+        self.assertEqual(schema['properties']['problems']['maxItems'], 5)
+        self.assertEqual((problem['source_ids']['maxItems'], problem['evidence']['maxItems']), (2, 2))
+        self.assertNotIn('gtm', schema['required'])
+        self.assertEqual(set(schema['properties']['gtm']['properties']),
+                         {'pricing', 'segments', 'positioning', 'alternatives', 'launches'})
+        self.assertIn('date', schema['properties']['gtm']['properties']['launches']['items']['properties'])
+
+    def test_five_findings_and_two_evidence_items_are_accepted(self):
+        pages = {'https://basecamp.com': 'Alpha team ships fast. Beta team ships slow.'}
+        problems = [finding('Alpha ships fast number %d' % i, 'Alpha team ships fast.') for i in range(5)]
+        problems[0]['evidence'].append({'source_id': 's1', 'quote': 'Beta team ships slow.'})
+        artifact = run_agent(ScriptedServices(pages, analysis={'problems': problems}, verdicts=lambda i: True))
+        self.assertEqual(len(artifact.content['problems']), 5)
+        self.assertEqual(len(artifact.content['problems'][0]['evidence']), 2)
+
+    def test_gtm_fields_validate_and_old_artifacts_do_not_need_them(self):
+        page = 'Pricing is a free plan plus paid upgrades. Basecamp 4 launched in 2022 for teams.'
+        gtm = {'pricing': [finding('Free plan plus paid upgrades', 'Pricing is a free plan plus paid upgrades.')],
+               'launches': [finding('Basecamp 4 launched in 2022', 'Basecamp 4 launched in 2022 for teams.', date='2022')]}
+        artifact = run_agent(ScriptedServices({'https://basecamp.com': page}, analysis={'gtm': gtm}, verdicts=lambda i: True))
+        self.assertTrue(valid_research(artifact))
+        self.assertEqual(len(artifact.content['gtm']['pricing']), 1)
+        plain = run_agent(ScriptedServices({'https://basecamp.com': page}))
+        self.assertNotIn('gtm', plain.content)
+        self.assertTrue(valid_research(plain))
+
+    def test_gtm_rejects_unknown_field_and_unsupported_launch_date(self):
+        page = 'Basecamp 4 launched in 2022 for teams.'
+        launch = finding('Basecamp 4 launched', 'Basecamp 4 launched in 2022 for teams.', date='2022')
+        artifact = run_agent(ScriptedServices({'https://basecamp.com': page}, analysis={'gtm': {'launches': [launch]}}, verdicts=lambda i: True))
+        self.assertTrue(valid_research(artifact))
+        artifact.content['gtm']['launches'][0]['date'] = '2031'
+        self.assertFalse(valid_research(artifact))
+        artifact.content['gtm']['launches'][0]['date'] = '2022-13-40'
+        self.assertFalse(valid_research(artifact))
+        artifact.content['gtm']['launches'][0]['date'] = '2022'
+        artifact.content['gtm']['revenue'] = []
+        self.assertFalse(valid_research(artifact))
+
+    RUN = 'runs/basecamp-complete-v2-final.json'
+
+    @unittest.skipUnless(os.path.exists(RUN), 'saved run is local and gitignored')
+    def test_saved_v2_run_still_validates_and_golden_excerpts_come_from_it(self):
+        saved = json.load(open(self.RUN))['artifact']
+        self.assertTrue(valid_research(Artifact.from_dict(saved)))
+        texts = ' '.join(s['text'] for s in saved['content']['sources'])
+        for case in json.load(open('tests/fixtures/web_intelligence_evals.json')):
+            if 'source_run' in case:
+                self.assertIn(' '.join(case['quote'].split()), ' '.join(texts.split()), case['name'])
