@@ -8,10 +8,10 @@ runtime unless explicitly requested.
 
 ## Version tracking
 
-- Current release is **V.0.2**, corresponding to package version `0.2.0` in
+- Current release is **V.0.3**, corresponding to package version `0.3.0` in
   `pyproject.toml`.
 - For every subsequent update published to GitHub, increment the version by
-  `0.1` (for example, next is **V.0.3** / `0.3.0`).
+  `0.1` (for example, next is **V.0.4** / `0.4.0`).
 - Update the current version in `README.md` and `pyproject.toml` together, and
   preserve this rule in both `README.md` and this file.
 

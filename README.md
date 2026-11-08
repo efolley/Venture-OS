@@ -8,9 +8,9 @@ follow-up answers.
 
 ## Versioning
 
-Current release: **V.0.2** (package version `0.2.0` in `pyproject.toml`).
+Current release: **V.0.3** (package version `0.3.0` in `pyproject.toml`).
 Increment the version by `0.1` for every subsequent update published to GitHub:
-the next published update is **V.0.3** (`0.3.0`). Keep this section, the
+the next published update is **V.0.4** (`0.4.0`). Keep this section, the
 versioning rule in `AGENTS.md`, and the package version in sync.
 
 ## Architecture
@@ -43,39 +43,46 @@ solution, positioning, and source URLs. [The golden fixture](tests/agents_data/w
 
 ## Demo result
 
-Example of the structured report shown in the UI. This is demo content, not a
-guarantee of a live research result:
+![Web Intelligence workflow: request, live progress steps, sourced report](docs/web-intelligence-demo.gif)
 
-```Markdown
-**Company:** [Vercel](https://www.vercel.com/) - Vercel is a cloud application platform and developer experience platform that provides developer tools, frameworks, and managed infrastructure to build, deploy, and scale web applications, websites, and AI agents.
+Live run on V.0.2 for the message *"Explore the company Stripe for me - http://stripe.com/"*.
+The `http://` link was upgraded to `https://` during request understanding.
+Live output varies between runs, so treat this as an example, not a fixed response.
 
-**Value proposition:** Vercel is the platform where humans and AI agents build, ship, and scale software together.
+### [Stripe](https://www.stripe.com/)
 
-**Problem:** Frontend developers and engineering teams face friction managing underlying server infrastructure, deploying applications at scale, integrating modern AI capabilities, and optimizing web performance across global edge networks.
+Stripe is a financial services platform that helps all types of businesses accept
+payments, build flexible billing models, and manage money movement.
 
-- High complexity in setting up backend infrastructure and continuous delivery pipelines
-- Managing deployments and scaling applications across multi-tenant environments
-- Integrating conversational streaming and modern AI features into web workflows
+> **Value proposition:** Stripe builds economic infrastructure for the internet,
+> helping businesses accept payments and manage financial operations globally.
 
-**Market:** Software Development | Cloud Platform as a Service (PaaS) / Frontend Cloud
+**Problem.** Businesses struggle with accepting online payments, managing recurring
+revenue, handling global compliance, and orchestrating complex money movement
+across channels.
 
-**Business model:** B2B SaaS / Tiered subscription pricing for developer tools and cloud hosting infrastructure
+- Complexities in integrating multiple payment methods and currencies
+- Managing fraud and preventing transaction losses
+- Setting up recurring billing models and subscription management
+- Handling global tax calculations and regulatory compliance
 
-**Target client:** Technology companies, digital agencies, and engineering teams building modern web applications
+| | |
+|---|---|
+| **Market** | Technology, Information and Internet · Fintech & Payments |
+| **Business model** | Pay-as-you-go transactional fees and custom enterprise packaging |
+| **Target client** | Digital-first businesses, e-commerce stores, and software platforms |
+| **ICP buyer** | Founders, Chief Financial Officers, and Engineering Leaders |
+| **End users** | Developers integrating payment APIs · Finance teams managing reconciliation and billing · End customers checking out online or via mobile |
 
-**Target ICP buyer:** Chief Technology Officers, Engineering Managers, and Lead Developers
+**Solution — Stripe Financial Services Platform.** Programmable APIs, prebuilt UI
+components, and developer tools to embed payments, billing, and money management
+into any application or website.
 
-**End users:** Frontend developers, Full-stack software engineers, AI agents and engineering teams
+**Sources** (all collected by the research worker):
 
-**Solution:** Vercel Developer Experience Platform, Next.js, v0, and AI SDK - Provides a comprehensive frontend cloud and autonomous stack supporting Git-based deployments, global edge content delivery networks, automated CI/CD, and specialized AI development tools.
-
-**Sources:**
-
-- [https://en.wikipedia.org/wiki/Vercel](https://en.wikipedia.org/wiki/Vercel)
-- [https://tavily.com/knowledge/company/zLugO9jdLlPE](https://tavily.com/knowledge/company/zLugO9jdLlPE)
-- [https://www.linkedin.com/company/vercel](https://www.linkedin.com/company/vercel)
-- [https://vercel.com/legal/privacy-notice](https://vercel.com/legal/privacy-notice)
-```
+1. [tavily.com — Stripe company profile](https://tavily.com/knowledge/company/igPwhNOUwEGy)
+2. [leadiq.com — Stripe company page](https://leadiq.com/c/stripe/5a1d892d240000240062acad/email-format)
+3. [stripe.com/pricing](https://stripe.com/pricing)
 
 ## Run locally
 
