@@ -8,9 +8,9 @@ follow-up answers.
 
 ## Versioning
 
-Current release: **V.0.3** (package version `0.3.0` in `pyproject.toml`).
+Current release: **V.0.4** (package version `0.4.0` in `pyproject.toml`).
 Increment the version by `0.1` for every subsequent update published to GitHub:
-the next published update is **V.0.4** (`0.4.0`). Keep this section, the
+the next published update is **V.0.5** (`0.5.0`). Keep this section, the
 versioning rule in `AGENTS.md`, and the package version in sync.
 
 ## Architecture
