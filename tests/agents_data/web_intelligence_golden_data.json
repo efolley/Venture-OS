@@ -1,0 +1,266 @@
+
+[
+  {
+    "company": {
+      "name": "Stripe",
+      "website": "https://stripe.com",
+      "description": "Financial infrastructure platform for businesses"
+    },
+    "problem": {
+      "statement": "Businesses face complexity in accepting, processing, and managing payments across markets.",
+      "pain_points": [
+        "Complex payment integrations",
+        "International payment processing",
+        "Fraud prevention and payment compliance"
+      ]
+    },
+    "market": {
+      "industry": "Fintech",
+      "category": "Payment infrastructure",
+      "business_model": "B2B transaction-based fees and software services"
+    },
+    "icp": {
+      "primary": "Online businesses and software platforms",
+      "buyer": "CTO, CFO, Head of Payments",
+      "users": [
+        "Software developers",
+        "Finance teams",
+        "Payment operations teams"
+      ]
+    },
+    "solution": {
+      "product": "Stripe Payments",
+      "approach": "Unified APIs and payment infrastructure for accepting and managing payments."
+    },
+    "positioning": {
+      "who": "Online businesses and software platforms",
+      "what": "Accept and manage payments globally",
+      "how": "Through unified payment APIs and financial infrastructure",
+      "statement": "We help online businesses and software platforms accept and manage payments globally through unified payment APIs and financial infrastructure."
+    },
+    "sources": [
+      "https://stripe.com",
+      "https://stripe.com/payments"
+    ]
+  },
+  {
+    "company": {
+      "name": "Palantir",
+      "website": "https://www.palantir.com",
+      "description": "Software company providing data integration, analytics, and AI platforms for organizations."
+    },
+    "problem": {
+      "statement": "Large organizations struggle to integrate fragmented data and translate it into actionable operational decisions.",
+      "pain_points": [
+        "Fragmented enterprise data across systems",
+        "Difficulty operationalizing AI and analytics",
+        "Complex decision-making across business operations"
+      ]
+    },
+    "market": {
+      "industry": "Enterprise software",
+      "category": "Enterprise data analytics and AI platforms",
+      "business_model": "Enterprise and government software contracts"
+    },
+    "icp": {
+      "primary": "Large enterprises and government organizations with complex data operations",
+      "buyer": "CIO, CTO, Chief Data Officer, Government Program Executive",
+      "users": [
+        "Data engineers",
+        "Data scientists",
+        "Business analysts",
+        "Operational teams"
+      ]
+    },
+    "solution": {
+      "product": "Palantir Foundry, Gotham, and Artificial Intelligence Platform (AIP)",
+      "approach": "Integrates organizational data, analytical workflows, and AI capabilities into operational software platforms."
+    },
+    "positioning": {
+      "who": "Large enterprises and government organizations",
+      "what": "Make better operational decisions using fragmented data",
+      "how": "Through integrated data platforms, analytics, and AI",
+      "statement": "We help large enterprises and government organizations make better operational decisions through integrated data platforms, analytics, and AI."
+    },
+    "sources": [
+      "https://www.palantir.com",
+      "https://www.palantir.com/platforms/"
+    ]
+  },
+  {
+    "company": {
+      "name": "Vercel",
+      "website": "https://vercel.com",
+      "description": "Cloud platform for developing, deploying, and scaling web applications."
+    },
+    "problem": {
+      "statement": "Development teams face complexity in deploying, optimizing, and scaling modern web applications.",
+      "pain_points": [
+        "Complex deployment workflows",
+        "Application performance optimization",
+        "Infrastructure management and scaling"
+      ]
+    },
+    "market": {
+      "industry": "Developer tools",
+      "category": "Frontend cloud and application deployment",
+      "business_model": "Usage-based cloud services and subscription plans"
+    },
+    "icp": {
+      "primary": "Frontend development teams and organizations building modern web applications",
+      "buyer": "CTO, VP Engineering, Engineering Manager",
+      "users": [
+        "Frontend developers",
+        "Full-stack developers",
+        "DevOps engineers"
+      ]
+    },
+    "solution": {
+      "product": "Vercel Platform",
+      "approach": "Provides integrated development workflows, deployment infrastructure, and performance optimization for web applications."
+    },
+    "positioning": {
+      "who": "Developers and engineering teams",
+      "what": "Build and deploy performant web applications faster",
+      "how": "Through an integrated cloud development and deployment platform",
+      "statement": "We help developers and engineering teams build and deploy performant web applications faster through an integrated cloud platform."
+    },
+    "sources": [
+      "https://vercel.com",
+      "https://vercel.com/docs"
+    ]
+  },
+  {
+    "company": {
+      "name": "Scale AI",
+      "website": "https://scale.com",
+      "description": "AI company providing data infrastructure, evaluation, and solutions for developing and deploying artificial intelligence."
+    },
+    "problem": {
+      "statement": "Organizations struggle to obtain high-quality training data, evaluate AI models, and deploy reliable AI systems.",
+      "pain_points": [
+        "Insufficient high-quality training data",
+        "Expensive and complex data annotation",
+        "Difficulty evaluating AI model performance and reliability"
+      ]
+    },
+    "market": {
+      "industry": "Artificial intelligence",
+      "category": "AI data infrastructure and model evaluation",
+      "business_model": "Enterprise and government contracts for AI data and services"
+    },
+    "icp": {
+      "primary": "AI model developers, large enterprises, and government organizations",
+      "buyer": "CTO, Head of AI, VP Machine Learning, Government Program Executive",
+      "users": [
+        "Machine learning engineers",
+        "Data scientists",
+        "AI researchers",
+        "AI evaluation teams"
+      ]
+    },
+    "solution": {
+      "product": "Scale AI data and evaluation solutions",
+      "approach": "Provides data annotation, data infrastructure, and model evaluation capabilities to support AI development."
+    },
+    "positioning": {
+      "who": "AI developers and organizations deploying AI",
+      "what": "Build and improve reliable AI systems",
+      "how": "Through high-quality data infrastructure and model evaluation",
+      "statement": "We help AI developers and organizations build and improve reliable AI systems through high-quality data infrastructure and model evaluation."
+    },
+    "sources": [
+      "https://scale.com",
+      "https://scale.com/data-engine"
+    ]
+  },
+  {
+    "company": {
+      "name": "Datadog",
+      "website": "https://www.datadoghq.com",
+      "description": "Cloud monitoring, observability, and security platform for modern applications and infrastructure."
+    },
+    "problem": {
+      "statement": "Organizations struggle to monitor complex cloud infrastructure, diagnose application failures, and maintain system reliability.",
+      "pain_points": [
+        "Limited visibility across distributed systems",
+        "Slow detection and resolution of incidents",
+        "Fragmented monitoring and security tools"
+      ]
+    },
+    "market": {
+      "industry": "Cloud software",
+      "category": "Observability and cloud security",
+      "business_model": "B2B SaaS with usage-based pricing"
+    },
+    "icp": {
+      "primary": "Organizations operating complex cloud-native applications and infrastructure",
+      "buyer": "CTO, VP Engineering, Head of Infrastructure, CISO",
+      "users": [
+        "DevOps engineers",
+        "Site reliability engineers",
+        "Software developers",
+        "Security operations teams"
+      ]
+    },
+    "solution": {
+      "product": "Datadog Observability and Security Platform",
+      "approach": "Unifies infrastructure monitoring, application performance monitoring, logs, and security telemetry."
+    },
+    "positioning": {
+      "who": "Engineering and operations teams",
+      "what": "Maintain reliable, performant, and secure cloud applications",
+      "how": "Through unified observability and security monitoring",
+      "statement": "We help engineering and operations teams maintain reliable, performant, and secure cloud applications through unified observability and security monitoring."
+    },
+    "sources": [
+      "https://www.datadoghq.com",
+      "https://www.datadoghq.com/product/"
+    ]
+  },
+  {
+    "company": {
+      "name": "Vercel",
+      "website": "https://www.vercel.com",
+      "description": "Vercel is a cloud application platform and developer experience platform that provides developer tools, frameworks, and managed infrastructure to build, deploy, and scale web applications, websites, and AI agents."
+    },
+    "problem": {
+      "statement": "Frontend developers and engineering teams face friction managing underlying server infrastructure, deploying applications at scale, integrating modern AI capabilities, and optimizing web performance across global edge networks.",
+      "pain_points": [
+        "High complexity in setting up backend infrastructure and continuous delivery pipelines",
+        "Managing deployments and scaling applications across multi-tenant environments",
+        "Integrating conversational streaming and modern AI features into web workflows"
+      ]
+    },
+    "market": {
+      "industry": "Software Development",
+      "category": "Cloud Platform as a Service (PaaS) / Frontend Cloud",
+      "business_model": "B2B SaaS / Tiered subscription pricing for developer tools and cloud hosting infrastructure"
+    },
+    "icp": {
+    "primary": "Technology companies, digital agencies, and engineering teams building modern web applications",
+    "buyer": "Chief Technology Officers, Engineering Managers, and Lead Developers",
+    "users": [
+      "Frontend developers",
+      "Full-stack software engineers",
+      "AI agents and engineering teams"
+    ]
+  },
+  "solution": {
+    "product": "Vercel Developer Experience Platform, Next.js, v0, and AI SDK",
+    "approach": "Provides a comprehensive frontend cloud and autonomous stack supporting Git-based deployments, global edge content delivery networks, automated CI/CD, and specialized AI development tools."
+  },
+  "positioning": {
+    "who": "Vercel",
+    "what": "is a frontend cloud platform and developer infrastructure provider",
+    "how": "by offering an integrated stack for building, deploying, and scaling web apps and AI agents together through seamless Git integrations and edge computing.",
+    "statement": "Vercel is the platform where humans and AI agents build, ship, and scale software together."
+  },
+  "sources": [
+    "https://en.wikipedia.org/wiki/Vercel",
+    "https://tavily.com/knowledge/company/zLugO9jdLlPE",
+    "https://www.linkedin.com/company/vercel",
+    "https://vercel.com/legal/privacy-notice"
+  ]
+  }
+]

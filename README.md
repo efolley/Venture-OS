@@ -1,113 +1,129 @@
-# VentureOS
+# VentureOS | Web Intelligence agent
 
-### From market research to a customer-ready offer and prototype.
+This branch is scoped for **Web Intelligence** agent - a company-research agentic workflow.
 
-VentureOS is a business operations harness that is designed to coordinate 6 specialized AI agents (planned) to turn a target market into an evidence-backed offer, tailored outreach, and a working prototype.
+The Streamlit app is a visualization client; the FastAPI backend owns request
+understanding, web search, report generation and validation, session state, and
+follow-up answers.
 
-Built for small B2B agencies and technical consultancies connecting research, sales preparation, and delivery across disconnected tools.
+## Versioning
 
-> **Status: shared runtime foundations.** The credential-free preview remains dependency-free. Optional PostgreSQL execution adds task leases, checkpoints, approvals, budget reservations, validation, audit, and tracing interfaces. The 6 business agents, live integrations, and full production controls remain planned. See [Current State](docs/agents_todo.md#current-state).
+Current release: **V.0.1** (package version `0.1.0` in `pyproject.toml`).
+Increment the version by `0.1` for every subsequent update published to GitHub:
+the next published update is **V.0.2** (`0.2.0`). Keep this section, the
+versioning rule in `AGENTS.md`, and the package version in sync.
 
 ## Architecture
 
-**Postgres only by default, scale with optional adapters (planned).** Local disk holds files. The default command is a credential-free preview. Shared runtime foundations are available separately; this diagram shows the target architecture, with remaining components labeled planned.
-
 ```mermaid
-flowchart LR
-    User["User"] --> API["API + Auth (planned)<br/>API Keys / JWT"]
-    API --> Harness["Agent Harness<br/>Resume · Checkpoints · HITL (planned)"]
-    Harness --> Policies["Policies (planned)<br/>Budgets · Guardrails"]
-    Harness <--> Agents["Agents (planned)"]
-    Agents --> Models["Model Gateway + LLM Providers (planned)"]
-    Agents --> Tools["Tool Gateway (planned)"] --> MCP["MCP + Sandbox (planned, optional execution)"]
-    Agents --> RAG["RAG (planned)"]
-    Harness --> Storage["Storage Interfaces (planned)"]
-    RAG --> Storage
-    Storage --> PG[("PostgreSQL + pgvector (planned)<br/>State · Queue · Audit · Vectors")]
-    Storage -.-> Scale["Optional Adapters (planned)<br/>Kafka · Redis · Chroma · S3"]
+flowchart TD
+    U["User<br/>Company name, website, or follow-up"] --> UI["Streamlit UI<br/>Python · renders report and progress"]
+    UI -->|"JSON request"| API["FastAPI<br/>Pydantic validation · REST API"]
+    API --> JOB["Session and job manager<br/>In-memory state · background worker"]
+    JOB --> INTENT["1 · Understand request<br/>Gemini 3.5 Flash-Lite · JSON"]
+    INTENT --> SEARCH["2 · Collect evidence<br/>Tavily Search · 3–5 sources"]
+    SEARCH --> ANALYZE["3 · Analyze / ReAct<br/>Gemini · max 3 rounds"]
+    ANALYZE -->|"Need more evidence · focused search"| SEARCH
+    ANALYZE -->|"Draft report"| VALIDATE["4 · Validate<br/>Report schema · collected source URLs"]
+    VALIDATE --> RESULT["5 · Return result<br/>Structured report · progress events"]
+    RESULT -->|"GET job status and events"| UI
 ```
 
-Cross-cutting: OpenTelemetry tracing · Offline eval harness as a CI release gate (planned)
+Follow-up messages re-enter the same backend flow and are answered from the
+accepted report and collected evidence.
 
-Architecture details:
+## ReAct workflow
 
-- [Storage defaults and interfaces](docs/architecture/storage.md)
-- [Optional adapters](docs/architecture/adapters.md)
-- [Safety and runtime policies](docs/architecture/safety.md)
+The backend runs one bounded research worker rather than several independent model-driven subagents. It classifies the request, collects 3 to 5 distinct sources, analyzes the evidence, and can request another focused search for up to 3 rounds. Every step emits input, output, and a success/failure status for the UI. The shared evidence set keeps follow-ups grounded in the same sources. Splitting this into separate agents is a future option only if the workflow needs independent permissions or parallel research.
 
-## 6 agents. 1 harness.
+Tavily supplies search results and extracted page text; the backend retains source URLs and retrieval timestamps. The report lists only URLs returned by search and collected by the worker.
 
-Agent execution and deliverables below are (planned); role specifications and a fixed workflow preview exist today.
+The final report uses the golden-data shape: company, problem, market, ICP,
+solution, positioning, and source URLs. [The golden fixture](tests/agents_data/web_intelligence_golden_data.json) is test reference data only; the app never uses it as a live response.
 
-| Agent | Responsibility | Deliverable |
-| --- | --- | --- |
-| Web Intelligence | Research companies, problems, trends, and buying signals | Sourced evidence brief |
-| Competitive Strategy | Compare alternatives, pricing, positioning, and gaps | Ranked opportunity hypotheses |
-| Challenger Salesman | Define the ICP, commercial insight, and tailored outreach | ICP, offer, and outreach drafts |
-| Presentation Builder | Package the approved offer and unique value proposition | Concise proposal |
-| Product Builder | Build a scoped prototype, integrations, code, and tests | Tested prototype |
-| Workflow Automation | Execute approved email, CRM, onboarding, and delivery steps | Action records and outcome data |
+## Demo result
 
-The preview harness returns a fixed workflow plan. The separate RuntimeHarness executes trusted registered plugins with PostgreSQL state, permissions, runtime validation, bounded retries, tracing interfaces, and task approval. Dynamic business-agent routing remains (planned).
+Example of the structured report shown in the UI. This is demo content, not a
+guarantee of a live research result:
 
-## Quick start
+```Markdown
+**Company:** [Vercel](https://www.vercel.com/) - Vercel is a cloud application platform and developer experience platform that provides developer tools, frameworks, and managed infrastructure to build, deploy, and scale web applications, websites, and AI agents.
 
-Requires Python 3.10+. No dependencies or API keys are needed for the preview.
+**Value proposition:** Vercel is the platform where humans and AI agents build, ship, and scale software together.
 
-Run from the repository root:
+**Problem:** Frontend developers and engineering teams face friction managing underlying server infrastructure, deploying applications at scale, integrating modern AI capabilities, and optimizing web performance across global edge networks.
+
+- High complexity in setting up backend infrastructure and continuous delivery pipelines
+- Managing deployments and scaling applications across multi-tenant environments
+- Integrating conversational streaming and modern AI features into web workflows
+
+**Market:** Software Development | Cloud Platform as a Service (PaaS) / Frontend Cloud
+
+**Business model:** B2B SaaS / Tiered subscription pricing for developer tools and cloud hosting infrastructure
+
+**Target client:** Technology companies, digital agencies, and engineering teams building modern web applications
+
+**Target ICP buyer:** Chief Technology Officers, Engineering Managers, and Lead Developers
+
+**End users:** Frontend developers, Full-stack software engineers, AI agents and engineering teams
+
+**Solution:** Vercel Developer Experience Platform, Next.js, v0, and AI SDK - Provides a comprehensive frontend cloud and autonomous stack supporting Git-based deployments, global edge content delivery networks, automated CI/CD, and specialized AI development tools.
+
+**Sources:**
+
+- [https://en.wikipedia.org/wiki/Vercel](https://en.wikipedia.org/wiki/Vercel)
+- [https://tavily.com/knowledge/company/zLugO9jdLlPE](https://tavily.com/knowledge/company/zLugO9jdLlPE)
+- [https://www.linkedin.com/company/vercel](https://www.linkedin.com/company/vercel)
+- [https://vercel.com/legal/privacy-notice](https://vercel.com/legal/privacy-notice)
+```
+
+## Run locally
+
+Python 3.10+ is required. Install the branch's API and UI dependencies:
 
 ```bash
-PYTHONPATH=src python3 -m ventureos --brief examples/agency-brief.json
+python3 -m venv .venv
+.venv/bin/python -m pip install -e '.[chat,ui,test]'
 ```
 
-This prints a JSON workflow plan showing agent assignments, review checkpoints, and expected deliverables. It does not call models, browse the web, send email, or build a product.
-
-## Project structure
-
-```text
-agents/                  6 agent instruction and output contracts
-src/ventureos/
-  agents.py              Agent registry
-  contracts.py           Shared brief and workflow types
-  harness.py             Workflow preview and execution boundary
-  __main__.py            Local preview command
-integrations/            Future model, research, email, and CRM adapters
-docs/architecture.md     Execution model and acceptance criteria
-docs/architecture/       Storage, adapters, and safety (planned)
-examples/agency-brief.json
-```
-
-## Roadmap
-
-- [x] Define 6 agent roles and workflow contracts
-- [x] Add a local workflow preview
-- [ ] Connect a model provider and sourced research tools
-- [x] Implement shared task state, runtime validation, budget reservations, and lease recovery
-- [x] Implement hash-bound task approval gates
-- [ ] Implement customer-feedback branching
-- [ ] Add email and CRM adapters with duplicate-action prevention
-- [ ] Publish a reproducible end-to-end example with cost and outcome data
-
-## Contributing
-
-Start with one workflow, agent contract, or adapter. Include a sample input, expected output, and a way to verify the result. Keep generated claims separate from sourced facts and observed customer outcomes.
-
-## Inspiration
-
-README organization and architecture references: [MetaGPT](https://github.com/FoundationAgents/MetaGPT), [CrewAI](https://github.com/crewAIInc/crewAI), [AutoGen](https://github.com/microsoft/autogen) (historical reference), [LangGraph](https://github.com/langchain-ai/langgraph), and [Agency Swarm](https://github.com/VRSEN/agency-swarm). These are references, not dependencies or affiliations.
-
-## Optional shared runtime
-
-Install the optional dependencies in a virtual environment:
+Configure a Tavily key and Gemini API key in the shell or root `.env`. The
+default model is Gemini 3.5 Flash-Lite (`gemini-3.5-flash-lite`), the current
+stable Flash-Lite API model. Google lists it separately from Gemini 3.8 Flash;
+there is no Gemini 3.8 Flash-Lite text model in its current model catalog.
+Availability and free quotas depend on the Google AI Studio project and account.
 
 ```bash
-python3 -m pip install -e '.[runtime,test]'
+export TAVILY_API_KEY="..."
+export GEMINI_API_KEY="..."
+export GEMINI_MODEL="gemini-3.5-flash-lite"
+PYTHONPATH=src .venv/bin/python -m web_intelligence.api
 ```
 
-Set `VENTUREOS_DATABASE_URL` to a PostgreSQL database dedicated to VentureOS, then run:
+In another terminal:
 
 ```bash
-PYTHONPATH=src python3 -m ventureos --brief examples/agency-brief.json --execute-demo --tenant demo --run-id brief-1
+PYTHONPATH=src .venv/bin/streamlit run UI/app.py --server.address 127.0.0.1
 ```
 
-This initializes the shared tables and executes a local brief demo, not the business agents. Repeating the same ID and input reuses the stored result. CLI tenant selection is operator-only, not authentication. See [testing instructions](tests/README.md) and [runtime limits](docs/agents_todo.md#current-state).
+The API and UI bind to loopback by default. Sessions are held in process memory
+and disappear on restart. This prototype has no authentication and is not
+suitable for public deployment. Do not expose it to an untrusted network.
+
+## Local API
+
+- `POST /api/sessions` creates an in-memory conversation.
+- `POST /api/sessions/{session_id}/messages` accepts `{"message":"Stripe"}` and
+  returns a job ID.
+- `GET /api/jobs/{job_id}?after=0` returns progress events and the final result.
+  Each event includes `module`, `input`, `output`, and `status`.
+- `GET /api/sessions/{session_id}` returns conversation history.
+
+The backend is also available as `web-intelligence-api` after installation.
+
+## Verify
+
+Tests use provider doubles and the golden file; they do not call live services:
+
+```bash
+PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -p 'test_web_intelligence.py' -v
+```
