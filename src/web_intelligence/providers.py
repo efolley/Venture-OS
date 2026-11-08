@@ -87,7 +87,7 @@ class GeminiModel:
             "contents": [{"role": "user", "parts": [{"text": prompt}]}],
             "generationConfig": {
                 "temperature": 0,
-                "maxOutputTokens": 1800,
+                "maxOutputTokens": 4096,
                 "responseMimeType": "application/json",
             },
         }).encode()

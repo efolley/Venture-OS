@@ -1,1 +1,1 @@
--e .[chat,ui]
+-e .[chat,ui,test]

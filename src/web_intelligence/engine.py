@@ -93,6 +93,18 @@ def _public_https_url(value: object) -> str:
     return urlunsplit(("https", parsed.netloc, parsed.path, parsed.query, ""))
 
 
+def _user_website(value: object) -> str:
+    """Accept a website the user typed: add https:// or upgrade http:// to https://."""
+    if isinstance(value, str):
+        value = value.strip()
+        scheme = urlsplit(value).scheme.lower()
+        if not scheme or "://" not in value:
+            value = f"https://{value}"
+        elif scheme == "http":
+            value = "https://" + value.split("://", 1)[1]
+    return _public_https_url(value)
+
+
 def _normalized_company_website(value: object) -> tuple[str, str]:
     website_value = value
     if isinstance(website_value, str) and not urlsplit(website_value.strip()).scheme:
@@ -102,10 +114,36 @@ def _normalized_company_website(value: object) -> tuple[str, str]:
     return website, host.removeprefix("www.") if host else ""
 
 
+_NAME_SUFFIXES = {
+    "inc", "incorporated", "corp", "corporation", "co", "company", "ltd", "limited",
+    "llc", "plc", "gmbh", "ag", "sa", "technologies", "technology", "labs", "ai", "hq",
+}
+
+
+def _name_key(value: str) -> str:
+    words = re.sub(r"[^\w\s]", " ", value.casefold()).split()
+    while len(words) > 1 and words[-1] in _NAME_SUFFIXES:
+        words.pop()
+    return " ".join(words)
+
+
+def _same_company(requested: str, reported: str) -> bool:
+    """Tolerate legal suffixes, punctuation and short/long forms of one name."""
+    left, right = _name_key(requested), _name_key(reported)
+    if not left or not right:
+        return False
+    return left == right or left.replace(" ", "") == right.replace(" ", "") or (
+        re.search(rf"\b{re.escape(left)}\b", right) is not None
+        or re.search(rf"\b{re.escape(right)}\b", left) is not None
+    )
+
+
 def _checked_report(
     value: object,
     evidence: list[Evidence],
     requested_website: str = "",
+    *,
+    require_website_source: bool = True,
 ) -> Report:
     raw = _as_json_object(value, "The model returned an invalid report structure.")
     if set(raw) != {*REPORT_FIELDS, "sources"}:
@@ -151,7 +189,7 @@ def _checked_report(
 
     company = _as_json_object(report["company"], "The report has no company section.")
     website, normalized_company_host = _normalized_company_website(company["website"])
-    if not any(
+    if require_website_source and not any(
         (urlsplit(url).hostname or "").removeprefix("www.") == normalized_company_host
         for url in allowed
     ):
@@ -185,12 +223,10 @@ class ResearchEngine:
         requested_website = ""
         stripped = message.strip()
         if re.fullmatch(r"https?://\S+|(?:[\w-]+\.)+[A-Za-z]{2,}(?:/\S*)?", stripped):
-            candidate = stripped if "://" in stripped else f"https://{stripped}"
-            requested_website = _public_https_url(candidate)
             intent: JsonObject = {
                 "action": "research",
                 "company": "",
-                "website": requested_website,
+                "website": stripped,
             }
         else:
             intent = self.model.json(
@@ -203,6 +239,22 @@ class ResearchEngine:
                 }),
             )
         action = intent.get("action")
+        upgrade_note = ""
+        raw_website = intent.get("website")
+        if action == "research" and isinstance(raw_website, str) and raw_website.strip():
+            # Query understanding owns website normalization: http:// is always
+            # upgraded to https:// before any search, and the change is reported.
+            try:
+                requested_website = _user_website(raw_website)
+            except ValueError as error:
+                progress("understanding", stripped, {**intent, "error": str(error)}, "failure")
+                raise
+            intent = {**intent, "website": requested_website}
+            if urlsplit(raw_website.strip()).scheme.lower() == "http":
+                intent["website_upgraded"] = {"from": raw_website.strip(), "to": requested_website}
+                upgrade_note = (
+                    f" I used {requested_website} because only HTTPS websites are supported."
+                )
         progress("understanding", stripped, intent, "success")
         if action == "clarify":
             question = intent.get("question")
@@ -222,9 +274,6 @@ class ResearchEngine:
         if not isinstance(raw_company, str):
             raise ValueError("The language model did not identify a company.")
         company = raw_company.strip()[:200]
-        website = intent.get("website")
-        if website:
-            requested_website = _public_https_url(website)
         website_host = urlsplit(requested_website).hostname if requested_website else ""
         target_query = " ".join(part for part in (company, website_host) if part)
         query = target_query
@@ -339,19 +388,60 @@ class ResearchEngine:
                 {"status": "checking output shape and source URLs"},
                 "running",
             )
-            accepted = _checked_report(
-                response.get("report"), evidence, requested_website
-            )
-            if company and accepted["company"]["name"].casefold() != company.casefold():
-                raise ValueError("The report company does not match the requested company.")
+            try:
+                accepted = self._accept(response, evidence, requested_website, company)
+            except ValueError as error:
+                # One corrective retry: send the validation error back to the model.
+                progress(
+                    "validating",
+                    {"report": response.get("report")},
+                    {"status": "retrying after validation error", "error": str(error)},
+                    "running",
+                )
+                response = self.model.json(
+                    REPORT_SYSTEM,
+                    json.dumps({
+                        "company": company,
+                        "requested_website": requested_website,
+                        "question": stripped,
+                        "sources": evidence,
+                        "allowed_source_urls": [item["url"] for item in evidence],
+                        "previous_report": response.get("report"),
+                        "validation_error": str(error),
+                        "instruction": "Return a corrected report (action report) "
+                        "that fixes the validation error.",
+                    }),
+                )
+                accepted = self._accept(response, evidence, requested_website, company)
             progress("validating", response, accepted, "success")
             state.update(report=accepted, evidence=evidence, target=accepted["company"])
             return {
                 "kind": "report",
-                "message": f"Here is the sourced company report for {accepted['company']['name']}.",
+                "message": f"Here is the sourced company report for {accepted['company']['name']}."
+                + upgrade_note,
                 "report": accepted,
             }
         raise ValueError("Research reached its search-round limit without a report.")
+
+    @staticmethod
+    def _accept(
+        response: JsonObject,
+        evidence: list[Evidence],
+        requested_website: str,
+        company: str,
+    ) -> Report:
+        if response.get("action") != "report":
+            raise ValueError("The model did not produce a report.")
+        # Final round: an official site missing from search results is not fatal.
+        accepted = _checked_report(
+            response.get("report"),
+            evidence,
+            requested_website,
+            require_website_source=False,
+        )
+        if company and not _same_company(company, accepted["company"]["name"]):
+            raise ValueError("The report company does not match the requested company.")
+        return accepted
 
     def _follow_up(
         self,
