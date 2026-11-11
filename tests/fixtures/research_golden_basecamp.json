@@ -1,0 +1,101 @@
+{
+  "note": "Test fixture. Page texts are short excerpts adapted from a saved Basecamp research run (2026-11-01). The wrong-entity page is a rewritten stand-in for a Basecamp Outdoor jobs page. It tests extraction contracts and grounding boundaries, not model accuracy.",
+  "company": {
+    "name": "Basecamp",
+    "website": "https://basecamp.com"
+  },
+  "pages": [
+    {
+      "url": "https://basecamp.com",
+      "title": "Basecamp",
+      "text": "Basecamp Skip to main content We’d like to use cookies to help understand if our ads are working or not. No, thanks Yes, that’s fine Have an account? Sign in Want an account? Sign up free Menu Pricing & sign up. Manage projects, coordinate teams, and master your company with Basecamp. Today, Basecamp is used across every industry, and nearly a million people, teams, companies, and non-profits worldwide rely on it daily for all sorts of things. Rather than rent cloud hosting, we own and run our hardware across multiple data centers. We’ve maintained an industry-leading 99.99% uptime record for years."
+    },
+    {
+      "url": "https://basecamp.com/5",
+      "title": "Basecamp 5 is all new for 2026",
+      "text": "Basecamp — Basecamp 5 is all new for 2026 Skip to main content We’d like to use cookies to help understand if our ads are working or not. No, thanks Yes, that’s fine Basecamp 5 is all new for 2026 With well over 100 significant improvements, Basecamp 5 is faster, simpler, and more capable than ever before."
+    },
+    {
+      "url": "https://www.wearetheoutdoorindustry.com/jobs",
+      "title": "Jobs - Basecamp Outdoor",
+      "text": "Basecamp Outdoor connects job seekers with outdoor industry employers. Browse open roles at Backbone, Cotopaxi, and Vail Resorts."
+    },
+    {
+      "url": "https://news.ycombinator.com/item?id=43778151",
+      "title": "Ask HN: Is Basecamp Good?",
+      "text": "Ask HN: Is Basecamp Good? Extremely opinionated design, which forces you to work in a certain way, which might or might not be the best way to be productive. Alternatives have caught up. The notifications system is buggy and doesn’t work very well. Nowadays we use Linear for both work and personal projects. No. We use ClickUp now and will never go back."
+    }
+  ],
+  "claims": [
+    {
+      "source_url": "https://basecamp.com",
+      "category": "customers",
+      "basis": "fact",
+      "text": "The company says nearly a million people, teams, companies, and non-profits rely on Basecamp daily.",
+      "quote": "Today, Basecamp is used across every industry, and nearly a million people, teams, companies, and non-profits worldwide rely on it daily for all sorts of things."
+    },
+    {
+      "source_url": "https://basecamp.com",
+      "category": "product",
+      "basis": "fact",
+      "text": "The company says it has kept 99.99% uptime for years on hardware it owns.",
+      "quote": "We’ve maintained an industry-leading 99.99% uptime record for years."
+    },
+    {
+      "source_url": "https://basecamp.com/5",
+      "category": "signals",
+      "basis": "fact",
+      "text": "The company says Basecamp 5 brings well over 100 significant improvements.",
+      "quote": "With well over 100 significant improvements, Basecamp 5 is faster, simpler, and more capable than ever before."
+    },
+    {
+      "source_url": "https://news.ycombinator.com/item?id=43778151",
+      "category": "risks",
+      "basis": "fact",
+      "text": "A forum commenter says the design is opinionated and forces one way of working.",
+      "quote": "Extremely opinionated design, which forces you to work in a certain way, which might or might not be the best way to be productive."
+    },
+    {
+      "source_url": "https://news.ycombinator.com/item?id=43778151",
+      "category": "risks",
+      "basis": "fact",
+      "text": "A forum commenter says the notification system is buggy.",
+      "quote": "The notifications system is buggy and doesn’t work very well."
+    },
+    {
+      "source_url": "https://news.ycombinator.com/item?id=43778151",
+      "category": "competitors",
+      "basis": "fact",
+      "text": "A forum commenter says they now use Linear for work and personal projects.",
+      "quote": "Nowadays we use Linear for both work and personal projects."
+    },
+    {
+      "source_url": "https://news.ycombinator.com/item?id=43778151",
+      "category": "competitors",
+      "basis": "fact",
+      "text": "A forum commenter says they use ClickUp and will not go back.",
+      "quote": "No. We use ClickUp now and will never go back."
+    }
+  ],
+  "expected": {
+    "rejected_url": "https://www.wearetheoutdoorindustry.com/jobs",
+    "rejected_reason": "does not mention the company website",
+    "coverage": {
+      "company": 0,
+      "product": 1,
+      "pricing": 0,
+      "customers": 1,
+      "market": 0,
+      "competitors": 2,
+      "trends": 0,
+      "signals": 1,
+      "risks": 2
+    },
+    "gaps": [
+      "company",
+      "pricing",
+      "market",
+      "trends"
+    ]
+  }
+}

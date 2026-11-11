@@ -1,10 +1,10 @@
 # Agent TODO lists
 
-Checked items are implemented shared foundations. Unchecked agent items remain planned. The 6 business agents are not implemented; the optional runtime currently supports trusted registered plugins and a local brief demo. Complete an item only when implemented and verified.
+Checked items are implemented shared foundations. Unchecked agent items remain planned. Only the Research agent is implemented, as a standalone module that is not connected to the harness; the optional runtime currently supports trusted registered plugins and a local brief demo. Complete an item only when implemented and verified.
 
 ## Current State
 
-VentureOS has shared runtime foundations and an optional PostgreSQL demo, but the 6 business agents and live integrations are not connected yet.
+VentureOS has shared runtime foundations and an optional PostgreSQL demo, The Research agent runs standalone (see [Research agent](research.md)); the other business agents and live integrations are not implemented.
 From the repository root, run `PYTHONPATH=src python3 -m ventureos --brief examples/agency-brief.json` without credentials or extra dependencies.
 Expect a JSON workflow preview showing planned tasks, agent assignments, and review checkpoints; this command does not research companies, call models, or perform external actions.
 
@@ -19,16 +19,24 @@ Expect a JSON workflow preview showing planned tasks, agent assignments, and rev
 
 ## Web Intelligence
 
-- [ ] Define company research input and structured evidence output schemas.
+- [x] Define company research input and structured evidence output schemas.
 - [ ] Add web search and fetch adapters with timeouts, rate limits, source timestamps, and safe URL handling.
 - [ ] Gather company pages, news, job postings, and credible supporting sources.
-- [ ] Extract problems, trends, and buying signals with structured model output.
-- [ ] Attach evidence and distinguish observed facts from inferences and unknowns.
+- [x] Extract problems, trends, and buying signals with structured model output.
+- [x] Attach evidence and distinguish observed facts from inferences and unknowns.
 - [ ] Store runs, source records, and structured findings in PostgreSQL; use BlobStore for large snapshots.
 - [ ] Implement tenant-scoped save, retrieve, and refresh operations without RAG.
 - [ ] Validate evidence coverage, freshness, conflicting findings, and output structure.
 - [ ] Integrate harness checkpoints, bounded retries, deadlines, budgets, and accepted handoffs.
 - [ ] Add evals for extraction quality, stale sources, source failures, prompt injection, PII handling, and tenant isolation.
+
+## Company Snapshot
+
+- [x] Define the profile contract in agents/company_snapshot.md.
+- [ ] Define the profile schema with claim-ID citations.
+- [ ] Implement profile generation from an accepted evidence brief.
+- [ ] Validate that every statement cites claim IDs and adds no new claims.
+- [ ] Add evals for unsupported statements and empty-field handling.
 
 ## Competitive Strategy
 

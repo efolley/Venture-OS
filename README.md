@@ -6,7 +6,7 @@ VentureOS is a business operations harness that is designed to coordinate 7 spec
 
 Built for small B2B agencies and technical consultancies connecting research, sales preparation, and delivery across disconnected tools.
 
-> **Status: shared runtime foundations.** The credential-free preview remains dependency-free. Optional PostgreSQL execution adds task leases, checkpoints, approvals, budget reservations, validation, audit, and tracing interfaces. The 7 business agents, live integrations, and full production controls remain planned. See [Current State](docs/agents_todo.md#current-state).
+> **Status: shared runtime foundations.** The credential-free preview remains dependency-free. Optional PostgreSQL execution adds task leases, checkpoints, approvals, budget reservations, validation, audit, and tracing interfaces. The Research agent (agent 1) runs standalone with a local API and viewer and is not connected to the harness yet; see [docs/research.md](docs/research.md). The other 6 business agents, live integrations, and full production controls remain planned. See [Current State](docs/agents_todo.md#current-state).
 
 ## Architecture
 
@@ -83,7 +83,7 @@ Agent execution and deliverables below are (planned); role specifications and a 
 | 6 | Product Builder | Build a scoped mini-MVP of a similar solution | Architecture, tested prototype, demo GIF |
 | 7 | Executor (Workflow Automation) | Execute approved email, CRM, onboarding, and delivery steps and track work to completion | Action records and outcome data |
 
-Contracts exist today for 6 of the 7 roles. The Company Snapshot contract is planned. The preview harness returns a fixed workflow plan that still lists the earlier 6-agent set. The separate RuntimeHarness executes trusted registered plugins with PostgreSQL state, permissions, runtime validation, bounded retries, tracing interfaces, and task approval. Dynamic business-agent routing remains (planned).
+Contracts exist for all 7 roles. Only Research is implemented, as a standalone agent that is not connected to the harness. The preview harness returns a fixed workflow plan that still lists the earlier 6-agent set. The separate RuntimeHarness executes trusted registered plugins with PostgreSQL state, permissions, runtime validation, bounded retries, tracing interfaces, and task approval. Dynamic business-agent routing remains (planned).
 
 ## Quick start
 
@@ -100,16 +100,19 @@ This prints a JSON workflow plan showing agent assignments, review checkpoints, 
 ## Project structure
 
 ```text
-agents/                  agent instruction and output contracts (6 today, Company Snapshot planned)
+agents/                  7 agent instruction and output contracts
 src/ventureos/
   agents.py              Agent registry
   contracts.py           Shared brief and workflow types
   harness.py             Workflow preview and execution boundary
   __main__.py            Local preview command
+  research/              Research agent: engine, providers, local API, renderer
 integrations/            Future model, research, email, and CRM adapters
 docs/architecture.md     Execution model and acceptance criteria
 docs/architecture/       Storage, adapters, and safety (planned)
 examples/agency-brief.json
+UI/app.py                Streamlit page for the Research agent
+docs/research.md         Research agent usage, claim schema, and limits
 ```
 
 ## Roadmap
@@ -120,8 +123,11 @@ examples/agency-brief.json
 - [x] Implement shared task state, runtime validation, budget reservations, and lease recovery
 - [x] Implement hash-bound task approval gates
 - [ ] Implement customer-feedback branching
-- [ ] Define the Company Snapshot contract and the evidence and claims schema
-- [ ] Add the evidence and claims store with claim IDs
+- [x] Define the Company Snapshot contract and the evidence and claims schema
+- [x] Build the standalone Research agent with cited claims, verbatim quote checks, and a local API and viewer
+- [ ] Connect the Research agent to the harness runtime and model gateway
+- [ ] Add category-driven searches and an entailment check to Research
+- [ ] Persist the evidence and claims store in PostgreSQL
 - [ ] Add eval gates between pipeline stages
 - [ ] Ship a thin end-to-end slice for 1 company across all 7 agents
 - [ ] Run the Executor in draft and dry-run mode with mock adapters

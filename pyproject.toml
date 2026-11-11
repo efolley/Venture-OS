@@ -5,16 +5,23 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "ventureos"
 version = "0.1.0"
-description = "Business operations harness for six specialized agents (early scaffold)"
+description = "Business operations harness for 7 specialized agents (early scaffold)"
 requires-python = ">=3.10"
 dependencies = []
 
 [project.optional-dependencies]
 runtime = ["psycopg[binary]>=3.2,<4", "opentelemetry-api>=1.27,<2"]
-test = ["opentelemetry-sdk>=1.27,<2"]
+agent = [
+    "deepagents>=0.7; python_version >= '3.11'",
+    "langchain-google-genai>=4,<5; python_version >= '3.11'",
+]
+chat = ["fastapi>=0.110,<1", "python-dotenv>=1.0,<2", "uvicorn>=0.29,<1"]
+ui = ["streamlit>=1.35,<2"]
+test = ["opentelemetry-sdk>=1.27,<2", "httpx>=0.27,<0.29"]
 
 [project.scripts]
 ventureos = "ventureos.__main__:main"
+ventureos-research-api = "ventureos.research.api:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

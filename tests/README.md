@@ -2,7 +2,7 @@
 
 ## Setup
 
-Use a virtual environment and install `python3 -m pip install -e '.[runtime,test]'`. The preview alone needs no optional dependencies.
+Use a virtual environment and install `python3 -m pip install -e '.[runtime,chat,test]'`. The preview alone needs no optional dependencies.
 
 For the full suite, set `VENTUREOS_TEST_DSN` to a disposable PostgreSQL database. Tests initialize ventureos_tasks and ventureos_audit and write isolated test tenants. Never use a production database. Without this variable, database tests skip; this is not a complete runtime verification.
 
@@ -24,6 +24,7 @@ Reports in reports/ preserve the existing per-task pre-implementation failures a
 | 4: runtime policies | test_runtime.py | 04_pre.txt, 04_post.txt |
 | 5: safety, evals, tracing | test_safety.py, test_telemetry.py | 05_pre.txt, 05_post.txt |
 | 6: preview and optional execution | test_preview.py, test_runtime_cli.py | 06_pre.txt, 06_post.txt |
+| Research agent | test_research.py, test_research_policy.py, fixtures/research_golden_basecamp.json | none; offline doubles, no live calls |
 
 Tests cover negative authorization, invalid artifacts, duplicate submission, competing claims, locked rows, expired leases, restart checkpoints, atomic budget reservations, approval changes, retries, deadlines, content filtering, and payload-free tracing. The offline fixtures are a small content-policy regression set, not a benchmark of business agent quality.
 

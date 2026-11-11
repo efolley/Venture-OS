@@ -1,6 +1,6 @@
 # Agent information
 
-VentureOS coordinates 6 specialized agents through 1 central harness. The code provides role specifications, a fixed workflow preview, and shared runtime foundations for trusted plugins. The 6 business agent implementations and their functionality below remain (planned). See [Current State](agents_todo.md#current-state).
+VentureOS coordinates 7 specialized agents through 1 central harness. The code provides role specifications, a fixed workflow preview, and shared runtime foundations for trusted plugins. Only the Research agent (Web Intelligence) is implemented, as a standalone module not yet connected to the harness (see [Research agent](research.md)). The other business agent implementations and their functionality below remain (planned). See [Current State](agents_todo.md#current-state).
 
 The initial audience is small B2B agencies and technical consultancies. The target deployment is PostgreSQL by default with local files and optional scale adapters; persistence is not implemented yet.
 
