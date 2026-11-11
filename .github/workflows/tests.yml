@@ -1,4 +1,4 @@
-name: Web Intelligence tests
+name: Competitive Strategy tests
 on: [push, pull_request]
 jobs:
   test:
@@ -9,5 +9,11 @@ jobs:
         with:
           python-version: '3.10'
       # Offline tests only: provider doubles, no live web or model calls.
-      - run: python -m pip install -e '.[chat,test]'
-      - run: python -m unittest discover -s tests -v
+      - run: python -m pip install -e '.[strategy,test]'
+      - name: Run tests
+        run: |
+          if ls tests/test_*.py >/dev/null 2>&1; then
+            python -m unittest discover -s tests -v
+          else
+            echo "No Competitive Strategy tests yet (module is planned)."
+          fi
