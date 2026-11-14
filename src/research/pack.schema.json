@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ventureos.local/schemas/research-evidence-pack-v3.json",
+  "title": "Research agent evidence pack",
+  "description": "Schema v3. Every value in company, market, competitors, and sales is a list of evidence IDs.",
+  "type": "object",
+  "required": ["schema_version", "run_id", "parent_run_id", "status", "company", "market", "competitors", "sales", "evidence", "sources", "coverage", "limits_hit", "uncertainties", "rejected_sources"],
+  "properties": {
+    "schema_version": {"const": 3},
+    "run_id": {"type": "string"},
+    "parent_run_id": {"type": ["string", "null"]},
+    "status": {"enum": ["complete", "partial"]},
+    "company": {
+      "type": "object",
+      "required": ["name", "website", "offering"],
+      "properties": {
+        "name": {"type": "string"},
+        "website": {"type": "string"},
+        "offering": {"$ref": "#/$defs/ids"}
+      }
+    },
+    "market": {
+      "type": "object",
+      "required": ["category", "size_growth", "trends"],
+      "properties": {
+        "category": {"$ref": "#/$defs/ids"},
+        "size_growth": {"$ref": "#/$defs/ids"},
+        "trends": {"$ref": "#/$defs/ids"}
+      },
+      "additionalProperties": false
+    },
+    "competitors": {
+      "type": "array",
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "required": ["name", "website", "evidence_ids", "positioning", "pricing", "pricing_status"],
+        "properties": {
+          "name": {"type": "string"},
+          "website": {"type": "string"},
+          "evidence_ids": {"$ref": "#/$defs/ids"},
+          "positioning": {"$ref": "#/$defs/ids"},
+          "pricing": {"$ref": "#/$defs/ids"},
+          "pricing_status": {"enum": ["found", "not_published", "not_checked"]}
+        }
+      }
+    },
+    "sales": {
+      "type": "object",
+      "required": ["target_customer", "buyer_role", "pricing_model", "channel", "buying_signals"],
+      "properties": {
+        "target_customer": {"$ref": "#/$defs/ids"},
+        "buyer_role": {"$ref": "#/$defs/ids"},
+        "pricing_model": {"$ref": "#/$defs/ids"},
+        "channel": {"$ref": "#/$defs/ids"},
+        "buying_signals": {"$ref": "#/$defs/ids"}
+      },
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "statement", "excerpt", "basis", "tags", "source_id", "url", "retrieved_at", "published_at", "competitor", "round"],
+        "properties": {
+          "id": {"type": "string"},
+          "statement": {"type": "string", "minLength": 15, "maxLength": 400},
+          "excerpt": {"type": "string", "minLength": 25, "maxLength": 400},
+          "basis": {"enum": ["fact", "inference"]},
+          "tags": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/tag"}},
+          "source_id": {"type": "string"},
+          "url": {"type": "string", "pattern": "^https://"},
+          "retrieved_at": {"type": "string"},
+          "published_at": {"type": ["string", "null"]},
+          "competitor": {
+            "oneOf": [
+              {"type": "null"},
+              {"type": "object", "required": ["name", "website"], "properties": {"name": {"type": "string"}, "website": {"type": "string"}}}
+            ]
+          },
+          "round": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "url", "title", "kind", "retrieved_at", "published_at"],
+        "properties": {
+          "id": {"type": "string"},
+          "url": {"type": "string", "pattern": "^https://"},
+          "title": {"type": "string"},
+          "kind": {"enum": ["first_party", "competitor", "aggregator", "review", "forum", "reference", "news", "other"]},
+          "retrieved_at": {"type": "string"},
+          "published_at": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "required": ["company", "market", "competitors", "sales"],
+      "additionalProperties": {
+        "type": "object",
+        "required": ["status", "missing"],
+        "properties": {
+          "status": {"enum": ["complete", "partial"]},
+          "missing": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "limits_hit": {"type": "array", "items": {"enum": ["rounds", "sources", "model_calls"]}},
+    "uncertainties": {"type": "array", "items": {"type": "string"}},
+    "rejected_sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url", "reason", "round"],
+        "properties": {"url": {"type": "string"}, "reason": {"type": "string"}, "round": {"type": "integer"}}
+      }
+    }
+  },
+  "$defs": {
+    "ids": {"type": "array", "items": {"type": "string"}},
+    "tag": {"enum": ["company.offering", "market.category", "market.size_growth", "market.trends", "competitors.alternative", "competitors.positioning", "competitors.pricing", "sales.target_customer", "sales.buyer_role", "sales.pricing_model", "sales.channel", "sales.buying_signals"]}
+  }
+}

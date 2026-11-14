@@ -1,0 +1,374 @@
+{
+  "schema_version": 3,
+  "run_id": "45df2d2a-2283-4a69-b5c4-f454a14a79d4",
+  "parent_run_id": null,
+  "status": "partial",
+  "company": {
+    "name": "Baseteen",
+    "website": "https://baseten.co/",
+    "offering": [
+      "e1",
+      "e2",
+      "e3",
+      "e4",
+      "e5"
+    ]
+  },
+  "market": {
+    "category": [
+      "e7",
+      "e8"
+    ],
+    "size_growth": [],
+    "trends": []
+  },
+  "competitors": [
+    {
+      "name": "Modal",
+      "website": "",
+      "evidence_ids": [
+        "e9"
+      ],
+      "positioning": [],
+      "pricing": [],
+      "pricing_status": "not_checked"
+    }
+  ],
+  "sales": {
+    "target_customer": [],
+    "buyer_role": [],
+    "pricing_model": [
+      "e6"
+    ],
+    "channel": [],
+    "buying_signals": []
+  },
+  "evidence": [
+    {
+      "id": "e1",
+      "statement": "Baseten provides an inference platform for deploying AI models in production.",
+      "excerpt": "Inference is everything The fastest model runtimes, cross-cloud high availability, and seamless developer workflows. Powered by the Baseten Inference Stack.",
+      "basis": "fact",
+      "tags": [
+        "company.offering"
+      ],
+      "source_id": "s2",
+      "url": "https://www.baseten.co",
+      "retrieved_at": "2026-11-14T22:52:08.144930+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 1
+    },
+    {
+      "id": "e2",
+      "statement": "Baseten offers Multi-cloud Capacity Management (MCM) to provision and manage GPUs across cloud providers and geographic regions.",
+      "excerpt": "Multi-cloud Capacity Management (MCM) provisions and manages GPUs across cloud providers and geographic regions.",
+      "basis": "fact",
+      "tags": [
+        "company.offering"
+      ],
+      "source_id": "s1",
+      "url": "https://docs.baseten.co/concepts/howbasetenworks",
+      "retrieved_at": "2026-11-14T22:52:08.144205+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 1
+    },
+    {
+      "id": "e3",
+      "statement": "Baseten enables users to run training with Loops SDK and deploy models to production inference on the same stack.",
+      "excerpt": "Run Training on Baseten Train your models with frontier RL using the Loops SDK and easily deploy them to production inference on the same stack.",
+      "basis": "fact",
+      "tags": [
+        "company.offering"
+      ],
+      "source_id": "s2",
+      "url": "https://www.baseten.co",
+      "retrieved_at": "2026-11-14T22:52:08.144930+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 1
+    },
+    {
+      "id": "e4",
+      "statement": "Baseten provides pre-optimized model APIs to test new workloads, prototype products, or evaluate the latest AI models.",
+      "excerpt": "Pre-optimized Model APIs Test new workloads, prototype products, or evaluate the latest AI models optimized to be the fastest in production — instantly.",
+      "basis": "fact",
+      "tags": [
+        "company.offering"
+      ],
+      "source_id": "s2",
+      "url": "https://www.baseten.co",
+      "retrieved_at": "2026-11-14T22:52:08.144930+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 1
+    },
+    {
+      "id": "e5",
+      "statement": "Users can get the performance of a managed service directly in their own VPCs with self-hosted options.",
+      "excerpt": "Self-hosted Get the low latency, high throughput, and dev experience you expect from a managed service, right in your own VPCs.",
+      "basis": "fact",
+      "tags": [
+        "company.offering"
+      ],
+      "source_id": "s2",
+      "url": "https://www.baseten.co",
+      "retrieved_at": "2026-11-14T22:52:08.144930+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 1
+    },
+    {
+      "id": "e6",
+      "statement": "Baseten offers transparent usage-based pricing with no contracts or capacity planning required for pay-as-you-go users.",
+      "excerpt": "No contracts or capacity planning. Use Model APIs, Dedicated Inference, Training, and Sandboxes with transparent usage-based pricing.",
+      "basis": "fact",
+      "tags": [
+        "sales.pricing_model"
+      ],
+      "source_id": "s6",
+      "url": "https://baseten.co/pricing/self-hosted",
+      "retrieved_at": "2026-11-14T22:52:12.894080+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 2
+    },
+    {
+      "id": "e7",
+      "statement": "Baseten is an inference platform that serves and scales open-source and custom AI models.",
+      "excerpt": "Baseten is an inference platform that serves and scales open-source and custom AI models on the fastest, most reliable inference platform.",
+      "basis": "fact",
+      "tags": [
+        "market.category"
+      ],
+      "source_id": "s7",
+      "url": "https://tavily.com/knowledge/company/xALCrbT2rzWZ",
+      "retrieved_at": "2026-11-14T22:52:17.134255+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 3
+    },
+    {
+      "id": "e8",
+      "statement": "Baseten operates in the AI infrastructure space and provides an AI infrastructure platform offering tooling, expertise, and hardware.",
+      "excerpt": "Baseten is a software development company based in San Francisco, California, operating in the AI infrastructure space. It provides an AI infrastructure platform offering tooling, expertise, and hardware to help bring AI products to market quickly.",
+      "basis": "fact",
+      "tags": [
+        "market.category"
+      ],
+      "source_id": "s8",
+      "url": "https://leadiq.com/c/baseten/60a7c0443b112d2d98663d58/email-format",
+      "retrieved_at": "2026-11-14T22:52:17.135673+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 3
+    },
+    {
+      "id": "e9",
+      "statement": "Modal is a managed serverless competitor to Baseten.",
+      "excerpt": "The strongest Baseten alternatives for production LLM inference sort into three archetypes: managed serverless platforms (Modal, RunPod, Cerebrium), OpenAI-compatible model APIs (Fireworks AI, Together AI), and dedicated or self-managed GPU offerings (Anyscale, AWS SageMaker).",
+      "basis": "fact",
+      "tags": [
+        "competitors.alternative"
+      ],
+      "source_id": "s9",
+      "url": "https://cerebrium.ai/resources/baseten-alternatives-production-llm-inference",
+      "retrieved_at": "2026-11-14T22:52:20.776964+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Modal",
+        "website": ""
+      },
+      "round": 4
+    }
+  ],
+  "sources": [
+    {
+      "id": "s1",
+      "url": "https://docs.baseten.co/concepts/howbasetenworks",
+      "title": "How Baseten works - Baseten",
+      "kind": "first_party",
+      "retrieved_at": "2026-11-14T22:52:08.144205+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s2",
+      "url": "https://www.baseten.co",
+      "title": "Inference Platform: Deploy AI models in production | Baseten",
+      "kind": "first_party",
+      "retrieved_at": "2026-11-14T22:52:08.144930+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s3",
+      "url": "https://www.baseten.co/blog/ten-reasons-to-join-baseten",
+      "title": "Ten reasons to join Baseten",
+      "kind": "first_party",
+      "retrieved_at": "2026-11-14T22:52:08.145911+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s4",
+      "url": "https://www.baseten.co/blog/introducing-baseten",
+      "title": "The platform for inference, training, and execution | Baseten",
+      "kind": "first_party",
+      "retrieved_at": "2026-11-14T22:52:08.145944+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s5",
+      "url": "https://www.baseten.co/resources/customers/openevidence-delivers-instant-medical-information-with-baseten",
+      "title": "The platform for inference, training, and execution | Baseten",
+      "kind": "first_party",
+      "retrieved_at": "2026-11-14T22:52:08.145974+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s6",
+      "url": "https://baseten.co/pricing/self-hosted",
+      "title": "The platform for inference, training, and execution | Baseten",
+      "kind": "first_party",
+      "retrieved_at": "2026-11-14T22:52:12.894080+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s7",
+      "url": "https://tavily.com/knowledge/company/xALCrbT2rzWZ",
+      "title": "Baseten",
+      "kind": "other",
+      "retrieved_at": "2026-11-14T22:52:17.134255+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s8",
+      "url": "https://leadiq.com/c/baseten/60a7c0443b112d2d98663d58/email-format",
+      "title": "Baseten Email Formats & Email Address Examples | LeadIQ",
+      "kind": "aggregator",
+      "retrieved_at": "2026-11-14T22:52:17.135673+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s9",
+      "url": "https://cerebrium.ai/resources/baseten-alternatives-production-llm-inference",
+      "title": "Baseten Alternatives for Production LLM Inference",
+      "kind": "other",
+      "retrieved_at": "2026-11-14T22:52:20.776964+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s10",
+      "url": "https://leadiq.com/c/baseten/60a7c0443b112d2d98663d58",
+      "title": "Baseten Company Overview, Contact Details & Competitors | LeadIQ",
+      "kind": "aggregator",
+      "retrieved_at": "2026-11-14T22:52:20.782461+00:00",
+      "published_at": null
+    }
+  ],
+  "coverage": {
+    "company": {
+      "status": "complete",
+      "missing": []
+    },
+    "market": {
+      "status": "partial",
+      "missing": [
+        "market.size_growth",
+        "market.trends"
+      ]
+    },
+    "competitors": {
+      "status": "partial",
+      "missing": [
+        "competitors.alternative",
+        "competitors.website:Modal",
+        "competitors.positioning:Modal",
+        "competitors.pricing:Modal"
+      ]
+    },
+    "sales": {
+      "status": "partial",
+      "missing": [
+        "sales.target_customer",
+        "sales.buyer_role",
+        "sales.channel"
+      ]
+    }
+  },
+  "limits_hit": [
+    "rounds"
+  ],
+  "uncertainties": [],
+  "rejected_sources": [
+    {
+      "url": "https://www.baseten.co/resources/changelog/usage-based-pricing-with-no-platform-fee",
+      "reason": "company website page limit reached",
+      "round": 2
+    },
+    {
+      "url": "https://baseten.co/pricing",
+      "reason": "company pricing and customer page limit reached",
+      "round": 2
+    },
+    {
+      "url": "https://www.baseten.co/pricing",
+      "reason": "company pricing and customer page limit reached",
+      "round": 2
+    },
+    {
+      "url": "https://www.baseten.co/blog/announcing-our-series-f",
+      "reason": "company website page limit reached",
+      "round": 3
+    },
+    {
+      "url": "https://www.baseten.co/blog/announcing-baseten-s-300m-series-e",
+      "reason": "company website page limit reached",
+      "round": 3
+    },
+    {
+      "url": "https://cloud.google.com/blog/products/ai-machine-learning/how-baseten-achieves-better-cost-performance-for-ai-inference",
+      "reason": "does not mention the company",
+      "round": 3
+    },
+    {
+      "url": "https://www.digitalocean.com/resources/articles/baseten-alternatives",
+      "reason": "does not mention the company",
+      "round": 4
+    },
+    {
+      "url": "https://www.spheron.network/blog/baseten-alternatives",
+      "reason": "does not mention the company",
+      "round": 4
+    },
+    {
+      "url": "https://www.runpod.io/articles/alternatives/baseten",
+      "reason": "does not mention the company",
+      "round": 4
+    },
+    {
+      "url": "https://checkthat.ai/brands/modal/pricing",
+      "reason": "does not mention the company",
+      "round": 5
+    },
+    {
+      "url": "https://www.beam.cloud/blog/modal-pricing-explained",
+      "reason": "does not mention the company",
+      "round": 5
+    },
+    {
+      "url": "https://blaxel.ai/blog/modal-pricing-alternatives-guide",
+      "reason": "does not mention the company",
+      "round": 5
+    },
+    {
+      "url": "https://modal.com/pricing",
+      "reason": "does not mention the company",
+      "round": 5
+    },
+    {
+      "url": "https://modal.com/docs/guide/billing",
+      "reason": "does not mention the company",
+      "round": 5
+    }
+  ]
+}

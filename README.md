@@ -1,159 +1,107 @@
-# VentureOS
+# VentureOS Research agent
 
-### From a company name or URL to market positioning, a GTM and sales strategy, and a working mini-MVP.
+> Version V.0.1 (`0.1.0`). Branch `agents/research`.
 
-VentureOS is a business operations harness that is designed to coordinate 7 specialized AI agents (planned) to analyze a company and the market it operates in, assess its strengths and weaknesses in market positioning, identify the clients it targets, build a GTM and sales strategy for them, and produce a simple mini-MVP of a similar solution.
+The Research agent is agent 1 of the VentureOS pipeline. Given a company name or website, it searches the web, keeps only relevant and verifiable evidence, tags it to the fields the GTM sub-agents need (company, market, competitors, sales), and stores every intermediate result in PostgreSQL. It gathers and organizes evidence; it does not analyze or write strategy.
 
-Built for small B2B agencies and technical consultancies connecting research, sales preparation, and delivery across disconnected tools.
+## Input and output
 
-> **Status: shared runtime foundations.** The credential-free preview remains dependency-free. Optional PostgreSQL execution adds task leases, checkpoints, approvals, budget reservations, validation, audit, and tracing interfaces. The Research agent (agent 1) runs standalone with a local API and viewer and is not connected to the harness yet; see [docs/research.md](docs/research.md). The other 6 business agents, live integrations, and full production controls remain planned. See [Current State](docs/agents_todo.md#current-state).
+**Input**
 
-## Architecture
+- A company name or website (required). `http://` is upgraded to `https://`, and the change is recorded.
+- Optional instructions, for example `focus on mid-market` or `EU only`.
+- Optional, on a re-run: a previous run ID and a list of gaps (for example `market.trends`), so only missing items are researched.
 
-**Postgres only by default, scale with optional adapters (planned).** Local disk holds files. The default command is a credential-free preview. Shared runtime foundations are available separately; the diagrams below show the target architecture, with remaining components labeled planned.
+**Output: an evidence pack (schema v3)**
 
-### Runtime
+| Field | Checklist (checked in code) |
+| --- | --- |
+| Company | name, website, what they sell |
+| Market | category, 1 or more size or growth signals, 2 or more trends |
+| Competitors | 3 to 5 alternatives, each with website, positioning, and pricing (or `not_published`) |
+| Sales | target customer, buyer role, pricing model, channel; buying signals optional |
+
+- Every value is a list of evidence IDs. Each evidence item has a short statement, a verbatim excerpt, its source URL, the retrieval date, a `fact` or `inference` label, and 1 or more tags such as `competitors.pricing`.
+- Coverage: for each field, `complete` or `partial`, with a list of what is missing.
+- Run status: `complete`, `partial` (a limit was hit), `clarify` (the company name is ambiguous; candidates are returned), or `failed`.
+
+The JSON Schema is in [src/research/pack.schema.json](src/research/pack.schema.json).
+
+## Functionality
+
+1. **Understand.** Normalize the website. With only a name, run 1 search and ask the model to confirm the official website; stop with `clarify` when it is ambiguous.
+2. **Plan.** Code compares the pack with the checklist. Company basics go first; then fields rotate, so the field searched least goes next (ties go to the field with the most missing items).
+3. **Search and collect.** Run 1 search from a fixed query template; open-web searches include the company domain to avoid same-name noise. If no page is kept, retry once with the field's next template in the same round. Skip duplicate and non-public or non-HTTPS URLs, remove cookie and navigation text, and reject pages about a different company. Caps: 3 general pages plus 2 pricing or customer pages from the company site, 2 pages per other site, 5 competitors.
+4. **Extract and tag.** The model returns statements with verbatim excerpts and tags. Code checks every item; failed items get 1 corrective retry with the errors.
+5. **Check coverage.** Code, not the model, recomputes coverage and stores a snapshot.
+6. **Repeat** until every field is complete or a limit is hit: 5 rounds, 15 sources, 10 model calls. Hitting a limit returns a `partial` pack with its gap list, never an error.
+
+Evidence rules enforced in code: excerpts are 25 to 400 characters and appear verbatim in their source; each excerpt supports 1 item; names and numbers in a statement must appear in its excerpt; facts from forums become inferences; company offering and pricing model must cite the company's own site when one was collected. Page text is treated as untrusted data.
+
+## Mini-architecture
 
 ```mermaid
 flowchart LR
-    User["User<br/>company name or URL"] --> API["API + Auth (planned)<br/>CLI or UI first, API Keys / JWT later"]
-    API --> Harness["Agent Harness<br/>DAG · Resume · Checkpoints · HITL (planned)"]
-    Harness --> Policies["Policies (planned)<br/>Budgets · Guardrails · Eval gates"]
-    Harness <--> Agents["7-agent pipeline (planned)"]
-    Agents --> Models["Model Gateway + LLM Providers (planned)"]
-    Agents --> Tools["Tool Gateway (planned)"] --> MCP["MCP + Sandbox (planned, optional execution)"]
-    Agents --> Evidence["Evidence + claims store (planned)<br/>Sources · Quotes · Claim IDs"]
-    Evidence -.-> RAG["Evidence retrieval / RAG (optional, planned)"]
-    Harness --> Storage["Storage Interfaces (planned)"]
-    Evidence --> Storage
-    RAG -.-> Storage
-    Storage --> PG[("PostgreSQL (planned)<br/>State · Queue · Audit · Evidence")]
-    Storage -.-> Scale["Optional Adapters (planned)<br/>pgvector · Kafka · Redis · Chroma · S3"]
+    In["Company name or URL<br/>instructions · gaps"] --> U["Understand"]
+    U -->|"ambiguous"| C["clarify + candidates"]
+    U --> P["Plan<br/>biggest gap"]
+    P --> S["Search + collect<br/>SearchProvider (Tavily)"]
+    S --> X["Extract + tag<br/>Model (Gemini)"]
+    X --> V["Validate + coverage<br/>code"]
+    V -->|"gaps left, within limits"| P
+    V -->|"complete or limit hit"| Pack["Evidence pack"]
+    U & S & X & V --> DB[("PostgreSQL<br/>runs · rounds · sources<br/>evidence · coverage · packs")]
+    Pack --> DB
+    UI["Streamlit UI<br/>Chat · Data management"] <-->|"HTTP"| API["FastAPI backend"]
+    API --> In
+    API --> DB
 ```
 
-Cross-cutting: OpenTelemetry tracing · Offline eval harness as a CI release gate (planned)
+The loop is plain Python with fixed limits, not an agent framework. Search and model providers sit behind small interfaces, and storage sits behind a `Store` interface with PostgreSQL and in-memory implementations.
 
-### Agent pipeline
+## Run
 
-The harness is deterministic code, not an LLM agent. It runs the 7 agents as a pipeline, applies eval gates between stages, and pauses for human approval before anything leaves the system.
-
-```mermaid
-flowchart LR
-    In["Company name or URL"] --> H["Harness<br/>routing · retries · budgets · approvals"]
-    H --> A1["1 Research"]
-    A1 --> E[("Evidence + claims<br/>PostgreSQL")]
-    E --> A2["2 Company Snapshot"]
-    A2 --> A3["3 Competitive Strategy"]
-    A3 -.->|"competitor lookups"| A1
-    A3 --> A4["4 Challenger Salesman"]
-    A4 --> G1{"Approval"}
-    G1 --> A5["5 Presentation Builder"]
-    G1 --> A6["6 Product Builder"]
-    A5 --> G2{"Approval"}
-    A6 --> G2
-    G2 --> A7["7 Executor<br/>draft and dry-run"]
-```
-
-Pipeline rules (planned):
-
-- Research is a reusable tool: it runs for the target company and again for each competitor requested by Competitive Strategy.
-- Downstream agents cite claim IDs from the evidence store. Anything without a citation is labeled a hypothesis.
-- An eval gate checks each stage output before the next stage starts.
-- Presentation Builder and Product Builder run in parallel after the first approval.
-- Product Builder writes a spec first, builds from a fixed scaffold in a sandbox, and records a demo GIF. It solves the same job as the target product and does not copy it.
-- Executor drafts and dry-runs email, CRM, and onboarding steps. Real sends require approval.
-
-Architecture details:
-
-- [Storage defaults and interfaces](docs/architecture/storage.md)
-- [Optional adapters](docs/architecture/adapters.md)
-- [Safety and runtime policies](docs/architecture/safety.md)
-
-## 7 agents. 1 harness.
-
-Agent execution and deliverables below are (planned); role specifications and a fixed workflow preview exist today.
-
-| # | Agent | Responsibility | Deliverable |
-| --- | --- | --- | --- |
-| 1 | Research (Web Intelligence) | Collect information about the company, its industry, and trends from a name or URL; also researches competitors on request | Sourced evidence and claims |
-| 2 | Company Snapshot | Turn evidence into a structured company profile: offer, customers, pricing, signals | Company summary with claim IDs |
-| 3 | Competitive Strategy | Compare alternatives, pricing, positioning, and gaps; assess strengths and weaknesses | Positioning analysis and ranked opportunity hypotheses |
-| 4 | Challenger Salesman | Define the ICP, commercial insight, GTM and sales strategy, and tailored outreach | ICP, offer, and outreach drafts |
-| 5 | Presentation Builder | Package the approved offer and unique value proposition | Concise proposal |
-| 6 | Product Builder | Build a scoped mini-MVP of a similar solution | Architecture, tested prototype, demo GIF |
-| 7 | Executor (Workflow Automation) | Execute approved email, CRM, onboarding, and delivery steps and track work to completion | Action records and outcome data |
-
-Contracts exist for all 7 roles. Only Research is implemented, as a standalone agent that is not connected to the harness. The preview harness returns a fixed workflow plan that still lists the earlier 6-agent set. The separate RuntimeHarness executes trusted registered plugins with PostgreSQL state, permissions, runtime validation, bounded retries, tracing interfaces, and task approval. Dynamic business-agent routing remains (planned).
-
-## Quick start
-
-Requires Python 3.10+. No dependencies or API keys are needed for the preview.
-
-Run from the repository root:
+Requires Python 3.10+. Put `TAVILY_API_KEY`, `GEMINI_API_KEY`, and optionally `RESEARCH_DATABASE_URL` in `.env` (git-ignored). Without a database URL, runs are kept in memory until the backend stops.
 
 ```bash
-PYTHONPATH=src python3 -m ventureos --brief examples/agency-brief.json
+python3 -m pip install -e '.[research,api,ui]'
 ```
 
-This prints a JSON workflow plan showing agent assignments, review checkpoints, and expected deliverables. It does not call models, browse the web, send email, or build a product.
-
-## Project structure
-
-```text
-agents/                  7 agent instruction and output contracts
-src/ventureos/
-  agents.py              Agent registry
-  contracts.py           Shared brief and workflow types
-  harness.py             Workflow preview and execution boundary
-  __main__.py            Local preview command
-  research/              Research agent: engine, providers, local API, renderer
-integrations/            Future model, research, email, and CRM adapters
-docs/architecture.md     Execution model and acceptance criteria
-docs/architecture/       Storage, adapters, and safety (planned)
-examples/agency-brief.json
-UI/app.py                Streamlit page for the Research agent
-docs/research.md         Research agent usage, claim schema, and limits
-```
-
-## Roadmap
-
-- [x] Define 6 agent roles and workflow contracts
-- [x] Add a local workflow preview
-- [ ] Connect a model provider and sourced research tools
-- [x] Implement shared task state, runtime validation, budget reservations, and lease recovery
-- [x] Implement hash-bound task approval gates
-- [ ] Implement customer-feedback branching
-- [x] Define the Company Snapshot contract and the evidence and claims schema
-- [x] Build the standalone Research agent with cited claims, verbatim quote checks, and a local API and viewer
-- [ ] Connect the Research agent to the harness runtime and model gateway
-- [ ] Add category-driven searches and an entailment check to Research
-- [ ] Persist the evidence and claims store in PostgreSQL
-- [ ] Add eval gates between pipeline stages
-- [ ] Ship a thin end-to-end slice for 1 company across all 7 agents
-- [ ] Run the Executor in draft and dry-run mode with mock adapters
-- [ ] Add email and CRM adapters with duplicate-action prevention
-- [ ] Publish a reproducible end-to-end example with cost and outcome data
-
-## Contributing
-
-Start with one workflow, agent contract, or adapter. Include a sample input, expected output, and a way to verify the result. Keep generated claims separate from sourced facts and observed customer outcomes.
-
-## Inspiration
-
-README organization and architecture references: [MetaGPT](https://github.com/FoundationAgents/MetaGPT), [CrewAI](https://github.com/crewAIInc/crewAI), [AutoGen](https://github.com/microsoft/autogen) (historical reference), [LangGraph](https://github.com/langchain-ai/langgraph), and [Agency Swarm](https://github.com/VRSEN/agency-swarm). These are references, not dependencies or affiliations.
-
-## Optional shared runtime
-
-Install the optional dependencies in a virtual environment:
+Start the FastAPI backend, then the Streamlit UI in a second terminal:
 
 ```bash
-python3 -m pip install -e '.[runtime,test]'
+PYTHONPATH=src python3 -m research.api
 ```
-
-Set `VENTUREOS_DATABASE_URL` to a PostgreSQL database dedicated to VentureOS, then run:
 
 ```bash
-PYTHONPATH=src python3 -m ventureos --brief examples/agency-brief.json --execute-demo --tenant demo --run-id brief-1
+streamlit run UI/app.py
 ```
 
-This initializes the shared tables and executes a local brief demo, not the business agents. Repeating the same ID and input reuses the stored result. CLI tenant selection is operator-only, not authentication. See [testing instructions](tests/README.md) and [runtime limits](docs/agents_todo.md#current-state).
+The UI only sends input and shows output; all processing runs in the backend. It has 2 views in the sidebar:
+
+- **Chat:** send a company name or website. The agent asks a follow-up question when the name is ambiguous (reply with a number, name, or website) or when the pack is partial (reply `yes` to research only the missing items). Packs are shown with coverage, cited evidence, and a JSON download.
+- **Data management:** every stored run, with its evidence pack, each round's query and coverage, and kept and rejected sources.
+
+The backend binds to `127.0.0.1` and has no authentication, so run it on your own machine. Chat sessions are in memory; runs and packs are in the store.
+
+| Endpoint | Purpose |
+| --- | --- |
+| `POST /api/sessions` | Start a chat session |
+| `POST /api/sessions/{id}/messages` | Send `{"message", "instructions"}`; returns a job ID |
+| `GET /api/jobs/{id}?after=N` | Progress events and the reply |
+| `GET /api/runs` | Stored runs, newest first |
+| `GET /api/runs/{id}` | 1 run and its evidence pack |
+| `GET /api/runs/{id}/rounds` | Rounds, coverage per round, and sources |
+
+A CLI is also available: `PYTHONPATH=src python3 -m research "Basecamp" --website basecamp.com`.
+
+Tests use provider doubles and never call live services. Set `RESEARCH_TEST_DATABASE_URL` to a disposable database to run the PostgreSQL tests.
+
+```bash
+PYTHONPATH=src python3 -m unittest discover -s tests -v
+```
+
+## Status
+
+- Implemented: input normalization, bounded loop, evidence checks, checklist coverage, re-runs from gaps, PostgreSQL and in-memory storage, FastAPI backend, Streamlit chat and data management UI, CLI.
+- Planned: live smoke check, updated golden fixture, a model check that a statement follows from its excerpt, pgvector retrieval.
