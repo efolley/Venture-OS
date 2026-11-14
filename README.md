@@ -1,16 +1,22 @@
 # VentureOS
 
-### From a company name or URL to market positioning, a GTM and sales strategy, and a working mini-MVP.
+> ### **From a company name to end2end loop**
 
-VentureOS is a business operations harness that is designed to coordinate 7 specialized AI agents (planned) to analyze a company and the market it operates in, assess its strengths and weaknesses in market positioning, identify the clients it targets, build a GTM and sales strategy for them, and produce a simple mini-MVP of a similar solution.
-
-Built for small B2B agencies and technical consultancies connecting research, sales preparation, and delivery across disconnected tools.
-
-> **Status: shared runtime foundations.** The credential-free preview remains dependency-free. Optional PostgreSQL execution adds task leases, checkpoints, approvals, budget reservations, validation, audit, and tracing interfaces. The 7 business agents, live integrations, and full production controls remain planned. See [Current State](docs/agents_todo.md#current-state).
+VentureOS is a business operations harness that is designed to coordinate agents to analyze a company and the market it operates in, assess its strengths and weaknesses in market positioning, identify the clients it targets, build a GTM and sales strategy for them, and produce a simple mini-MVP of a similar solution. Built for small B2B agencies and technical consultancies connecting research, sales preparation, and delivery across disconnected tools.
 
 ## Architecture
 
-**Postgres only by default, scale with optional adapters (planned).** Local disk holds files. The default command is a credential-free preview. Shared runtime foundations are available separately; the diagrams below show the target architecture, with remaining components labeled planned.
+<p align="center">
+  <img src="docs/architecture/agent-pipeline.svg" alt="VentureOS agent pipeline: Research, GTM orchestrator with 3 parallel sub-agents, PM agent snapshot check with HITL 1, parallel builders, HITL 2, Executor" width="620">
+</p>
+
+User flow (planned):
+1. Input: company name or URL
+2. Research agent: collects sourced evidence about the company until it has enough context
+3. GTM orchestrator: runs market analysis, competitive strategy, and challenger salesman in parallel
+4. PM agent: turns their outputs into a company snapshot; if any field is missing, a human decides to research more or proceed (HITL 1)
+5. Presentation and Product builders: create a 1-pager proposal and a mini-MVP in parallel, then a human approves both (HITL 2)
+6. Executor: a mini AI CRM that runs approved follow-up and tracks all work
 
 ### Runtime
 
@@ -19,7 +25,7 @@ flowchart LR
     User["User<br/>company name or URL"] --> API["API + Auth (planned)<br/>CLI or UI first, API Keys / JWT later"]
     API --> Harness["Agent Harness<br/>DAG · Resume · Checkpoints · HITL (planned)"]
     Harness --> Policies["Policies (planned)<br/>Budgets · Guardrails · Eval gates"]
-    Harness <--> Agents["7-agent pipeline (planned)"]
+    Harness <--> Agents["Agent pipeline (planned)<br/>6 agents · 3 GTM sub-agents"]
     Agents --> Models["Model Gateway + LLM Providers (planned)"]
     Agents --> Tools["Tool Gateway (planned)"] --> MCP["MCP + Sandbox (planned, optional execution)"]
     Agents --> Evidence["Evidence + claims store (planned)<br/>Sources · Quotes · Claim IDs"]
@@ -35,33 +41,49 @@ Cross-cutting: OpenTelemetry tracing · Offline eval harness as a CI release gat
 
 ### Agent pipeline
 
-The harness is deterministic code, not an LLM agent. It runs the 7 agents as a pipeline, applies eval gates between stages, and pauses for human approval before anything leaves the system.
+The harness is deterministic code, not an LLM agent. It runs the agents as a pipeline, applies eval gates between stages, and pauses for human-in-the-loop (HITL) decisions before work moves on or leaves the system.
+
+<details>
+<summary>Same pipeline as a Mermaid diagram</summary>
 
 ```mermaid
-flowchart LR
-    In["Company name or URL"] --> H["Harness<br/>routing · retries · budgets · approvals"]
-    H --> A1["1 Research"]
-    A1 --> E[("Evidence + claims<br/>PostgreSQL")]
-    E --> A2["2 Company Snapshot"]
-    A2 --> A3["3 Competitive Strategy"]
-    A3 -.->|"competitor lookups"| A1
-    A3 --> A4["4 Challenger Salesman"]
-    A4 --> G1{"Approval"}
-    G1 --> A5["5 Presentation Builder"]
-    G1 --> A6["6 Product Builder"]
-    A5 --> G2{"Approval"}
-    A6 --> G2
-    G2 --> A7["7 Executor<br/>draft and dry-run"]
+flowchart TD
+    In["Company name or URL"] --> H["Harness<br/>routing · retries · budgets · HITL"]
+    H --> R["1 Research agent<br/>ReAct · searches until context is sufficient"]
+    R --> E[("Evidence + claims<br/>PostgreSQL")]
+    E --> GTM["2 GTM orchestrator"]
+    subgraph SUB["GTM sub-agents (run in parallel)"]
+        MA["2a Market analysis"]
+        CS["2b Competitive strategy"]
+        CH["2c Challenger salesman"]
+    end
+    GTM --> MA & CS & CH
+    MA & CS & CH --> PM["3 PM agent<br/>company snapshot"]
+    PM --> Q{"Snapshot complete?<br/>all fields filled"}
+    Q -->|"yes"| BUILD
+    Q -->|"no"| G1{"HITL 1<br/>research more or proceed"}
+    G1 -->|"collect more data"| R
+    G1 -->|"proceed with gaps"| BUILD
+    subgraph BUILD["Builders (run in parallel)"]
+        PB["4 Presentation builder<br/>1-pager proposal"]
+        PR["5 Product builder<br/>mini-MVP + demo GIF"]
+    end
+    BUILD --> G2{"HITL 2<br/>approve outputs"}
+    G2 --> X["6 Executor<br/>mini AI CRM"]
 ```
+
+</details>
 
 Pipeline rules (planned):
 
-- Research is a reusable tool: it runs for the target company and again for each competitor requested by Competitive Strategy.
+- Research is a ReAct loop (reason, search, observe) that stops when it has enough context for the downstream agents or reaches its search budget.
+- The GTM orchestrator passes the full research context to 3 sub-agents that run in parallel, then hands their combined outputs to the PM agent.
+- The PM agent assembles a company snapshot. If every required field is filled, the pipeline continues to the builders automatically. If any field is empty, HITL 1 asks a human to send the gaps back to Research or proceed with the gaps marked as unknown.
 - Downstream agents cite claim IDs from the evidence store. Anything without a citation is labeled a hypothesis.
 - An eval gate checks each stage output before the next stage starts.
-- Presentation Builder and Product Builder run in parallel after the first approval.
-- Product Builder writes a spec first, builds from a fixed scaffold in a sandbox, and records a demo GIF. It solves the same job as the target product and does not copy it.
-- Executor drafts and dry-runs email, CRM, and onboarding steps. Real sends require approval.
+- Presentation Builder and Product Builder run in parallel. Product Builder writes a spec first, builds from a fixed scaffold in a sandbox, and records a demo GIF. It solves the same job as the target product and does not copy it.
+- HITL 2 approves the proposal and prototype before the Executor acts.
+- Executor is a mini AI CRM: it tracks contacts, deals, and follow-ups, and drafts and dry-runs email and onboarding steps. Real sends require approval.
 
 Architecture details:
 
@@ -69,21 +91,23 @@ Architecture details:
 - [Optional adapters](docs/architecture/adapters.md)
 - [Safety and runtime policies](docs/architecture/safety.md)
 
-## 7 agents. 1 harness.
+## 6 agents. 3 GTM sub-agents. 1 harness.
 
 Agent execution and deliverables below are (planned); role specifications and a fixed workflow preview exist today.
 
-| # | Agent | Responsibility | Deliverable |
-| --- | --- | --- | --- |
-| 1 | Research (Web Intelligence) | Collect information about the company, its industry, and trends from a name or URL; also researches competitors on request | Sourced evidence and claims |
-| 2 | Company Snapshot | Turn evidence into a structured company profile: offer, customers, pricing, signals | Company summary with claim IDs |
-| 3 | Competitive Strategy | Compare alternatives, pricing, positioning, and gaps; assess strengths and weaknesses | Positioning analysis and ranked opportunity hypotheses |
-| 4 | Challenger Salesman | Define the ICP, commercial insight, GTM and sales strategy, and tailored outreach | ICP, offer, and outreach drafts |
-| 5 | Presentation Builder | Package the approved offer and unique value proposition | Concise proposal |
-| 6 | Product Builder | Build a scoped mini-MVP of a similar solution | Architecture, tested prototype, demo GIF |
-| 7 | Executor (Workflow Automation) | Execute approved email, CRM, onboarding, and delivery steps and track work to completion | Action records and outcome data |
+| #  | Agent                | Responsibility                                                                                                                   | Deliverable                     |
+| -- | -------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
+| 1  | Research             | ReAct agent that collects information about the company, its industry, and trends from a name or URL until it has enough context | Sourced evidence and claims     |
+| 2  | GTM orchestrator     | Runs the 3 GTM sub-agents in parallel on the research context and combines their outputs                                         | Combined GTM analysis           |
+| 2a | Market analysis      | Size and segment the market, trends, and buying signals                                                                          | Market overview                 |
+| 2b | Competitive strategy | Compare alternatives, pricing, positioning, and gaps                                                                             | Ranked opportunity hypotheses   |
+| 2c | Challenger salesman  | Define the ICP, commercial insight, GTM and sales strategy, and tailored outreach                                                | ICP, offer, and outreach drafts |
+| 3  | PM agent             | Turn GTM outputs into a company snapshot and check that every field is filled; trigger HITL when it is not                       | Company snapshot with claim IDs |
+| 4  | Presentation builder | Package the offer and unique value proposition                                                                                   | 1-pager proposal                |
+| 5  | Product builder      | Build a scoped mini-MVP of a similar solution                                                                                    | Tested prototype and demo GIF   |
+| 6  | Executor             | Mini AI CRM: track contacts, deals, and follow-ups, and run approved outreach and onboarding steps                               | Action records and outcome data |
 
-Contracts exist today for 6 of the 7 roles. The Company Snapshot contract is planned. The preview harness returns a fixed workflow plan that still lists the earlier 6-agent set. The separate RuntimeHarness executes trusted registered plugins with PostgreSQL state, permissions, runtime validation, bounded retries, tracing interfaces, and task approval. Dynamic business-agent routing remains (planned).
+Role contracts in `agents/` still follow the earlier layout. Contracts for the GTM orchestrator, Market analysis, and PM agent are planned. The preview harness returns a fixed workflow plan that still lists the earlier 6-agent set. The separate RuntimeHarness executes trusted registered plugins with PostgreSQL state, permissions, runtime validation, bounded retries, tracing interfaces, and task approval. Dynamic business-agent routing remains (planned).
 
 ## Quick start
 
@@ -100,7 +124,7 @@ This prints a JSON workflow plan showing agent assignments, review checkpoints, 
 ## Project structure
 
 ```text
-agents/                  agent instruction and output contracts (6 today, Company Snapshot planned)
+agents/                  agent contracts in the earlier 6-agent layout (new pipeline contracts planned)
 src/ventureos/
   agents.py              Agent registry
   contracts.py           Shared brief and workflow types
@@ -114,16 +138,18 @@ examples/agency-brief.json
 
 ## Roadmap
 
-- [x] Define 6 agent roles and workflow contracts
-- [x] Add a local workflow preview
+- [X] Define the earlier 6 agent roles and workflow contracts
+- [X] Add a local workflow preview
 - [ ] Connect a model provider and sourced research tools
-- [x] Implement shared task state, runtime validation, budget reservations, and lease recovery
-- [x] Implement hash-bound task approval gates
+- [X] Implement shared task state, runtime validation, budget reservations, and lease recovery
+- [X] Implement hash-bound task approval gates
 - [ ] Implement customer-feedback branching
-- [ ] Define the Company Snapshot contract and the evidence and claims schema
+- [ ] Define contracts for the GTM orchestrator, Market analysis, and PM agent, and the evidence and claims schema
 - [ ] Add the evidence and claims store with claim IDs
 - [ ] Add eval gates between pipeline stages
-- [ ] Ship a thin end-to-end slice for 1 company across all 7 agents
+- [ ] Run the GTM sub-agents in parallel and merge their outputs
+- [ ] Implement the PM snapshot completeness check with HITL 1 (research more or proceed) and HITL 2 approval
+- [ ] Ship a thin end-to-end slice for 1 company across all agents and sub-agents
 - [ ] Run the Executor in draft and dry-run mode with mock adapters
 - [ ] Add email and CRM adapters with duplicate-action prevention
 - [ ] Publish a reproducible end-to-end example with cost and outcome data
