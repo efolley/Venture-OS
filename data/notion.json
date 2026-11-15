@@ -1,0 +1,645 @@
+{
+  "schema_version": 3,
+  "run_id": "335d6d35-8bed-4f46-ba4e-9a11d5a9653e",
+  "parent_run_id": null,
+  "status": "complete",
+  "company": {
+    "name": "Notion",
+    "website": "https://www.notion.com/",
+    "offering": [
+      "e3"
+    ]
+  },
+  "market": {
+    "category": [
+      "e6"
+    ],
+    "size_growth": [
+      "e9"
+    ],
+    "trends": [
+      "e7",
+      "e8"
+    ]
+  },
+  "competitors": [
+    {
+      "name": "Coda",
+      "website": "https://coda.io",
+      "evidence_ids": [
+        "e10",
+        "e14",
+        "e19"
+      ],
+      "positioning": [
+        "e14"
+      ],
+      "pricing": [
+        "e19"
+      ],
+      "pricing_status": "found"
+    },
+    {
+      "name": "ClickUp",
+      "website": "https://clickup.com",
+      "evidence_ids": [
+        "e11",
+        "e15",
+        "e16"
+      ],
+      "positioning": [
+        "e15"
+      ],
+      "pricing": [
+        "e16"
+      ],
+      "pricing_status": "found"
+    },
+    {
+      "name": "Monday.com",
+      "website": "https://monday.com",
+      "evidence_ids": [
+        "e12",
+        "e17",
+        "e18"
+      ],
+      "positioning": [
+        "e17"
+      ],
+      "pricing": [
+        "e18"
+      ],
+      "pricing_status": "found"
+    },
+    {
+      "name": "Asana",
+      "website": "https://asana.com",
+      "evidence_ids": [
+        "e13"
+      ],
+      "positioning": [],
+      "pricing": [],
+      "pricing_status": "not_checked"
+    }
+  ],
+  "sales": {
+    "target_customer": [
+      "e5"
+    ],
+    "buyer_role": [
+      "e4"
+    ],
+    "pricing_model": [
+      "e2"
+    ],
+    "channel": [
+      "e1"
+    ],
+    "buying_signals": []
+  },
+  "evidence": [
+    {
+      "id": "e1",
+      "statement": "Notion sells self-serve with a free plan and sign-up, and offers a sales-led Enterprise plan via contact sales.",
+      "excerpt": "Enterprise Custom pricing For organizations to operate with scalability, control, and security. Contact Sales",
+      "basis": "fact",
+      "tags": [
+        "sales.channel"
+      ],
+      "source_id": "s1",
+      "url": "https://www.notion.com/pricing",
+      "retrieved_at": "2026-11-15T18:21:47.741037+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 1
+    },
+    {
+      "id": "e2",
+      "statement": "Notion prices plans per seat per month, with Free at $0, Plus at $10, and Business at $20.",
+      "excerpt": "Plans and features Free$0 per seat/monthSign up Plus$10 per seat/monthGet started Business$20 per seat/monthGet started",
+      "basis": "fact",
+      "tags": [
+        "sales.pricing_model"
+      ],
+      "source_id": "s1",
+      "url": "https://www.notion.com/pricing",
+      "retrieved_at": "2026-11-15T18:21:47.741037+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 1
+    },
+    {
+      "id": "e3",
+      "statement": "Notion offers a connected workspace for projects, wikis, and docs.",
+      "excerpt": "Your projects, wikis and docs, all side by side. For small teams to large organizations.",
+      "basis": "fact",
+      "tags": [
+        "company.offering"
+      ],
+      "source_id": "s3",
+      "url": "https://www.notion.com/teams",
+      "retrieved_at": "2026-11-15T18:21:47.744417+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 1
+    },
+    {
+      "id": "e4",
+      "statement": "Notion says it solves problems for Engineering teams.",
+      "excerpt": "Built for every team Notion solves problems unique to any function. Engineering Ship features faster with sprint tasks",
+      "basis": "fact",
+      "tags": [
+        "sales.buyer_role"
+      ],
+      "source_id": "s3",
+      "url": "https://www.notion.com/teams",
+      "retrieved_at": "2026-11-15T18:21:47.744417+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 1
+    },
+    {
+      "id": "e5",
+      "statement": "Notion targets small teams to large organizations.",
+      "excerpt": "For small teams to large organizations. Get Notion freeRequest a demo",
+      "basis": "fact",
+      "tags": [
+        "sales.target_customer"
+      ],
+      "source_id": "s3",
+      "url": "https://www.notion.com/teams",
+      "retrieved_at": "2026-11-15T18:21:47.744417+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 1
+    },
+    {
+      "id": "e6",
+      "statement": "Notion competes in the team collaboration software category.",
+      "excerpt": "The global team collaboration software market size reached USD 21.5 Billion in 2025.",
+      "basis": "fact",
+      "tags": [
+        "market.category"
+      ],
+      "source_id": "s6",
+      "url": "https://www.researchandmarkets.com/report/collaborative-software",
+      "retrieved_at": "2026-11-15T18:21:58.413164+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 2
+    },
+    {
+      "id": "e7",
+      "statement": "Market reports say AI assistants are a major catalyst for team collaboration software adoption.",
+      "excerpt": "The rapid rollout of AI assistants is a massive catalyst for market expansion, as these tools significantly lift knowledge-worker output without increasing headcount.",
+      "basis": "fact",
+      "tags": [
+        "market.trends"
+      ],
+      "source_id": "s5",
+      "url": "https://vocal.media/futurism/team-collaboration-software-market-insights-virtual-workspaces-data-security-and-industry-forecast-to-2034",
+      "retrieved_at": "2026-11-15T18:21:58.406430+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 2
+    },
+    {
+      "id": "e8",
+      "statement": "Market reports describe a shift toward documentation-centric, asynchronous work instead of time-heavy meetings.",
+      "excerpt": "A significant trend is the move toward \"documentation-centric\" cultures, where asynchronous tools like video clips and digital canvases replace traditional, time-heavy meetings.",
+      "basis": "fact",
+      "tags": [
+        "market.trends"
+      ],
+      "source_id": "s5",
+      "url": "https://vocal.media/futurism/team-collaboration-software-market-insights-virtual-workspaces-data-security-and-industry-forecast-to-2034",
+      "retrieved_at": "2026-11-15T18:21:58.406430+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 2
+    },
+    {
+      "id": "e9",
+      "statement": "The team collaboration software market is forecast to grow at a 10.67% CAGR from 2026 to 2034.",
+      "excerpt": "exhibiting a growth rate (CAGR) of 10.67% during 2026-2034.",
+      "basis": "fact",
+      "tags": [
+        "market.size_growth"
+      ],
+      "source_id": "s6",
+      "url": "https://www.researchandmarkets.com/report/collaborative-software",
+      "retrieved_at": "2026-11-15T18:21:58.413164+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 2
+    },
+    {
+      "id": "e10",
+      "statement": "Coda is listed as a Notion alternative for document-based project management.",
+      "excerpt": "Coda for powerful formulas and databases",
+      "basis": "fact",
+      "tags": [
+        "competitors.alternative"
+      ],
+      "source_id": "s9",
+      "url": "https://zapier.com/blog/best-notion-alternatives",
+      "retrieved_at": "2026-11-15T18:22:07.821215+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Coda",
+        "website": "https://coda.io"
+      },
+      "round": 3
+    },
+    {
+      "id": "e11",
+      "statement": "ClickUp is listed as a Notion alternative for all-in-one functionality.",
+      "excerpt": "ClickUp | All-in-one functionality | Yes | $10/user/month",
+      "basis": "fact",
+      "tags": [
+        "competitors.alternative"
+      ],
+      "source_id": "s8",
+      "url": "https://www.airtable.com/articles/notion-alternatives",
+      "retrieved_at": "2026-11-15T18:22:07.816883+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "ClickUp",
+        "website": "https://clickup.com"
+      },
+      "round": 3
+    },
+    {
+      "id": "e12",
+      "statement": "Monday.com is listed as a Notion alternative for visual project management.",
+      "excerpt": "Monday.com | Visual project management | Yes | $14/user/month",
+      "basis": "fact",
+      "tags": [
+        "competitors.alternative"
+      ],
+      "source_id": "s8",
+      "url": "https://www.airtable.com/articles/notion-alternatives",
+      "retrieved_at": "2026-11-15T18:22:07.816883+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Monday.com",
+        "website": "https://monday.com"
+      },
+      "round": 3
+    },
+    {
+      "id": "e13",
+      "statement": "Asana is listed as a Notion alternative for task and project management.",
+      "excerpt": "Asana | Task and project management | Yes | $13.49/user/month",
+      "basis": "fact",
+      "tags": [
+        "competitors.alternative"
+      ],
+      "source_id": "s8",
+      "url": "https://www.airtable.com/articles/notion-alternatives",
+      "retrieved_at": "2026-11-15T18:22:07.816883+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Asana",
+        "website": "https://asana.com"
+      },
+      "round": 3
+    },
+    {
+      "id": "e14",
+      "statement": "Coda positions itself as an all-in-one doc customizable for every business need.",
+      "excerpt": "Coda is the all-in-one doc you can customize to fit every business need—from tracking projects and tasks, to team hubs, to interactive writeups.",
+      "basis": "fact",
+      "tags": [
+        "competitors.positioning"
+      ],
+      "source_id": "s14",
+      "url": "https://coda.io/product/collaboration-costs-less-with-coda",
+      "retrieved_at": "2026-11-15T18:22:17.710361+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Coda",
+        "website": "https://coda.io"
+      },
+      "round": 6
+    },
+    {
+      "id": "e15",
+      "statement": "ClickUp positions itself as the best work solution at the best price.",
+      "excerpt": "The best work solution, for the best price.",
+      "basis": "fact",
+      "tags": [
+        "competitors.positioning"
+      ],
+      "source_id": "s10",
+      "url": "https://clickup.com/pricing",
+      "retrieved_at": "2026-11-15T18:22:17.666121+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "ClickUp",
+        "website": "https://clickup.com"
+      },
+      "round": 6
+    },
+    {
+      "id": "e16",
+      "statement": "ClickUp's Unlimited plan is listed at $10 per user per month billed monthly.",
+      "excerpt": "unlimited monthly price:$10Per user/month, billed monthly",
+      "basis": "fact",
+      "tags": [
+        "competitors.pricing"
+      ],
+      "source_id": "s10",
+      "url": "https://clickup.com/pricing",
+      "retrieved_at": "2026-11-15T18:22:17.666121+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "ClickUp",
+        "website": "https://clickup.com"
+      },
+      "round": 6
+    },
+    {
+      "id": "e17",
+      "statement": "monday.com positions its plans as including every team, people, and agents, with a free start.",
+      "excerpt": "Plans for every team, people and agents included. Start free, no credit card needed.",
+      "basis": "fact",
+      "tags": [
+        "competitors.positioning"
+      ],
+      "source_id": "s16",
+      "url": "https://monday.com/pricing",
+      "retrieved_at": "2026-11-15T18:22:17.717212+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Monday.com",
+        "website": "https://monday.com"
+      },
+      "round": 6
+    },
+    {
+      "id": "e18",
+      "statement": "monday.com's Pro plan is $19 per seat per month.",
+      "excerpt": "Pro $ 19 seat / month Total of $190",
+      "basis": "fact",
+      "tags": [
+        "competitors.pricing"
+      ],
+      "source_id": "s16",
+      "url": "https://monday.com/pricing",
+      "retrieved_at": "2026-11-15T18:22:17.717212+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Monday.com",
+        "website": "https://monday.com"
+      },
+      "round": 6
+    },
+    {
+      "id": "e19",
+      "statement": "Coda offers Free, Pro, Team, and Enterprise plans.",
+      "excerpt": "There are four pricing plans to select from: Free, Pro, Team, Enterprise.",
+      "basis": "fact",
+      "tags": [
+        "competitors.pricing"
+      ],
+      "source_id": "s13",
+      "url": "https://help.coda.io/hc/en-us/articles/39555725230989-Billing-and-pricing-basics",
+      "retrieved_at": "2026-11-15T18:22:17.709820+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Coda",
+        "website": "https://coda.io"
+      },
+      "round": 6
+    }
+  ],
+  "sources": [
+    {
+      "id": "s1",
+      "url": "https://www.notion.com/pricing",
+      "title": "Notion Pricing Plans: Free, Plus, Business, & Enterprise.",
+      "kind": "first_party",
+      "retrieved_at": "2026-11-15T18:21:47.741037+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s2",
+      "url": "https://www.notion.com/help/upgrade-or-downgrade-your-plan",
+      "title": "Change your Notion plan | Notion Help – Notion Help Center",
+      "kind": "first_party",
+      "retrieved_at": "2026-11-15T18:21:47.743294+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s3",
+      "url": "https://www.notion.com/teams",
+      "title": "Notion for Teams and Businesses",
+      "kind": "first_party",
+      "retrieved_at": "2026-11-15T18:21:47.744417+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s4",
+      "url": "https://scoop.market.us/collaboration-software-statistics",
+      "title": "Collaboration Software Statistics and Facts (2026)",
+      "kind": "market_report",
+      "retrieved_at": "2026-11-15T18:21:58.404473+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s5",
+      "url": "https://vocal.media/futurism/team-collaboration-software-market-insights-virtual-workspaces-data-security-and-industry-forecast-to-2034",
+      "title": "Team Collaboration Software Market Insights: Virtual Workspaces, Data Security & Industry Forecast to 2034 | Futurism",
+      "kind": "market_report",
+      "retrieved_at": "2026-11-15T18:21:58.406430+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s6",
+      "url": "https://www.researchandmarkets.com/report/collaborative-software",
+      "title": "Team Collaboration Software Market Size & Forecast to 2034",
+      "kind": "market_report",
+      "retrieved_at": "2026-11-15T18:21:58.413164+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s7",
+      "url": "https://noteapps.info/best_notion_alternatives_2026_personalized_ad_free",
+      "title": "39 Best Notion Alternatives of 2026: Personalized, Ad-free - NoteApps.info",
+      "kind": "other",
+      "retrieved_at": "2026-11-15T18:22:07.812065+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s8",
+      "url": "https://www.airtable.com/articles/notion-alternatives",
+      "title": "The 10 best Notion alternatives for 2026 | Airtable",
+      "kind": "other",
+      "retrieved_at": "2026-11-15T18:22:07.816883+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s9",
+      "url": "https://zapier.com/blog/best-notion-alternatives",
+      "title": "The 9 best Notion alternatives in 2026 | Zapier",
+      "kind": "other",
+      "retrieved_at": "2026-11-15T18:22:07.821215+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s10",
+      "url": "https://clickup.com/pricing",
+      "title": "ClickUp Pricing and Plans",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T18:22:17.666121+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s11",
+      "url": "https://clickup.com/faqs",
+      "title": "ClickUp FAQs | Pricing, Features, AI, Security & More",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T18:22:17.668250+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s12",
+      "url": "https://help.clickup.com/hc/en-us/articles/10129535087383-Intro-to-pricing",
+      "title": "Intro to pricing – ClickUp Help",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T18:22:17.669049+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s13",
+      "url": "https://help.coda.io/hc/en-us/articles/39555725230989-Billing-and-pricing-basics",
+      "title": "Billing and pricing basics – Coda",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T18:22:17.709820+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s14",
+      "url": "https://coda.io/product/collaboration-costs-less-with-coda",
+      "title": "Collaboration costs less with Coda, we price differently - Coda",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T18:22:17.710361+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s15",
+      "url": "https://help.coda.io/hc/en-us/articles/39555798022797-Doc-limits-on-Free-plan",
+      "title": "Doc limits on Free plan – Coda",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T18:22:17.711141+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s16",
+      "url": "https://monday.com/pricing",
+      "title": "monday.com pricing and plans",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T18:22:17.717212+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s17",
+      "url": "https://support.monday.com/hc/en-us/articles/4405633151634-Plans-and-pricing-for-monday-com",
+      "title": "Plans and pricing for monday.com",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T18:22:17.718549+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s18",
+      "url": "https://support.monday.com/hc/en-us/articles/115005320209-Available-plan-types-on-monday-AI-work-platform",
+      "title": "Available plan types on monday AI work platform – Support",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T18:22:17.723417+00:00",
+      "published_at": null
+    }
+  ],
+  "coverage": {
+    "company": {
+      "status": "complete",
+      "missing": []
+    },
+    "market": {
+      "status": "complete",
+      "missing": []
+    },
+    "competitors": {
+      "status": "complete",
+      "missing": []
+    },
+    "sales": {
+      "status": "complete",
+      "missing": []
+    }
+  },
+  "limits_hit": [],
+  "uncertainties": [],
+  "rejected_sources": [
+    {
+      "url": "https://www.notion.com/personal",
+      "reason": "round page limit reached",
+      "round": 1
+    },
+    {
+      "url": "https://www.notion.com/product/ai",
+      "reason": "round page limit reached",
+      "round": 1
+    },
+    {
+      "url": "https://www.imarcgroup.com/team-collaboration-software-market",
+      "reason": "round page limit reached",
+      "round": 2
+    },
+    {
+      "url": "https://straitsresearch.com/press-release/global-team-collaboration-software-market-growth",
+      "reason": "round page limit reached",
+      "round": 2
+    },
+    {
+      "url": "https://www.cbinsights.com/company/notion-labs/alternatives-competitors",
+      "reason": "round page limit reached",
+      "round": 3
+    },
+    {
+      "url": "https://www.cbinsights.com/company/loop-labs/alternatives-competitors",
+      "reason": "round page limit reached",
+      "round": 3
+    },
+    {
+      "url": "https://clickup.com/blog/monday-vs-asana-vs-clickup-small-business-pricing",
+      "reason": "round page limit reached",
+      "round": 6
+    },
+    {
+      "url": "https://help.clickup.com/hc/en-us/articles/6303244318999-Pricing-per-user-role-and-plan",
+      "reason": "round page limit reached",
+      "round": 6
+    },
+    {
+      "url": "https://community.coda.io/t/does-coda-team-come-with-all-packs-at-one-cost/46482",
+      "reason": "round page limit reached",
+      "round": 4
+    },
+    {
+      "url": "https://community.coda.io/t/coda-4-0-pricing-updates-supercharging-doc-makers/43268",
+      "reason": "round page limit reached",
+      "round": 4
+    },
+    {
+      "url": "https://monday.com/crm/pricing",
+      "reason": "page limit for this site reached",
+      "round": 5
+    },
+    {
+      "url": "https://monday.com/w/enterprise",
+      "reason": "round page limit reached",
+      "round": 5
+    }
+  ]
+}
