@@ -10,6 +10,7 @@ from .agents import GTMSubAgent, build_sub_agents
 from .contracts import STRATEGY_SCHEMA_VERSION, SUB_AGENTS, StrategyPack, SubAgentResult, validate_strategy_pack
 from .inputs import as_object, evidence_id_index, validate_research_pack
 from .merge import merge_outputs
+from .snapshot import build_snapshot
 
 
 class GTMOrchestrator:
@@ -80,6 +81,7 @@ class GTMOrchestrator:
                 })
 
         merged = merge_outputs(self.model, recommendations, agent_gaps)
+        snapshot = build_snapshot(self.model, pack, recommendations)
 
         strategy: JsonObject = {
             "schema_version": STRATEGY_SCHEMA_VERSION,
@@ -90,8 +92,10 @@ class GTMOrchestrator:
                 "partial"
                 # Sub-agent gaps are reported, not blocking: a real model always lists some.
                 if status == "partial" or research_gaps or has_failed_agent or has_empty_agent
+                or snapshot["status"] != "complete"
                 else "complete"
             ),
+            "snapshot": snapshot,
             "research_gaps": research_gaps,
             "gaps": research_gaps + merged["gaps"],
             "sub_agents": results,

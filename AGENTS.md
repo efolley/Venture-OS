@@ -8,8 +8,8 @@ Implemented on `dev`:
 
 | Agent | Package | Version | Source branch |
 | --- | --- | --- | --- |
-| 1 Research | `src/research/` | V.0.2 (`0.2.0`) | `agents/research` |
-| 2 GTM orchestrator | `src/gtm/` | V.0.1 (`0.1.0`) | `agents/GTM_orchestrator` |
+| 1 Research | `src/research/` | V.0.3 (`0.3.0`) | `agents/research` |
+| 2 GTM orchestrator | `src/gtm/` | V.0.2 (`0.2.0`) | `agents/GTM_orchestrator` |
 
 Planned: the harness, PM agent, Presentation builder, Product builder, Executor, eval gates, and both HITL points. The agents run separately today: Research produces an evidence pack, and GTM reads that pack from a file. Never describe planned behavior as working software.
 
@@ -19,9 +19,9 @@ The `## Architecture` section of README.md is the benchmark for flow and archite
 
 ## Agent pipeline
 
-1. **Research agent** (implemented): a bounded ReAct loop (DeepAgents on Claude) that collects verified web evidence about a company into an evidence pack (schema v3) with company, market, competitors, and sales sections. It gathers and organizes; it does not analyze.
-2. **GTM orchestrator** (implemented): validates the evidence pack and runs 3 sub-agents in parallel, all advising the researched company: market analysis, competitive strategy (hypotheses ranked in code), and challenger salesman. A merge step groups overlapping recommendations into themes and de-duplicates gaps. Output: a strategy pack (schema v3).
-3. **PM agent** (planned): turns the strategy pack into a company snapshot. If any field is empty, HITL 1 asks a human to send the gaps back to Research or proceed.
+1. **Research agent** (implemented): a bounded ReAct loop (DeepAgents on Claude) that collects verified web evidence about a company into an evidence pack (schema v4) with company (including mission, vision, and problem), market, competitors, and sales sections. It gathers and organizes; it does not analyze.
+2. **GTM orchestrator** (implemented): validates the evidence pack and runs 3 sub-agents in parallel, all advising the researched company: market analysis, competitive strategy (hypotheses ranked in code), and challenger salesman. A merge step groups overlapping recommendations into themes and de-duplicates gaps, and a snapshot step writes a cited company snapshot (mission, vision, problem, target market, ICP, product, client value, market brief, competition landscape). Output: a strategy pack (schema v4).
+3. **PM agent** (planned): checks the company snapshot. If any field is empty, HITL 1 asks a human to send the gaps back to Research or proceed.
 4. **Presentation builder** (1-pager proposal) and 5. **Product builder** (mini-MVP and demo GIF), in parallel (planned).
 6. **HITL 2** approves both, then the **Executor** (mini AI CRM) tracks contacts, deals, and follow-ups and drafts and dry-runs outreach. Real sends require approval (planned).
 

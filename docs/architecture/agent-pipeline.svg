@@ -36,7 +36,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,san
 <path d="M130 420 L130 452 L340 452" class="arr"/>
 <path d="M550 420 L550 452 L340 452" class="arr"/>
 <line x1="340" y1="420" x2="340" y2="460" class="arr" marker-end="url(#arrow)"/>
-<g class="purple"><rect x="220" y="462" width="240" height="56" rx="8" stroke-width="0.5"/><text class="th" x="340" y="480" text-anchor="middle" dominant-baseline="central">3 PM agent</text><text class="ts" x="340" y="500" text-anchor="middle" dominant-baseline="central">Company snapshot</text></g>
+<g class="purple"><rect x="220" y="462" width="240" height="56" rx="8" stroke-width="0.5"/><text class="th" x="340" y="480" text-anchor="middle" dominant-baseline="central">3 PM agent</text><text class="ts" x="340" y="500" text-anchor="middle" dominant-baseline="central">Checks the snapshot</text></g>
 <line x1="340" y1="518" x2="340" y2="544" class="arr" marker-end="url(#arrow)"/>
 <g class="gray"><rect x="240" y="546" width="200" height="44" rx="8" stroke-width="0.5"/><text class="th" x="340" y="568" text-anchor="middle" dominant-baseline="central">All fields filled?</text></g>
 <line x1="440" y1="568" x2="488" y2="568" class="arr" marker-end="url(#arrow)"/>
