@@ -10,6 +10,7 @@ snapshot never fails the run.
 """
 
 import json
+import re
 from typing import Literal, TypedDict, cast
 
 from research.contracts import JsonObject, Model
@@ -226,6 +227,17 @@ def _validate(
     return good, failed
 
 
+def _trim_to_sentences(text: str, limit: int) -> str:
+    """The longest run of whole sentences from the start that fits in `limit`, or ''."""
+    out = ""
+    for sentence in re.split(r"(?<=[.!?])\s+", text):
+        candidate = f"{out} {sentence}".strip()
+        if len(candidate) > limit:
+            break
+        out = candidate
+    return out if out[-1:] in ".!?" else ""
+
+
 def _validate_line(
     key: str, item: object, allowed: tuple[list[str], list[str]],
 ) -> SnapshotLine:
@@ -240,8 +252,13 @@ def _validate_line(
     text = line.get("text")
     if not isinstance(text, str) or not text.strip():
         raise ValueError(f"Snapshot line {key} needs text.")
-    if len(text.strip()) > limits[key]:
-        raise ValueError(f"Snapshot line {key} is longer than {limits[key]} characters.")
+    text = " ".join(text.split())
+    if len(text) > limits[key]:
+        # Keep the full sentences that fit instead of losing a correct line to its length.
+        trimmed = _trim_to_sentences(text, limits[key])
+        if not trimmed:
+            raise ValueError(f"Snapshot line {key} is longer than {limits[key]} characters.")
+        text = trimmed
     basis = line.get("basis")
     if basis not in ("evidence_based", "hypothesis"):
         raise ValueError(f"Snapshot line {key} has an invalid basis.")

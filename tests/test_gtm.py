@@ -346,6 +346,25 @@ class GTMSnapshotTests(unittest.TestCase):
         self.assertEqual(snapshot["status"], "partial")
         self.assertIn("longer than 250", cast(dict[str, str], snapshot["line_errors"])["mission"])
 
+    def test_over_long_line_is_trimmed_to_whole_sentences(self):
+        pack = load_research_pack(SAMPLES[0])
+        sentence = "Competitor A charges less and targets small teams. "
+
+        class LongLandscape(FakeModel):
+            def json(self, system: str, prompt: str) -> JsonObject:
+                answer = super().json(system, prompt)
+                if system == SNAPSHOT_SYSTEM:
+                    line = cast(dict[str, JsonObject], answer["lines"])["competitive_landscape"]
+                    line["text"] = sentence * 20  # about 1,000 characters
+                return answer
+
+        snapshot = build_snapshot(LongLandscape(), pack, [])
+        line = cast(dict[str, JsonObject], snapshot["lines"])["competitive_landscape"]
+        self.assertEqual(line["status"], "found")
+        self.assertLessEqual(len(cast(str, line["text"])), 700)
+        self.assertTrue(cast(str, line["text"]).endswith("small teams."))
+        self.assertNotIn("competitive_landscape", snapshot["line_errors"])
+
     def test_unusable_response_twice_falls_back(self):
         model = FakeModel(snapshot_reply=["not", "an", "object"])
         result = GTMOrchestrator(model).run(load_research_pack(SAMPLES[0]))

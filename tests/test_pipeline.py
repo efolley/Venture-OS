@@ -13,7 +13,9 @@ from pipeline import __main__ as cli
 from pipeline.runner import run_pipeline, slug
 from research import MemoryStore, ResearchAgent
 from research.contracts import JsonObject
+from pm.agent import PMAgent
 from test_gtm import FakeModel
+from test_pm import FakeModel as FakePMModel
 
 
 def research_agent(routes=None, model=None) -> ResearchAgent:  # type: ignore[no-untyped-def]
@@ -69,6 +71,30 @@ class PipelineTests(unittest.TestCase):
         self.assertIsNone(result.strategy)
         self.assertIn("model unavailable", result.message)
 
+    def test_full_cycle_stops_at_hitl_1_when_pm_baseline_fails(self) -> None:
+        pm_model = FakePMModel()
+        result = run_pipeline(research_agent(), GTMOrchestrator(FakeModel()), "Acme Cloud",
+                              "acmecloud.com", pm=PMAgent(pm_model))
+        self.assertEqual(result.status, "hitl_required")
+        self.assertIsNotNone(result.strategy)
+        pm = cast(JsonObject, result.pm)
+        self.assertEqual(pm["input_run_id"], result.research_run_id)
+        self.assertIn("sales", cast(JsonObject, pm["baseline"])["missing"])
+        self.assertEqual(pm_model.requests, [])  # no planning before the person decides
+
+    def test_full_cycle_with_proceed_produces_the_use_case(self) -> None:
+        result = run_pipeline(research_agent(), GTMOrchestrator(FakeModel()), "Acme Cloud",
+                              "acmecloud.com", pm=PMAgent(FakePMModel()), decision="proceed")
+        self.assertEqual(result.status, "partial")
+        use_case = cast(JsonObject, cast(JsonObject, result.pm)["use_case"])
+        self.assertTrue(cast(str, use_case["statement"]).startswith("Help "))
+
+    def test_research_decision_returns_gaps_without_planning(self) -> None:
+        result = run_pipeline(research_agent(), GTMOrchestrator(FakeModel()), "Acme Cloud",
+                              "acmecloud.com", pm=PMAgent(FakePMModel()), decision="research")
+        self.assertEqual(result.status, "research_requested")
+        self.assertIsNotNone(cast(JsonObject, result.pm)["research_request"])
+
     def test_slug_makes_safe_file_names(self) -> None:
         self.assertEqual(slug("Baseten, Inc."), "baseten-inc")
         self.assertEqual(slug("  "), "company")
@@ -81,12 +107,30 @@ class PipelineTests(unittest.TestCase):
                 patch.object(cli, "ResearchAgent",
                              side_effect=lambda model, search, store: research_agent()):
             status = cli.main(["Acme Cloud", "--website", "acmecloud.com",
-                               "--output-dir", directory])
+                               "--output-dir", directory, "--no-pm"])
             research = json.loads((Path(directory) / "acme-cloud-research.json").read_text())
             strategy = json.loads((Path(directory) / "acme-cloud-gtm.json").read_text())
         self.assertEqual(status, 0)
         self.assertEqual(strategy["input_run_id"], research["run_id"])
         self.assertIn("snapshot", strategy)
+
+    def test_cli_runs_pm_and_reports_hitl_1(self) -> None:
+        with tempfile.TemporaryDirectory() as directory, \
+                patch.object(cli, "default_model", return_value=FakeModel()), \
+                patch.object(cli, "TavilySearch", return_value=FakeSearch(FULL_ROUTES)), \
+                patch.object(cli, "default_store", return_value=MemoryStore()), \
+                patch.object(cli, "default_pm", return_value=PMAgent(FakePMModel())), \
+                patch.object(cli, "ResearchAgent",
+                             side_effect=lambda model, search, store: research_agent()):
+            waiting = cli.main(["Acme Cloud", "--website", "acmecloud.com",
+                                "--output-dir", directory])
+            pm = json.loads((Path(directory) / "acme-cloud-pm.json").read_text())
+            planned = cli.main(["Acme Cloud", "--website", "acmecloud.com",
+                                "--output-dir", directory, "--decision", "proceed"])
+            plan = json.loads((Path(directory) / "acme-cloud-pm.json").read_text())
+        self.assertEqual((waiting, planned), (5, 0))
+        self.assertEqual(pm["status"], "hitl_required")
+        self.assertTrue(plan["use_case"]["statement"].startswith("Help "))
 
 
 try:
@@ -105,7 +149,9 @@ class PipelineApiTests(unittest.TestCase):
         self.store = MemoryStore()
         agent = ResearchAgent(WorldModel(FULL_ITEMS), FakeSearch(FULL_ROUTES), self.store)
         self.client = TestClient(create_app(agent, self.store, GTMOrchestrator(FakeModel()),
-                                            run_inline=True, results_dir=self.results))
+                                            PMAgent(FakePMModel()), run_inline=True,
+                                            results_dir=self.results,
+                                            pm_results_dir=self.results / "pm"))
 
     def tearDown(self) -> None:
         self.tmp.cleanup()
@@ -135,6 +181,24 @@ class PipelineApiTests(unittest.TestCase):
         self.assertEqual(saved["input_run_id"], run_id)
         self.assertTrue((self.results / f"{run_id}.json").exists())
 
+    def test_pm_runs_on_the_saved_strategy_with_hitl_decisions(self) -> None:
+        run_id = self.research_run_id()
+        no_gtm = self.client.post("/api/pm/runs", json={"research_run_id": run_id})
+        self.assertEqual(no_gtm.status_code, 409)
+        self.client.post("/api/gtm/runs", json={"research_run_id": run_id})
+        first = self.client.post("/api/pm/runs", json={"research_run_id": run_id}).json()["job_id"]
+        job = self.client.get(f"/api/pm/jobs/{first}").json()
+        self.assertEqual(job["status"], "done", job)
+        self.assertEqual(job["result"]["status"], "hitl_required")
+        second = self.client.post("/api/pm/runs", json={"research_run_id": run_id,
+                                                        "decision": "proceed"}).json()["job_id"]
+        result = self.client.get(f"/api/pm/jobs/{second}").json()["result"]
+        self.assertEqual(result["status"], "partial")
+        self.assertTrue(result["use_case"]["statement"].startswith("Help "))
+        saved = self.client.get(f"/api/pm/runs/{run_id}").json()["result"]
+        self.assertEqual(saved["decision"], "proceed")
+        self.assertTrue((self.results / "pm" / f"{run_id}.json").exists())
+
     def test_gtm_needs_a_known_run_with_a_pack(self) -> None:
         missing = "00000000-0000-0000-0000-000000000000"
         self.assertEqual(self.client.post("/api/gtm/runs",
@@ -157,6 +221,20 @@ class StrategyRenderTests(unittest.TestCase):
         self.assertIn("Acme \\*Cloud\\*", text)
         self.assertIn("Mission:", text)
         self.assertIn("| 1 | 12/20 |", competitive_markdown(strategy))
+
+    def test_pm_result_renders_use_case_and_hitl(self) -> None:
+        import sys
+        sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "UI"))
+        from render import pm_markdown
+
+        pack = research_agent().run("Acme Cloud", "acmecloud.com").pack
+        strategy = dict(GTMOrchestrator(FakeModel()).run(dict(cast(dict, pack))))
+        waiting = PMAgent(FakePMModel()).run(strategy)
+        self.assertIn("HITL 1", pm_markdown(waiting))
+        planned = PMAgent(FakePMModel()).run(strategy, decision="proceed")
+        text = pm_markdown(planned)
+        self.assertIn("#### Use case", text)
+        self.assertIn("validate", text)
 
 
 if __name__ == "__main__":

@@ -20,6 +20,7 @@ ventureos-research = "research.__main__:main"
 ventureos-research-api = "research.api:main"
 ventureos-gtm = "gtm.cli:main"
 ventureos-pipeline = "pipeline.__main__:main"
+ventureos-pm = "pm.__main__:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

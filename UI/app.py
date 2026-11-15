@@ -16,8 +16,9 @@ import streamlit as st
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from render import (  # noqa: E402
-    competitive_markdown, evidence_rows, gaps_markdown, pack_markdown,
-    recommendations_markdown, snapshot_markdown, themes_markdown,
+    competitive_markdown, evidence_rows, gaps_markdown, pack_markdown, pm_markdown,
+    presentation_brief_markdown, product_brief_markdown, recommendations_markdown,
+    snapshot_markdown, themes_markdown,
 )
 
 API = os.getenv("RESEARCH_API_URL", "http://127.0.0.1:8000").rstrip("/")
@@ -113,20 +114,82 @@ def run_gtm(research_run_id: str, instructions: str) -> dict:
             "strategy": strategy}
 
 
+def show_pm(result: dict, key: str) -> None:
+    st.markdown(pm_markdown(result))
+    if result["status"] == "hitl_required":
+        st.caption("HITL 1: choose how to continue.")
+        research_col, proceed_col = st.columns(2)
+        run_id = result["input_run_id"]
+        if research_col.button("Research more", key=f"hitl-research-{key}"):
+            st.session_state.pending_pm = (run_id, "research")
+            st.rerun()
+        if proceed_col.button("Proceed with gaps", key=f"hitl-proceed-{key}"):
+            st.session_state.pending_pm = (run_id, "proceed")
+            st.rerun()
+        return
+    if result.get("presentation_brief") or result.get("product_brief"):
+        presentation, product = st.tabs(["Presentation brief", "Product brief"])
+        with presentation:
+            st.markdown(presentation_brief_markdown(result.get("presentation_brief")))
+        with product:
+            st.markdown(product_brief_markdown(result.get("product_brief")))
+    st.download_button("Download PM JSON", json.dumps(result, indent=2, ensure_ascii=False),
+                       file_name=f"pm-plan-{result['input_run_id']}.json",
+                       mime="application/json", key=f"download-pm-{key}")
+
+
+def run_pm(research_run_id: str, instructions: str, decision: str | None = None) -> dict:
+    """Run PM on the saved GTM strategy and wait for the PM result."""
+    body = {"research_run_id": research_run_id, "instructions": instructions}
+    if decision:
+        body["decision"] = decision
+    try:
+        job_id = call("POST", "/api/pm/runs", body)["job_id"]
+    except RuntimeError as error:
+        return {"kind": "error", "message": f"⚠️ PM did not start: {error}"}
+    with st.status("PM: checking the baseline and establishing the use case...",
+                   expanded=False) as status:
+        while True:
+            try:
+                job = call("GET", f"/api/pm/jobs/{job_id}")
+            except RuntimeError as error:
+                status.update(label="Lost contact with the backend", state="error")
+                return {"kind": "error", "message": f"⚠️ {error}"}
+            if job["status"] != "running":
+                break
+            time.sleep(GTM_POLL_SECONDS)
+        if job["status"] != "done" or not job["result"]:
+            status.update(label="PM failed", state="error")
+            return {"kind": "error", "message": f"⚠️ PM failed: {job['error'] or 'no result'}"}
+        result = job["result"]
+        label = {"hitl_required": "PM needs your decision (HITL 1)",
+                 "research_requested": "PM sent the gaps back to Research"}.get(
+            result["status"], "PM plan ready")
+        status.update(label=label, state="complete")
+    message = {"hitl_required": "The strategy pack misses required information. Choose below.",
+               "research_requested": "Gaps sent back to Research. Run a re-run in the chat to "
+                                     "fill them."}.get(result["status"],
+                                                       "Here is the use case and action plan.")
+    return {"kind": "pm", "message": message, "pm": result}
+
+
 def show_reply(message: dict, key: str) -> None:
     st.markdown(message.get("message", "").replace("\n", "  \n"))
     if message.get("pack"):
         show_pack(message["pack"], key)
     if message.get("strategy"):
         show_strategy(message["strategy"], key)
+    if message.get("pm"):
+        show_pm(message["pm"], key)
 
 
 # ----- chat tab -------------------------------------------------------------------------
 
 def chat_tab() -> None:
-    st.title("Research and GTM chat")
-    st.caption("Send a company name or website. Research collects the evidence, then the GTM "
-               "orchestrator builds the company snapshot, competitive analysis, and sales strategy.")
+    st.title("Research, GTM, and PM chat")
+    st.caption("Send a company name or website. Research collects the evidence, the GTM "
+               "orchestrator builds the snapshot and strategy, and PM establishes the use case "
+               "and action plan.")
     if "session_id" not in st.session_state:
         try:
             st.session_state.session_id = call("POST", "/api/sessions")["session_id"]
@@ -143,6 +206,17 @@ def chat_tab() -> None:
     for index, message in enumerate(st.session_state.messages):
         with st.chat_message(message["role"]):
             show_reply(message, f"history-{index}")
+    pending = st.session_state.pop("pending_pm", None)
+    if pending:
+        # A HITL 1 button was clicked: rerun PM with the chosen decision.
+        run_id, decision = pending
+        st.session_state.messages.append({"role": "user", "message": f"HITL 1 decision: {decision}"})
+        with st.chat_message("user"):
+            st.markdown(f"HITL 1 decision: **{decision}**")
+        with st.chat_message("assistant"):
+            answer = run_pm(run_id, instructions, decision)
+            show_reply(answer, f"history-{len(st.session_state.messages)}")
+        st.session_state.messages.append({"role": "assistant", **answer})
     prompt = st.chat_input("Company name or website")
     if not prompt:
         return
@@ -159,6 +233,12 @@ def chat_tab() -> None:
             strategy = run_gtm(answer["pack"]["run_id"], instructions)
             show_reply(strategy, f"history-{len(st.session_state.messages)}")
         st.session_state.messages.append({"role": "assistant", **strategy})
+        if strategy.get("strategy"):
+            # GTM finished: hand the strategy pack to PM automatically.
+            with st.chat_message("assistant"):
+                plan = run_pm(answer["pack"]["run_id"], instructions)
+                show_reply(plan, f"history-{len(st.session_state.messages)}")
+            st.session_state.messages.append({"role": "assistant", **plan})
 
 
 def run_message(prompt: str, instructions: str) -> dict:
@@ -224,8 +304,8 @@ def data_tab() -> None:
     except RuntimeError as error:
         st.error(str(error))
         return
-    pack_tab, gtm_tab, rounds_tab, sources_tab = st.tabs(
-        ["Evidence pack", "GTM strategy", "Rounds", "Sources"])
+    pack_tab, gtm_tab, pm_tab, rounds_tab, sources_tab = st.tabs(
+        ["Evidence pack", "GTM strategy", "PM plan", "Rounds", "Sources"])
     with pack_tab:
         if detail["pack"]:
             show_pack(detail["pack"], f"data-{run_id}")
@@ -238,6 +318,8 @@ def data_tab() -> None:
                 st.error(run["error"])
     with gtm_tab:
         gtm_section(run_id, has_pack=bool(detail["pack"]))
+    with pm_tab:
+        pm_section(run_id)
     with rounds_tab:
         for entry in trail["rounds"]:
             title = "Round 0: understand" if entry["number"] == 0 else (
@@ -279,12 +361,44 @@ def gtm_section(run_id: str, *, has_pack: bool) -> None:
             st.rerun()
 
 
+def pm_section(run_id: str) -> None:
+    try:
+        result = call("GET", f"/api/pm/runs/{run_id}")
+        has_strategy = bool(call("GET", f"/api/gtm/runs/{run_id}")["strategy"])
+    except RuntimeError as error:
+        st.error(str(error))
+        return
+    if result["running_job_id"]:
+        st.info("A PM run is in progress for this research run. Refresh in a minute.")
+        return
+    if result["result"]:
+        show_pm(result["result"], f"data-{run_id}")
+    elif not has_strategy:
+        st.info("Run GTM first; PM plans from the GTM strategy.")
+        return
+    else:
+        st.info("No PM plan for this run yet.")
+    pending = st.session_state.pop("pending_pm", None)
+    if pending and pending[0] == run_id:
+        answer = run_pm(run_id, "", pending[1])
+        if answer.get("kind") == "error":
+            st.error(answer["message"])
+        else:
+            st.rerun()
+    if st.button("Run PM again" if result["result"] else "Run PM", key=f"run-pm-{run_id}"):
+        answer = run_pm(run_id, "")
+        if answer.get("kind") == "error":
+            st.error(answer["message"])
+        else:
+            st.rerun()
+
+
 # ----- layout ---------------------------------------------------------------------------
 
 st.set_page_config(page_title="VentureOS", page_icon="🔎", layout="wide")
 with st.sidebar:
     st.header("🔎 VentureOS")
-    st.caption("Research → GTM orchestrator")
+    st.caption("Research → GTM orchestrator → PM")
     page = st.radio("View", ["Chat", "Data management"], label_visibility="collapsed")
     st.divider()
 if page == "Chat":

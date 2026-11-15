@@ -1,13 +1,16 @@
-"""Run Research, then hand its evidence pack straight to the GTM orchestrator.
+"""Run Research, then the GTM orchestrator, then the PM agent, passing results in memory.
 
 This is the first slice of the VentureOS harness: deterministic code, not an LLM agent.
-It chains the 2 implemented agents and stops early when a step cannot continue:
+It chains the 3 implemented agents and stops early when a step cannot continue:
 
 - Research asks the user to pick a website (`clarify`): stop and return the candidates.
 - Research fails or returns no pack: stop with the error.
 - Research returns a `complete` or `partial` pack: run GTM on it. A partial pack is still
   analyzed; GTM marks its own result `partial` and lists the Research gaps.
 - GTM raises: keep the evidence pack and report the error.
+- PM's baseline fails and no HITL 1 decision was given: stop with `hitl_required`, keeping
+  the evidence pack and strategy pack. Rerun with `proceed` or `research`.
+- PM raises: keep the earlier results and report the error.
 """
 
 import re
@@ -15,10 +18,12 @@ from dataclasses import dataclass, field
 from typing import Literal
 
 from gtm.orchestrator import GTMOrchestrator
+from pm.agent import PMAgent
 from research.agent import ResearchAgent
 from research.contracts import EvidencePack, JsonObject, Progress, no_progress
 
-PipelineStatus = Literal["complete", "partial", "clarify", "research_failed", "gtm_failed"]
+PipelineStatus = Literal["complete", "partial", "clarify", "research_failed", "gtm_failed",
+                         "pm_failed", "hitl_required", "research_requested"]
 
 
 @dataclass
@@ -28,6 +33,7 @@ class PipelineResult:
     research_status: str = ""
     pack: EvidencePack | None = None
     strategy: JsonObject | None = None
+    pm: JsonObject | None = None
     candidates: list[JsonObject] = field(default_factory=list)
     message: str = ""
 
@@ -38,10 +44,12 @@ def run_pipeline(
     company: str,
     website: str = "",
     *,
+    pm: PMAgent | None = None,
+    decision: Literal["proceed", "research"] | None = None,
     instructions: str = "",
     progress: Progress = no_progress,
 ) -> PipelineResult:
-    """Research 1 company, then run GTM on its evidence pack."""
+    """Research 1 company, run GTM on its evidence pack, then PM on the strategy pack."""
     progress("pipeline", {"step": "research", "company": company, "website": website}, "running")
     try:
         result = research.run(company, website, instructions=instructions, progress=progress)
@@ -71,7 +79,35 @@ def run_pipeline(
     base.strategy = dict(strategy)
     base.status = "complete" if strategy["status"] == "complete" else "partial"
     progress("pipeline", {"step": "gtm", "status": strategy["status"]}, base.status)
+    if pm is None:
+        return base
+
+    progress("pipeline", {"step": "pm", "decision": decision}, "running")
+    try:
+        plan = pm.run(base.strategy, decision=decision, instructions=instructions,
+                      progress=progress)
+    except Exception as error:  # noqa: BLE001 - keep the evidence and strategy packs
+        progress("pipeline", {"step": "pm", "error": str(error)}, "failed")
+        base.status, base.message = "pm_failed", f"{type(error).__name__}: {error}"
+        return base
+    base.pm = plan
+    pm_status = plan["status"]
+    if pm_status in ("hitl_required", "research_requested"):
+        base.status = pm_status  # type: ignore[assignment]
+    elif pm_status != "complete":
+        base.status = "partial"
+    progress("pipeline", {"step": "pm", "status": pm_status}, base.status)
     return base
+
+
+def default_pm(model: object) -> PMAgent:
+    """PM on the same model as the other agents, with the DeepAgents planner when the model
+    offers a LangChain chat model (Claude), otherwise the JSON planner only."""
+    from pm.plan import DeepAgentsPlanner
+
+    chat_model = getattr(model, "chat_model", None)
+    deep = DeepAgentsPlanner(chat_model()) if callable(chat_model) else None
+    return PMAgent(model, deep_planner=deep)  # type: ignore[arg-type]
 
 
 def slug(name: str) -> str:

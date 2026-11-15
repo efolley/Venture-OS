@@ -171,3 +171,84 @@ def themes_markdown(strategy: dict) -> str:
 def gaps_markdown(strategy: dict) -> str:
     gaps = strategy.get("gaps", [])
     return "\n".join(f"- {esc(gap)}" for gap in gaps) if gaps else "_No gaps listed._"
+
+
+# ----- PM result ------------------------------------------------------------------------
+
+PURPOSE_LABELS = {"validate": "🧪 validate", "prepare": "🛠 prepare", "deliver": "🚀 deliver"}
+
+
+def _ids(ids: list[str]) -> str:
+    return f" `{esc(', '.join(ids))}`" if ids else ""
+
+
+def pm_markdown(result: dict) -> str:
+    """The PM result: baseline and HITL 1, or the use case, action plan, and builder briefs."""
+    baseline = result["baseline"]
+    out = [f"### PM plan: {esc(result['company']['name'])}",
+           f"PM status **{esc(result['status'])}** · baseline **{esc(baseline['status'])}**"
+           + (f" · decision **{esc(result['decision'])}**" if result.get("decision") else "")]
+    if baseline["missing"]:
+        out += ["", "**Baseline gaps:** " + esc(", ".join(baseline["missing"]))]
+    if result["status"] == "hitl_required":
+        out += ["", f"**HITL 1:** {esc(result['hitl']['question'])}",
+                "", "Research gaps that would fill it: "
+                + (esc(", ".join(result["hitl"]["research_gaps"])) or "_none mapped_")]
+        return "\n".join(out)
+    if result["status"] == "research_requested":
+        request = result["research_request"]
+        out += ["", "**Sent back to Research.** Gaps to collect: " + esc(", ".join(request["gaps"]))]
+        return "\n".join(out)
+    use_case = result.get("use_case")
+    if use_case:
+        out += ["", "#### Use case", "", f"> **{esc(use_case['statement'])}**", "",
+                f"- **ICP:** {esc(use_case['icp']['text'])}{_ids(use_case['icp']['based_on'])}",
+                f"- **Core problem:** {esc(use_case['core_problem']['text'])}"
+                f"{_ids(use_case['core_problem']['based_on'])}",
+                f"- **MVP solution:** {esc(use_case['mvp_solution']['text'])}"
+                f"{_ids(use_case['mvp_solution']['based_on'])}",
+                f"- **Why:** {esc(use_case['why'])}{_ids(use_case['why_based_on'])}",
+                f"- **Key assumption to test:** {esc(use_case['key_assumption'])}"]
+        for alternative in use_case.get("alternatives", []):
+            out.append(f"- **Not chosen:** {esc(alternative['statement'])} "
+                       f"_({esc(alternative['why_not'])})_")
+    actions = result.get("action_plan") or []
+    if actions:
+        out += ["", "#### Action plan", "", "| # | Purpose | Priority | When | Owner | Action | Success metric |",
+                "| --- | --- | --- | --- | --- | --- | --- |"]
+        for action in actions:
+            out.append(f"| {action['id']} | {PURPOSE_LABELS.get(action['purpose'], esc(action['purpose']))} "
+                       f"| P{action['priority']} | {esc(action['horizon'])} | {esc(action['owner'])} "
+                       f"| **{esc(action['title'])}**: {esc(action['description'])}{_ids(action['based_on'])} "
+                       f"| {esc(action['success_metric'])} |")
+    return "\n".join(out)
+
+
+def presentation_brief_markdown(brief: dict | None) -> str:
+    if not brief:
+        return "_No presentation brief._"
+    return "\n".join([
+        f"**{esc(brief['headline'])}**", "",
+        f"- **Problem:** {esc(brief['problem'])}",
+        f"- **Value proposition:** {esc(brief['value_proposition'])}",
+        f"- **Target customer:** {esc(brief['target_customer'])}",
+        "- **Key points:**", *[f"  - {esc(point)}" for point in brief["key_points"]],
+        "- **Proof points:**", *[f"  - {esc(point)}" for point in brief["proof_points"]],
+        f"- **Call to action:** {esc(brief['call_to_action'])}",
+    ])
+
+
+def product_brief_markdown(brief: dict | None) -> str:
+    if not brief:
+        return "_No product brief._"
+    return "\n".join([
+        f"**Goal:** {esc(brief['product_goal'])}", "",
+        f"- **Target user:** {esc(brief['target_user'])}",
+        f"- **Core job:** {esc(brief['core_job'])}",
+        "- **Must-have features:**",
+        *[f"  - **{esc(f['name'])}**: {esc(f['why'])}{_ids(f['based_on'])}"
+          for f in brief["must_have_features"]],
+        "- **Out of scope:** " + esc("; ".join(brief["out_of_scope"])),
+        "- **Success criteria:**", *[f"  - {esc(item)}" for item in brief["success_criteria"]],
+        f"- **Demo scenario:** {esc(brief['demo_scenario'])}",
+    ])
