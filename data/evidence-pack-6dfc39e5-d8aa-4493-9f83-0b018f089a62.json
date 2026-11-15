@@ -1,0 +1,247 @@
+{
+  "schema_version": 3,
+  "run_id": "6dfc39e5-d8aa-4493-9f83-0b018f089a62",
+  "parent_run_id": null,
+  "status": "partial",
+  "company": {
+    "name": "Research Linear company",
+    "website": "https://linear.app/",
+    "offering": [
+      "e1",
+      "e2",
+      "e3"
+    ]
+  },
+  "market": {
+    "category": [],
+    "size_growth": [],
+    "trends": []
+  },
+  "competitors": [],
+  "sales": {
+    "target_customer": [],
+    "buyer_role": [],
+    "pricing_model": [],
+    "channel": [],
+    "buying_signals": []
+  },
+  "evidence": [
+    {
+      "id": "e1",
+      "statement": "Linear provides planning and monitoring features designed to help product teams plan and navigate from idea to launch.",
+      "excerpt": "Planning and monitoring Plan and navigate from idea to launch Manage projects end-to-end Coordinate larger pieces of work across multiple people and teams.",
+      "basis": "fact",
+      "tags": [
+        "company.offering"
+      ],
+      "source_id": "s2",
+      "url": "https://linear.app/plan",
+      "retrieved_at": "2026-11-14T22:45:14.007940+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 1
+    },
+    {
+      "id": "e2",
+      "statement": "Linear sets a new standard for planning and building products with AI workflows at its core.",
+      "excerpt": "Purpose-built for modern teams with AI workflows at its core, Linear sets a new standard for planning and building products.",
+      "basis": "fact",
+      "tags": [
+        "company.offering"
+      ],
+      "source_id": "s1",
+      "url": "https://linear.app",
+      "retrieved_at": "2026-11-14T22:45:14.007316+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 1
+    },
+    {
+      "id": "e3",
+      "statement": "Linear offers purpose-built analytics and reporting features.",
+      "excerpt": "Take the guesswork out of product planning with Linear’s purpose-built analytics and reporting features.",
+      "basis": "fact",
+      "tags": [
+        "company.offering"
+      ],
+      "source_id": "s3",
+      "url": "https://linear.app/insights",
+      "retrieved_at": "2026-11-14T22:45:14.008172+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 1
+    }
+  ],
+  "sources": [
+    {
+      "id": "s1",
+      "url": "https://linear.app",
+      "title": "Linear – The system for product development",
+      "kind": "first_party",
+      "retrieved_at": "2026-11-14T22:45:14.007316+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s2",
+      "url": "https://linear.app/plan",
+      "title": "Linear – Plan and navigate from idea to launch",
+      "kind": "first_party",
+      "retrieved_at": "2026-11-14T22:45:14.007940+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s3",
+      "url": "https://linear.app/insights",
+      "title": "Insights – Linear",
+      "kind": "first_party",
+      "retrieved_at": "2026-11-14T22:45:14.008172+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s4",
+      "url": "https://www.usecarly.com/blog/linear-pricing",
+      "title": "Linear Pricing in 2026: What Every Plan Actually Costs",
+      "kind": "other",
+      "retrieved_at": "2026-11-14T22:45:21.342588+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s5",
+      "url": "https://guptadeepak.com/startup-offers/programs/linear-startups",
+      "title": "Linear for Startups, Free Business plan (term set by partner)",
+      "kind": "other",
+      "retrieved_at": "2026-11-14T22:45:21.345377+00:00",
+      "published_at": null
+    }
+  ],
+  "coverage": {
+    "company": {
+      "status": "complete",
+      "missing": []
+    },
+    "market": {
+      "status": "partial",
+      "missing": [
+        "market.category",
+        "market.size_growth",
+        "market.trends"
+      ]
+    },
+    "competitors": {
+      "status": "partial",
+      "missing": [
+        "competitors.alternative"
+      ]
+    },
+    "sales": {
+      "status": "partial",
+      "missing": [
+        "sales.target_customer",
+        "sales.buyer_role",
+        "sales.pricing_model",
+        "sales.channel"
+      ]
+    }
+  },
+  "limits_hit": [
+    "rounds"
+  ],
+  "uncertainties": [],
+  "rejected_sources": [
+    {
+      "url": "https://linear.app/customers/browsercompany",
+      "reason": "company website page limit reached",
+      "round": 1
+    },
+    {
+      "url": "https://linear.app/careers/86abcce0-04b2-405c-9a8e-e0ca84813914",
+      "reason": "company website page limit reached",
+      "round": 1
+    },
+    {
+      "url": "https://linear.app/now/the-profitable-startup",
+      "reason": "company website page limit reached",
+      "round": 2
+    },
+    {
+      "url": "https://linear.app/changelog/page/6",
+      "reason": "company website page limit reached",
+      "round": 2
+    },
+    {
+      "url": "https://linear.app/customers",
+      "reason": "company website page limit reached",
+      "round": 2
+    },
+    {
+      "url": "https://linear.app/customers/openai",
+      "reason": "company website page limit reached",
+      "round": 2
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=pRf8_40EDtM",
+      "reason": "does not mention the company",
+      "round": 3
+    },
+    {
+      "url": "https://filament.digital/how-to-write-b2b-case-studies",
+      "reason": "does not mention the company",
+      "round": 3
+    },
+    {
+      "url": "https://www.fryerhq.co.nz/post/case-study-statistics-2025",
+      "reason": "does not mention the company",
+      "round": 3
+    },
+    {
+      "url": "https://planbeyond.com/case-studies",
+      "reason": "does not mention the company",
+      "round": 3
+    },
+    {
+      "url": "https://intentsify.io/our-customers",
+      "reason": "does not mention the company",
+      "round": 3
+    },
+    {
+      "url": "https://www.linear.eu/en/become-a-sales-partner",
+      "reason": "does not mention the company",
+      "round": 4
+    },
+    {
+      "url": "https://linear.app/startups",
+      "reason": "company website page limit reached",
+      "round": 4
+    },
+    {
+      "url": "https://creditforstartups.com/companies/linear",
+      "reason": "does not mention the company",
+      "round": 4
+    },
+    {
+      "url": "https://www.marketresearchfuture.com/reports/linear-motor-market-7149",
+      "reason": "does not mention the company",
+      "round": 5
+    },
+    {
+      "url": "https://au.finance.yahoo.com/news/linear-motor-market-size-surpass-063000798.html",
+      "reason": "does not mention the company",
+      "round": 5
+    },
+    {
+      "url": "https://www.linkedin.com/pulse/linear-axis-market-size-share-growth-future-u0ikf",
+      "reason": "does not mention the company",
+      "round": 5
+    },
+    {
+      "url": "https://www.grandviewresearch.com/industry-analysis/linear-motion-market-report",
+      "reason": "does not mention the company",
+      "round": 5
+    },
+    {
+      "url": "https://finance.yahoo.com/news/linear-alkyl-benzene-lab-market-083100903.html",
+      "reason": "does not mention the company",
+      "round": 5
+    }
+  ]
+}

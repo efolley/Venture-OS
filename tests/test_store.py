@@ -1,95 +1,99 @@
+"""Store contract tests, run against MemoryStore and (when configured) PostgreSQL."""
+
 import os
-import time
 import unittest
-from ventureos.execution import Task, Artifact
-from ventureos.store import PostgresStore, LeaseLost
+import uuid
 
-@unittest.skipUnless(os.environ.get('VENTUREOS_TEST_DSN'), 'requires disposable PostgreSQL database')
-class StoreTests(unittest.TestCase):
-    def setUp(self):
-        self.store = PostgresStore(os.environ['VENTUREOS_TEST_DSN'])
-        self.store.initialize()
-        import uuid
-        self.tenant = str(uuid.uuid4())
-        self.task = Task(self.tenant, 'run', 'task', 'research', {})
-        self.store.submit(self.task)
+from research.contracts import Limits
+from research.store import MemoryStore, PostgresStore, RunRecord, StoredSource
 
-    def test_claim_is_exclusive_and_tenant_scoped(self):
-        lease = self.store.claim(self.tenant, 'worker', 30)
-        self.assertIsNotNone(lease)
-        self.assertIsNone(self.store.claim(self.tenant, 'other', 30))
-        self.assertIsNone(self.store.get('other-tenant', 'task'))
-        self.assertEqual(self.store.get(self.tenant,'task')['status'], 'running')
+DSN = os.getenv("RESEARCH_TEST_DATABASE_URL", "")
 
-    def test_expired_worker_fenced_checkpoint_survives_restart(self):
-        first = self.store.claim(self.tenant,'first',30)
-        self.store.checkpoint(first, {'page': 2})
-        with self.store.connect() as conn:
-            conn.execute('UPDATE ventureos_tasks SET lease_until=0 WHERE tenant_id=%s', (self.tenant,))
-        restarted = PostgresStore(os.environ['VENTUREOS_TEST_DSN'])
-        second = restarted.claim(self.tenant,'second',30)
-        self.assertEqual(second.checkpoint, {'page': 2})
-        with self.assertRaises(LeaseLost):
-            self.store.complete(first, Artifact(self.tenant,'run','task','brief',{}))
-        restarted.complete(second, Artifact(self.tenant,'run','task','brief',{'ok':True}))
-        self.assertEqual(restarted.get(self.tenant,'task')['status'], 'succeeded')
-        self.assertIsNone(restarted.claim(self.tenant,'third',30))
 
-    def test_budget_atomic_and_checkpoint_json(self):
-        lease = self.store.claim(self.tenant,'worker',30)
-        self.store.reserve(lease, 9999)
-        with self.assertRaises(ValueError): self.store.reserve(lease, 2)
-        self.assertEqual(self.store.get(self.tenant,'task')['spent_units'],9999)
-        with self.assertRaises(ValueError): self.store.checkpoint(lease, {'bad':object()})
+def _run(parent: str | None = None) -> RunRecord:
+    return {"id": str(uuid.uuid4()), "parent_run_id": parent, "company": "Acme", "website": "",
+            "instructions": "", "gaps": ["market"], "status": "running",
+            "limits": Limits().as_dict(), "usage": {}, "candidates": [], "notes": [], "error": None}
 
-    def test_duplicate_submit_and_approval_binding(self):
-        self.store.submit(self.task)
+
+def _source(url: str, sid: str | None) -> StoredSource:
+    return {"url": url, "round": 1, "rejection_reason": None if sid else "off target",
+            "source": {"id": sid, "url": url, "title": "t", "kind": "other", "text": "body",
+                       "retrieved_at": "2026-11-14T00:00:00+00:00", "published_at": None,
+                       "round": 1} if sid else None}
+
+
+ITEM = {"id": "e1", "statement": "s" * 20, "excerpt": "x" * 30, "basis": "fact",
+        "tags": ["market.trends"], "source_id": "s1", "url": "https://a.com/", "retrieved_at": "t",
+        "published_at": None, "competitor": None, "round": 1}
+ROUND = {"number": 1, "gap": "market", "query": "q", "site": "", "model_calls": 1,
+         "dropped": [], "error": None}
+COVERAGE = {"market": {"status": "partial", "missing": ["market.trends"]}}
+
+
+class StoreContract:
+    store: MemoryStore | PostgresStore
+
+    def test_run_round_trip(self) -> None:
+        run = _run()
+        self.store.create_run(run)
+        self.store.update_run(run["id"], status="partial", website="https://a.com/")
+        self.store.save_round(run["id"], ROUND, [_source("https://a.com/", "s1"),
+                                                _source("https://b.com/", None)], [ITEM], COVERAGE)
+        stored = self.store.get_run(run["id"])
+        assert stored is not None
+        self.assertEqual((stored["status"], stored["website"], stored["gaps"]),
+                         ("partial", "https://a.com/", ["market"]))
+        self.assertEqual(self.store.list_rounds(run["id"])[0]["query"], "q")
+        sources = self.store.get_sources(run["id"])
+        self.assertEqual(len(sources), 2)
+        self.assertEqual(sources[0]["source"]["text"], "body")  # type: ignore[index]
+        self.assertEqual(sources[1]["rejection_reason"], "off target")
+        self.assertEqual(self.store.get_evidence(run["id"])[0]["tags"], ["market.trends"])
+        self.assertEqual(self.store.get_coverage(run["id"]), [(1, COVERAGE)])
+
+    def test_list_runs_newest_first(self) -> None:
+        first, second = _run(), _run()
+        self.store.create_run(first)
+        self.store.create_run(second)
+        ids = [r["id"] for r in self.store.list_runs(500)]
+        self.assertLess(ids.index(second["id"]), ids.index(first["id"]))
+        self.assertTrue(self.store.list_runs(500)[0]["created_at"])
+
+    def test_round_is_atomic(self) -> None:
+        run = _run()
+        self.store.create_run(run)
+        self.store.save_round(run["id"], ROUND, [_source("https://a.com/", "s1")], [], None)
+        with self.assertRaises(Exception):
+            self.store.save_round(run["id"], {**ROUND, "number": 2},  # type: ignore[arg-type]
+                                  [_source("https://c.com/", "s2"), _source("https://a.com/", "s3")],
+                                  [], None)
+        self.assertEqual([r["number"] for r in self.store.list_rounds(run["id"])], [1])
+        self.assertEqual(len(self.store.get_sources(run["id"])), 1)
+
+    def test_unknown_parent_and_status_rejected(self) -> None:
+        with self.assertRaises(Exception):
+            self.store.create_run(_run(parent=str(uuid.uuid4())))
+        run = _run()
+        self.store.create_run(run)
         with self.assertRaises(ValueError):
-            self.store.submit(Task(self.tenant,'run','task','research',{'changed':True}))
-        approved = Task(self.tenant,'run','approval','research',{}, requires_approval=True)
-        self.store.submit(approved)
-        self.assertFalse(self.store.approve(self.tenant,'approval','wrong'))
-        digest = self.store.get(self.tenant,'approval')['task_hash']
-        self.assertTrue(self.store.approve(self.tenant,'approval',digest))
+            self.store.update_run(run["id"], status="done")
 
-    def test_skip_locked_does_not_wait_for_locked_task(self):
-        with self.store.connect() as conn:
-            conn.execute('SELECT * FROM ventureos_tasks WHERE tenant_id=%s FOR UPDATE', (self.tenant,))
-            self.assertIsNone(self.store.claim(self.tenant,'other',30))
 
-    def test_attempts_exhausted_on_crash(self):
-        one = Task(self.tenant,'run','one','research',{},max_attempts=1)
-        self.store.submit(one)
-        with self.store.connect() as conn:
-            conn.execute("UPDATE ventureos_tasks SET status='failed' WHERE tenant_id=%s AND task_id='task'",(self.tenant,))
-        self.store.claim(self.tenant,'worker',30)
-        with self.store.connect() as conn:
-            conn.execute("UPDATE ventureos_tasks SET lease_until=0 WHERE tenant_id=%s AND task_id='one'",(self.tenant,))
-        self.assertIsNone(self.store.claim(self.tenant,'worker2',30))
-        self.assertEqual(self.store.get(self.tenant,'one')['status'],'failed')
+class MemoryStoreTest(StoreContract, unittest.TestCase):
+    def setUp(self) -> None:
+        self.store = MemoryStore()
 
-    def test_real_concurrent_claims_and_budget_reservations(self):
-        from concurrent.futures import ThreadPoolExecutor
-        with ThreadPoolExecutor(max_workers=4) as workers:
-            leases=list(workers.map(lambda n:self.store.claim(self.tenant,str(n),30),range(4)))
-        claimed=[lease for lease in leases if lease is not None]
-        self.assertEqual(len(claimed),1)
-        def reserve(_):
-            try:
-                self.store.reserve(claimed[0],6000)
-                return True
-            except ValueError:
-                return False
-        with ThreadPoolExecutor(max_workers=2) as workers:
-            self.assertEqual(sum(workers.map(reserve,range(2))),1)
 
-    def test_completed_task_identity_and_deadline(self):
-        lease=self.store.claim(self.tenant,'worker',30)
-        with self.assertRaises(ValueError):
-            self.store.complete(lease,Artifact('other','run','task','brief',{}))
-        with self.store.connect() as conn:
-            conn.execute('UPDATE ventureos_tasks SET deadline=0 WHERE tenant_id=%s',(self.tenant,))
-        with self.assertRaises(ValueError):
-            self.store.complete(lease,Artifact(self.tenant,'run','task','brief',{}))
-        self.store.fail(lease,retryable=True)
-        self.assertEqual(self.store.get(self.tenant,'task')['status'],'failed')
+@unittest.skipUnless(DSN, "set RESEARCH_TEST_DATABASE_URL to a disposable PostgreSQL database")
+class PostgresStoreTest(StoreContract, unittest.TestCase):
+    def setUp(self) -> None:
+        self.store = PostgresStore(DSN)
+        self.store.migrate()
+
+    def test_migrate_is_repeatable(self) -> None:
+        self.store.migrate()
+
+
+if __name__ == "__main__":
+    unittest.main()

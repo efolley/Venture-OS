@@ -1,10 +1,12 @@
-# VentureOS
+# VentureOS | Dev branch
 
 > ### **From a company name to end2end loop**
 
 VentureOS is a business operations harness that is designed to coordinate agents to analyze a company and the market it operates in, assess its strengths and weaknesses in market positioning, identify the clients it targets, build a GTM and sales strategy for them, and produce a simple mini-MVP of a similar solution. Built for small B2B agencies and technical consultancies connecting research, sales preparation, and delivery across disconnected tools.
 
-## Architecture
+- A company name or website (required). `http://` is upgraded to `https://`, and the change is recorded.
+- Optional instructions, for example `focus on mid-market` or `EU only`.
+- Optional, on a re-run: a previous run ID and a list of gaps (for example `market.trends`), so only missing items are researched.
 
 <p align="center">
   <img src="docs/architecture/agent-pipeline.svg" alt="VentureOS agent pipeline: Research, GTM orchestrator with 3 parallel sub-agents, PM agent snapshot check with HITL 1, parallel builders, HITL 2, Executor" width="620">
@@ -18,7 +20,12 @@ User flow (planned):
 5. Presentation and Product builders: create a 1-pager proposal and a mini-MVP in parallel, then a human approves both (HITL 2)
 6. Executor: a mini AI CRM that runs approved follow-up and tracks all work
 
-### Runtime
+| Field | Checklist (checked in code) |
+| --- | --- |
+| Company | name, website, what they sell |
+| Market | category, 1 or more size or growth signals, 2 or more trends |
+| Competitors | 3 to 5 alternatives, each with website, positioning, and pricing (or `not_published`) |
+| Sales | target customer, buyer role, pricing model, channel; buying signals optional |
 
 ```mermaid
 flowchart LR
@@ -37,9 +44,14 @@ flowchart LR
     Storage -.-> Scale["Optional Adapters (planned)<br/>pgvector · Kafka · Redis · Chroma · S3"]
 ```
 
-Cross-cutting: OpenTelemetry tracing · Offline eval harness as a CI release gate (planned)
+1. **Understand.** Normalize a given website and start research. With only a name, run 1 search and 1 model call to check the spelling (for example `Baseteen` becomes `Baseten`) and propose up to 5 official websites. The run stops with `clarify`; research starts after the user picks a website, and the typed spelling still counts as the company's name.
+2. **Reason (ReAct, DeepAgents).** The research loop is a [DeepAgents](https://docs.langchain.com/oss/python/deepagents/overview) agent on Claude Haiku 5.5. The model decides what to search and read next, starting with the company's own site, then market, then competitors. It works only through 5 tools: `coverage_status`, `search_web`, `read_source`, `add_evidence`, and `note_gap`. Code validates every tool call; a search may target only the company's site, a known competitor's site, or a site already collected.
+3. **Act: search and collect.** Each `search_web` call is 1 stored round. Keep at most 3 pages per search, preferring new sites. Skip duplicates (ignoring `www.`), non-public or non-HTTPS URLs, and low-value pages on any site (careers, benefits, legal, sign-in, PDFs). Reject pages about a different company (typed, confirmed, and domain names all count), except category market reports in market searches, which may support market items only. Competitor pages count only from the competitor's own site or a pricing, comparison, or review page about it. Caps: 3 general, 2 pricing, 2 customer, and 1 funding or launch page from the company site; 2 general pages plus 1 pricing page per other site; 5 competitors.
+4. **Observe: read and record.** The model reads a source with `read_source` and records items with `add_evidence`; a rejected item comes back with the reason so it can fix it. Only direct competitors are recorded (the model labels each one direct or adjacent), and only from comparison, alternatives, review, or competitor pages. Competitors are rejected when the excerpt describes an acquisition, integration, or partnership, or when the competitor published the page. Competitor pricing must state a price; forum posts cannot supply competitor positioning or pricing. Competitors are ranked by how many sources name them, and details are required for the top 3.
+5. **Check coverage.** Code, not the model, recomputes coverage and stores a snapshot.
+6. **Repeat** until every field is complete or a limit is hit: 12 searches, 36 sources, 36 model calls. Hitting a limit returns a `partial` pack with its gap list, never an error. The Anthropic client retries rate limits and server errors with backoff.
 
-### Agent pipeline
+Evidence rules enforced in code: excerpts are 25 to 400 characters and appear verbatim in their source; each excerpt supports 1 item (a list of competitors may support 1 item per competitor); names and numbers in a statement must appear in its excerpt; facts from forums become inferences; company offering and pricing model must cite the company's own site when one was collected. Page text is treated as untrusted data.
 
 The harness is deterministic code, not an LLM agent. It runs the agents as a pipeline, applies eval gates between stages, and pauses for human-in-the-loop (HITL) decisions before work moves on or leaves the system.
 
@@ -93,7 +105,7 @@ Architecture details:
 
 ## 6 agents. 3 GTM sub-agents. 1 harness.
 
-Agent execution and deliverables below are (planned); role specifications and a fixed workflow preview exist today.
+## Run
 
 | #  | Agent                | Responsibility                                                                                                                   | Deliverable                     |
 | -- | -------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
@@ -113,10 +125,10 @@ Role contracts in `agents/` still follow the earlier layout. Contracts for the G
 
 Requires Python 3.10+. No dependencies or API keys are needed for the preview.
 
-Run from the repository root:
+Start the FastAPI backend, then the Streamlit UI in a second terminal:
 
 ```bash
-PYTHONPATH=src python3 -m ventureos --brief examples/agency-brief.json
+PYTHONPATH=src python3 -m research.api
 ```
 
 This prints a JSON workflow plan showing agent assignments, review checkpoints, and expected deliverables. It does not call models, browse the web, send email, or build a product.
@@ -154,26 +166,35 @@ examples/agency-brief.json
 - [ ] Add email and CRM adapters with duplicate-action prevention
 - [ ] Publish a reproducible end-to-end example with cost and outcome data
 
-## Contributing
+- **Chat:** send a company name or website. For a name, the agent checks the spelling and proposes websites (reply with a number, name, or website) or when the pack is partial (reply `yes` to research only the missing items). Packs are shown with coverage, cited evidence, and a JSON download.
+- **Data management:** every stored run, with its evidence pack, each round's query and coverage, and kept and rejected sources.
 
-Start with one workflow, agent contract, or adapter. Include a sample input, expected output, and a way to verify the result. Keep generated claims separate from sourced facts and observed customer outcomes.
+The backend binds to `127.0.0.1` and has no authentication, so run it on your own machine. Chat sessions are in memory; runs and packs are in the store.
 
-## Inspiration
+| Endpoint | Purpose |
+| --- | --- |
+| `POST /api/sessions` | Start a chat session |
+| `POST /api/sessions/{id}/messages` | Send `{"message", "instructions"}`; returns a job ID |
+| `GET /api/jobs/{id}?after=N` | Progress events and the reply |
+| `GET /api/runs` | Stored runs, newest first |
+| `GET /api/runs/{id}` | 1 run and its evidence pack |
+| `GET /api/runs/{id}/rounds` | Rounds, coverage per round, and sources |
 
-README organization and architecture references: [MetaGPT](https://github.com/FoundationAgents/MetaGPT), [CrewAI](https://github.com/crewAIInc/crewAI), [AutoGen](https://github.com/microsoft/autogen) (historical reference), [LangGraph](https://github.com/langchain-ai/langgraph), and [Agency Swarm](https://github.com/VRSEN/agency-swarm). These are references, not dependencies or affiliations.
+A CLI is also available: `PYTHONPATH=src python3 -m research "Basecamp" --website basecamp.com`.
 
-## Optional shared runtime
-
-Install the optional dependencies in a virtual environment:
+`research.pack.gtm_gaps(pack)` lists what still blocks the GTM agents (at least 1 cited item per section and 3 described competitors; buying signals optional). A live smoke check researches real companies and scores each pack; it makes billed calls and is not part of the tests:
 
 ```bash
-python3 -m pip install -e '.[runtime,test]'
+PYTHONPATH=src python3 scripts/live_smoke.py linear.app baseten.co vercel.com
 ```
 
-Set `VENTUREOS_DATABASE_URL` to a PostgreSQL database dedicated to VentureOS, then run:
+Tests use provider doubles and never call live services; they cover the shared rules, storage, API, and the fallback loop, not the live DeepAgents loop, which the smoke check covers. Set `RESEARCH_TEST_DATABASE_URL` to a disposable database to run the PostgreSQL tests.
 
 ```bash
-PYTHONPATH=src python3 -m ventureos --brief examples/agency-brief.json --execute-demo --tenant demo --run-id brief-1
+PYTHONPATH=src python3 -m unittest discover -s tests -v
 ```
 
-This initializes the shared tables and executes a local brief demo, not the business agents. Repeating the same ID and input reuses the stored result. CLI tenant selection is operator-only, not authentication. See [testing instructions](tests/README.md) and [runtime limits](docs/agents_todo.md#current-state).
+## Status
+
+- Implemented: input normalization, name check with website options, DeepAgents research loop on Claude Haiku 5.5, evidence checks, checklist coverage, re-runs from gaps, PostgreSQL and in-memory storage, FastAPI backend, Streamlit chat and data management UI, CLI.
+- Planned: updated golden fixture, a model check that a statement follows from its excerpt, pgvector retrieval.
