@@ -320,11 +320,34 @@ class GTMSnapshotTests(unittest.TestCase):
         self.assertEqual(result["snapshot"]["status"], "complete")
         self.assertNotIn("vision", result["snapshot"]["missing"])
 
-    def test_invalid_citation_retries_once_then_falls_back(self):
-        reply = {"lines": {"mission": {"status": "found", "text": "Made up.",
-                                       "basis": "evidence_based", "evidence_ids": ["e999"],
-                                       "recommendation_ids": []}}}
-        model = FakeModel(snapshot_reply=reply)
+    def test_one_bad_line_is_retried_alone_and_good_lines_are_kept(self):
+        pack = load_research_pack(SAMPLES[0])
+        company = cast(dict[str, list[str]], pack["company"])
+        calls: list[JsonObject] = []
+
+        class OneBadLine(FakeModel):
+            def json(self, system: str, prompt: str) -> JsonObject:
+                answer = super().json(system, prompt)
+                if system == SNAPSHOT_SYSTEM:
+                    calls.append(cast(JsonObject, json.loads(prompt)))
+                    mission = cast(dict[str, JsonObject], answer["lines"]).get("mission")
+                    if mission is not None:
+                        mission["text"] = "x" * 400  # longer than the 250-character limit
+                return answer
+
+        snapshot = build_snapshot(OneBadLine(), pack, [])
+        self.assertEqual(len(calls), 2)
+        self.assertEqual(list(cast(JsonObject, calls[1]["lines"])), ["mission"])
+        self.assertIn("mission", cast(JsonObject, calls[1]["validation_errors"]))
+        lines = cast(dict[str, JsonObject], snapshot["lines"])
+        self.assertEqual(lines["mission"]["status"], "unknown")
+        self.assertEqual(lines["problem"]["status"], "found")
+        self.assertEqual(lines["problem"]["evidence_ids"], company["problem"][:1])
+        self.assertEqual(snapshot["status"], "partial")
+        self.assertIn("longer than 250", cast(dict[str, str], snapshot["line_errors"])["mission"])
+
+    def test_unusable_response_twice_falls_back(self):
+        model = FakeModel(snapshot_reply=["not", "an", "object"])
         result = GTMOrchestrator(model).run(load_research_pack(SAMPLES[0]))
         snapshot = result["snapshot"]
         self.assertEqual(len(model.snapshot_requests), 2)

@@ -19,6 +19,7 @@ test = ["httpx>=0.27,<1"]
 ventureos-research = "research.__main__:main"
 ventureos-research-api = "research.api:main"
 ventureos-gtm = "gtm.cli:main"
+ventureos-pipeline = "pipeline.__main__:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
