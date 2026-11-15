@@ -1,0 +1,822 @@
+{
+  "schema_version": 4,
+  "input_run_id": "ff9d241d-1d27-4eb6-a756-58e4cb54ad24",
+  "company": {
+    "name": "Linear",
+    "website": "https://linear.app/"
+  },
+  "research_status": "complete",
+  "status": "complete",
+  "research_gaps": [],
+  "gaps": [
+    "competitive_strategy, market_analysis: No segment-level breakdown of market size or growth (by company size, industry, region, or team type) to rank segments against each other.",
+    "market_analysis: No market share or competitive position data for Linear within project management software.",
+    "market_analysis: No evidence on the size or growth rate of the AI agent workflow segment specifically, only general trend commentary.",
+    "market_analysis: No data on which customer segments currently generate Linear's revenue or retention, so segment priority cannot be checked against actual performance.",
+    "challenger_salesman, competitive_strategy, market_analysis: No evidence of Linear's Business or Enterprise plan pricing or feature set.",
+    "market_analysis: No evidence from the competitor research to compare Linear's segment focus against rivals.",
+    "challenger_salesman, competitive_strategy, market_analysis: Company mission statement not found; the about page was skipped, so positioning relies on product marketing claims.",
+    "competitive_strategy: No evidence of Linear's dependency, cross-team planning, or reporting features.",
+    "competitive_strategy: No evidence of Plane's paid plan pricing or feature set.",
+    "challenger_salesman, competitive_strategy: No evidence of Shortcut's or Jira's feature parity with Linear on agents, workflows, or feedback routing.",
+    "competitive_strategy: No evidence of GitHub Issues and Projects feature depth, reporting, or integration limits relative to Linear.",
+    "challenger_salesman, competitive_strategy: No customer data on pain points, switching behavior, win/loss reasons, or conversion from Linear's free plan.",
+    "challenger_salesman: No buyer persona data identifying titles, decision makers, or who approves purchases.",
+    "challenger_salesman: No evidence on channels beyond the pricing page, such as partners, marketplaces, or self-serve versus sales-led mix.",
+    "challenger_salesman: No buying-signal data showing which events (team growth, tool migrations, security reviews) predict purchase.",
+    "challenger_salesman: No independent customer reviews or interviews confirming the pains Linear's messaging addresses."
+  ],
+  "sub_agents": {
+    "market_analysis": {
+      "name": "market_analysis",
+      "status": "complete",
+      "recommendations": [
+        {
+          "title": "Anchor strategy in the project management software category",
+          "recommendation": "Treat project management software as Linear's core addressable market and plan growth targets against its projected expansion rather than against a narrower niche.",
+          "rationale": "The global project management software market was valued at USD 7.9 billion in 2025 and is projected to reach USD 19.8 billion by 2033 at an 11.1% CAGR.",
+          "basis": "evidence_based",
+          "evidence_ids": [
+            "e10",
+            "e11"
+          ]
+        },
+        {
+          "title": "Prioritize teams building AI agent workflows",
+          "recommendation": "Give priority to segments of teams that are building AI features and agents on top of the product, and develop integration and agent-facing capabilities for them.",
+          "rationale": "Linear states that customers have been building AI features and agents that work with Linear. Industry commentary says AI agents for project management are now drafting status reports, chasing missing updates, and preparing task changes for approval. The evidence does not size this segment or show it is growing faster than others, so the priority itself is a judgment.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e19",
+            "e17"
+          ]
+        },
+        {
+          "title": "Prioritize product teams that turn customer feedback into work",
+          "recommendation": "Focus go-to-market on product and support teams whose workflow starts with customer conversations and feedback, and make feedback-to-issue routing a lead use case for them.",
+          "rationale": "Linear says it turns customer conversations and feedback into actionable issues that are routed, labeled, and prioritized for the right team. The evidence does not show that these teams are a larger or faster-growing segment, so this targeting is a hypothesis.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e2"
+          ]
+        },
+        {
+          "title": "Prioritize product-development teams",
+          "recommendation": "Concentrate segment targeting on teams that plan and build products, and use customer scale evidence to frame that focus.",
+          "rationale": "Linear positions itself as purpose-built for planning and building products and as a product development system for teams and agents, and its pricing page says it is trusted by more than 50,000 companies. The evidence does not break that customer base into segments, so the segment choice relies on the company's own positioning.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e4",
+            "e5",
+            "e7"
+          ]
+        }
+      ],
+      "gaps": [
+        "No segment-level breakdown of market size or growth (by company size, industry, region, or team type) to rank segments against each other.",
+        "No market share or competitive position data for Linear within project management software.",
+        "No evidence on the size or growth rate of the AI agent workflow segment specifically, only general trend commentary.",
+        "No data on which customer segments currently generate Linear's revenue or retention, so segment priority cannot be checked against actual performance.",
+        "No evidence on pricing tiers or willingness to pay by segment.",
+        "No evidence from the competitor research to compare Linear's segment focus against rivals.",
+        "Company mission statement not found; the about page was skipped, so positioning relies on product marketing claims."
+      ]
+    },
+    "competitive_strategy": {
+      "name": "competitive_strategy",
+      "status": "complete",
+      "recommendations": [
+        {
+          "title": "Multi-team dependency planning versus Jira's premium tier",
+          "recommendation": "Test whether Linear can win mid-size organizations that need cross-team planning and dependency management by making multi-team planning a visible part of its paid positioning, instead of leaving it implied by team count.",
+          "rationale": "Jira's paid tiers are positioned around cross-team planning and dependency management, with the Premium tier at $15.56 per user per month. Linear's Basic plan is $10 per user per month and includes 5 teams, while the free plan covers 2 teams. The gap is whether Linear's planning capabilities for multi-team organizations are clearly communicated against Jira's stated positioning.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e22",
+            "e8",
+            "e6",
+            "e12"
+          ],
+          "sub_scores": {
+            "pain": 3,
+            "gap_size": 3,
+            "competitor_weakness": 3,
+            "fit": 4
+          },
+          "disconfirming_evidence": "The evidence does not describe Linear's dependency or cross-team planning features. Jira is also named as the choice for deep configuration, which may outweigh simplicity for buyers at this stage. Jira's Premium price is higher, so Linear may already win on price without any positioning change.",
+          "validation_question": "When buyers of multi-team software evaluate Jira Premium and Linear, which planning and dependency capabilities do they treat as required, and do they perceive Linear as lacking any of them?",
+          "score": 13,
+          "rank": 1
+        },
+        {
+          "title": "Free-tier friction for small teams outgrowing the free plan",
+          "recommendation": "Test whether teams that exceed Linear's free limits (2 teams, 250 issues) move to free self-hosted or free cloud alternatives, and whether a revised free or entry offer would keep them.",
+          "rationale": "Linear's free plan caps teams at 2 and issues at 250. Plane offers a free self-hosted Community Edition under AGPL-3.0 plus a free cloud tier for up to 12 users. Teams that outgrow Linear's free limits may have a no-cost path to a competitor, and this is a gap in Linear's entry-level offer.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e6",
+            "e14",
+            "e24"
+          ],
+          "sub_scores": {
+            "pain": 3,
+            "gap_size": 3,
+            "competitor_weakness": 3,
+            "fit": 3
+          },
+          "disconfirming_evidence": "The evidence does not show how many Linear free users reach these limits or convert to paid plans. Plane's free cloud tier caps at 12 users, while Linear's free plan allows unlimited members, so the comparison depends on which constraint binds first. Self-hosting also has operational costs the evidence does not measure.",
+          "validation_question": "At what point do small teams hit Linear's free limits, and do they evaluate or adopt free self-hosted or free cloud tools such as Plane when they do?",
+          "score": 12,
+          "rank": 2
+        },
+        {
+          "title": "Customer feedback routed directly into issues",
+          "recommendation": "Test whether Linear's claim that it turns customer conversations and feedback into routed, labeled, prioritized issues is a differentiator that buyers value enough to choose Linear over alternatives focused on AI agents or configuration.",
+          "rationale": "Linear says it automatically turns conversations and feedback into issues routed to the right team. Shortcut's positioning emphasizes AI agents for product engineering workflows, and Jira's emphasis is on custom workflows and permissions. The evidence does not show competitors offering the same feedback-to-issue routing, so this may be a positioning area where Linear can emphasize a distinct capability.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e2",
+            "e16",
+            "e12",
+            "e5"
+          ],
+          "sub_scores": {
+            "pain": 3,
+            "gap_size": 2,
+            "competitor_weakness": 2,
+            "fit": 4
+          },
+          "disconfirming_evidence": "The evidence contains only Linear's own claim about feedback routing and does not show that competitors lack this capability. Absence of competitor evidence is not proof of absence. Shortcut's AI agents or Jira's workflow features may already address the same need.",
+          "validation_question": "Do product and support teams currently route customer feedback into issue trackers, and would automatic routing into labeled, prioritized issues change which tool they choose?",
+          "score": 11,
+          "rank": 3
+        },
+        {
+          "title": "GitHub-native teams with no-cost issue tracking",
+          "recommendation": "Test whether teams already working in GitHub are satisfied with GitHub Issues and Projects, and whether Linear's integration depth or workflow differences are enough to win them from a free, bundled option.",
+          "rationale": "GitHub Issues and Projects are included on every GitHub plan, including Free. Linear's free plan is limited to 2 teams and 250 issues. Teams that live in GitHub have a no-additional-cost tracker that may satisfy them without a separate purchase, which is a competitive gap for Linear to address.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e15",
+            "e6"
+          ],
+          "sub_scores": {
+            "pain": 2,
+            "gap_size": 3,
+            "competitor_weakness": 2,
+            "fit": 3
+          },
+          "disconfirming_evidence": "The evidence does not describe GitHub Issues' feature depth, reporting, or workflow capabilities compared with Linear. Teams may choose Linear despite the cost because of product quality, which the evidence does not measure.",
+          "validation_question": "For teams that use GitHub for code, what do they gain from Linear beyond GitHub Issues and Projects, and at what scale do they pay for a separate tracker?",
+          "score": 10,
+          "rank": 4
+        },
+        {
+          "title": "Per-user price gap against Shortcut and Jira Standard",
+          "recommendation": "Test whether a value message that explains Linear's per-user price relative to Shortcut and Jira Standard, rather than a discount, improves win rates among price-sensitive teams.",
+          "rationale": "Linear's Basic plan is $10 per user per month. Shortcut's paid plans start at $8.50 per user per month after a free tier for up to 10 users, and Jira's Standard plan is $8.48 per user per month with a free tier for 10 users. The gap is a $1.50 to $1.52 per-user difference at entry-level paid tiers against two competitors that both offer free tiers covering 10 users.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e8",
+            "e13",
+            "e20",
+            "e21"
+          ],
+          "sub_scores": {
+            "pain": 2,
+            "gap_size": 2,
+            "competitor_weakness": 2,
+            "fit": 3
+          },
+          "disconfirming_evidence": "The evidence does not show whether price is a deciding factor for buyers in this category. Plans are not compared on equal feature sets, and Linear's free plan may offer a different path to adoption. The per-user difference is small.",
+          "validation_question": "When price-sensitive buyers compare Linear Basic with Shortcut and Jira Standard, is the roughly $1.50 per-user difference a factor in their decision, and what other factors outweigh it?",
+          "score": 9,
+          "rank": 5
+        }
+      ],
+      "gaps": [
+        "No evidence of Linear's Business or Enterprise plan pricing or feature set.",
+        "No evidence of Linear's dependency, cross-team planning, or reporting features.",
+        "No evidence of Plane's paid plan pricing or feature set.",
+        "No evidence of Shortcut's or Jira's feature parity with Linear on agents, workflows, or feedback routing.",
+        "No evidence of GitHub Issues and Projects feature depth, reporting, or integration limits relative to Linear.",
+        "No customer data on pain points, switching behavior, win/loss reasons, or conversion from Linear's free plan.",
+        "No evidence of Linear's stated mission or long-term positioning beyond its homepage and pricing claims.",
+        "No market evidence on buyer segments, adoption drivers, or growth by segment beyond the overall project management software market size."
+      ]
+    },
+    "challenger_salesman": {
+      "name": "challenger_salesman",
+      "status": "complete",
+      "recommendations": [
+        {
+          "title": "Target product and engineering teams as the core ICP",
+          "recommendation": "Define the primary ICP as product and engineering teams that plan and build products, and lead outreach with planning and building workflows rather than generic project tracking.",
+          "rationale": "Linear positions itself as purpose-built for planning and building products and as shaped by the practices of world-class product teams. The evidence supports this as the company's stated focus, but does not directly identify the buyer title or who signs the purchase.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e4",
+            "e18"
+          ]
+        },
+        {
+          "title": "Reframe the problem around customer feedback becoming routed work",
+          "recommendation": "Reframe the buyer's problem from 'tracking issues' to 'customer conversations and feedback not reaching the right team as prioritized work,' and use that framing in discovery and outreach to product teams.",
+          "rationale": "Linear's offering centers on turning conversations and customer feedback into issues that are routed, labeled, and prioritized for the right team. Whether buyers feel this gap strongly is not established by the evidence.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e2"
+          ]
+        },
+        {
+          "title": "Use the free tier as a land motion with defined upgrade limits",
+          "recommendation": "Use the free plan as the entry point for teams, and build upgrade conversations around the free plan's 250-issue and 2-team limits as they are reached.",
+          "rationale": "The pricing page states a free plan for everyone with a 250-issue limit and 2 teams, and a Basic plan at $10 per user per month that adds 5 teams. The evidence states these limits and prices but does not show that hitting them converts teams to paid plans.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e6",
+            "e8"
+          ]
+        },
+        {
+          "title": "Route larger accounts to contact-sales enterprise motion",
+          "recommendation": "Route larger buyers with security and admin needs to the contact-sales Enterprise path, and lead those conversations with SAML/SCIM, granular admin controls, and migration and onboarding support.",
+          "rationale": "The Enterprise plan is sold through contact sales, billed annually only, and includes SAML and SCIM, granular admin controls, advanced org modeling, and migration and onboarding support.",
+          "basis": "evidence_based",
+          "evidence_ids": [
+            "e9"
+          ]
+        },
+        {
+          "title": "Target teams switching from legacy tools with migration support",
+          "recommendation": "Build outreach sequences aimed at teams currently on legacy issue trackers, offering migration and onboarding support as the switching path.",
+          "rationale": "Linear states that companies choose it over legacy tools to move faster, and the Enterprise plan includes migration and onboarding support. The evidence does not show how many prospects are on legacy tools or how they switch.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e3",
+            "e9"
+          ]
+        },
+        {
+          "title": "Address price comparison against Jira and Shortcut",
+          "recommendation": "Prepare sales responses for price-sensitive prospects who compare Linear's $10 per user Basic plan with Jira's $8.48 Standard plan and Shortcut's $8.50 paid plan, emphasizing features and workflow fit rather than headline price alone.",
+          "rationale": "Jira lists a $8.48 per user Standard plan and free use for 10 users. Shortcut is described as a lighter alternative with paid plans from $8.50 per user per month. Linear's Basic plan is listed at $10 per user per month. The evidence does not show which features justify the difference.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e8",
+            "e20",
+            "e21",
+            "e13"
+          ]
+        },
+        {
+          "title": "Prepare for self-hosted and free alternatives",
+          "recommendation": "Create a qualification step for buyers who want self-hosting or a zero-cost option, and route them to a clear comparison or fit assessment rather than the standard paid funnel.",
+          "rationale": "Plane offers a free Community Edition under AGPL-3.0 that teams self-host, plus a free cloud tier. The evidence does not show whether Linear offers self-hosting or how many prospects prioritize it.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e24"
+          ]
+        },
+        {
+          "title": "Use customer logos in outreach to product leaders",
+          "recommendation": "Include relevant named customer examples and the company's customer count in outreach to product and engineering leaders, selecting examples that match each prospect's segment.",
+          "rationale": "Linear states that over 15,000 companies, including named firms, choose it over legacy tools, and its pricing page says it is trusted by more than 50,000 companies. These are the company's own claims and do not show that they influence buying decisions.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e3",
+            "e7"
+          ]
+        },
+        {
+          "title": "Position for teams working with AI agents",
+          "recommendation": "Test positioning that connects Linear's product development system for teams and agents with AI-era planning, and use it with buyers who are actively adopting AI in product work.",
+          "rationale": "Linear describes itself as a product development system for teams and agents and as designed for the AI era. The evidence does not show buyer demand for agent workflows.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e4",
+            "e5"
+          ]
+        }
+      ],
+      "gaps": [
+        "No stated company mission from Linear's own site, as noted in research uncertainties.",
+        "No buyer persona data identifying titles, decision makers, or who approves purchases.",
+        "No win/loss, conversion, or churn data showing whether free-tier limits or price comparisons drive upgrades or losses.",
+        "No data on sales cycle length, deal size, or Enterprise pricing beyond the contact-sales and annual-billing terms.",
+        "No evidence on channels beyond the pricing page, such as partners, marketplaces, or self-serve versus sales-led mix.",
+        "No buying-signal data showing which events (team growth, tool migrations, security reviews) predict purchase.",
+        "No independent customer reviews or interviews confirming the pains Linear's messaging addresses.",
+        "No competitor feature comparison showing how Linear's workflow differs from Jira, Shortcut, or Plane beyond price."
+      ]
+    }
+  },
+  "recommendations": [
+    {
+      "id": "r1",
+      "agent": "market_analysis",
+      "title": "Anchor strategy in the project management software category",
+      "recommendation": "Treat project management software as Linear's core addressable market and plan growth targets against its projected expansion rather than against a narrower niche.",
+      "rationale": "The global project management software market was valued at USD 7.9 billion in 2025 and is projected to reach USD 19.8 billion by 2033 at an 11.1% CAGR.",
+      "basis": "evidence_based",
+      "evidence_ids": [
+        "e10",
+        "e11"
+      ]
+    },
+    {
+      "id": "r2",
+      "agent": "market_analysis",
+      "title": "Prioritize teams building AI agent workflows",
+      "recommendation": "Give priority to segments of teams that are building AI features and agents on top of the product, and develop integration and agent-facing capabilities for them.",
+      "rationale": "Linear states that customers have been building AI features and agents that work with Linear. Industry commentary says AI agents for project management are now drafting status reports, chasing missing updates, and preparing task changes for approval. The evidence does not size this segment or show it is growing faster than others, so the priority itself is a judgment.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e19",
+        "e17"
+      ]
+    },
+    {
+      "id": "r3",
+      "agent": "market_analysis",
+      "title": "Prioritize product teams that turn customer feedback into work",
+      "recommendation": "Focus go-to-market on product and support teams whose workflow starts with customer conversations and feedback, and make feedback-to-issue routing a lead use case for them.",
+      "rationale": "Linear says it turns customer conversations and feedback into actionable issues that are routed, labeled, and prioritized for the right team. The evidence does not show that these teams are a larger or faster-growing segment, so this targeting is a hypothesis.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e2"
+      ]
+    },
+    {
+      "id": "r4",
+      "agent": "market_analysis",
+      "title": "Prioritize product-development teams",
+      "recommendation": "Concentrate segment targeting on teams that plan and build products, and use customer scale evidence to frame that focus.",
+      "rationale": "Linear positions itself as purpose-built for planning and building products and as a product development system for teams and agents, and its pricing page says it is trusted by more than 50,000 companies. The evidence does not break that customer base into segments, so the segment choice relies on the company's own positioning.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e4",
+        "e5",
+        "e7"
+      ]
+    },
+    {
+      "id": "r5",
+      "agent": "competitive_strategy",
+      "title": "Multi-team dependency planning versus Jira's premium tier",
+      "recommendation": "Test whether Linear can win mid-size organizations that need cross-team planning and dependency management by making multi-team planning a visible part of its paid positioning, instead of leaving it implied by team count.",
+      "rationale": "Jira's paid tiers are positioned around cross-team planning and dependency management, with the Premium tier at $15.56 per user per month. Linear's Basic plan is $10 per user per month and includes 5 teams, while the free plan covers 2 teams. The gap is whether Linear's planning capabilities for multi-team organizations are clearly communicated against Jira's stated positioning.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e22",
+        "e8",
+        "e6",
+        "e12"
+      ],
+      "sub_scores": {
+        "pain": 3,
+        "gap_size": 3,
+        "competitor_weakness": 3,
+        "fit": 4
+      },
+      "disconfirming_evidence": "The evidence does not describe Linear's dependency or cross-team planning features. Jira is also named as the choice for deep configuration, which may outweigh simplicity for buyers at this stage. Jira's Premium price is higher, so Linear may already win on price without any positioning change.",
+      "validation_question": "When buyers of multi-team software evaluate Jira Premium and Linear, which planning and dependency capabilities do they treat as required, and do they perceive Linear as lacking any of them?",
+      "score": 13,
+      "rank": 1
+    },
+    {
+      "id": "r6",
+      "agent": "competitive_strategy",
+      "title": "Free-tier friction for small teams outgrowing the free plan",
+      "recommendation": "Test whether teams that exceed Linear's free limits (2 teams, 250 issues) move to free self-hosted or free cloud alternatives, and whether a revised free or entry offer would keep them.",
+      "rationale": "Linear's free plan caps teams at 2 and issues at 250. Plane offers a free self-hosted Community Edition under AGPL-3.0 plus a free cloud tier for up to 12 users. Teams that outgrow Linear's free limits may have a no-cost path to a competitor, and this is a gap in Linear's entry-level offer.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e6",
+        "e14",
+        "e24"
+      ],
+      "sub_scores": {
+        "pain": 3,
+        "gap_size": 3,
+        "competitor_weakness": 3,
+        "fit": 3
+      },
+      "disconfirming_evidence": "The evidence does not show how many Linear free users reach these limits or convert to paid plans. Plane's free cloud tier caps at 12 users, while Linear's free plan allows unlimited members, so the comparison depends on which constraint binds first. Self-hosting also has operational costs the evidence does not measure.",
+      "validation_question": "At what point do small teams hit Linear's free limits, and do they evaluate or adopt free self-hosted or free cloud tools such as Plane when they do?",
+      "score": 12,
+      "rank": 2
+    },
+    {
+      "id": "r7",
+      "agent": "competitive_strategy",
+      "title": "Customer feedback routed directly into issues",
+      "recommendation": "Test whether Linear's claim that it turns customer conversations and feedback into routed, labeled, prioritized issues is a differentiator that buyers value enough to choose Linear over alternatives focused on AI agents or configuration.",
+      "rationale": "Linear says it automatically turns conversations and feedback into issues routed to the right team. Shortcut's positioning emphasizes AI agents for product engineering workflows, and Jira's emphasis is on custom workflows and permissions. The evidence does not show competitors offering the same feedback-to-issue routing, so this may be a positioning area where Linear can emphasize a distinct capability.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e2",
+        "e16",
+        "e12",
+        "e5"
+      ],
+      "sub_scores": {
+        "pain": 3,
+        "gap_size": 2,
+        "competitor_weakness": 2,
+        "fit": 4
+      },
+      "disconfirming_evidence": "The evidence contains only Linear's own claim about feedback routing and does not show that competitors lack this capability. Absence of competitor evidence is not proof of absence. Shortcut's AI agents or Jira's workflow features may already address the same need.",
+      "validation_question": "Do product and support teams currently route customer feedback into issue trackers, and would automatic routing into labeled, prioritized issues change which tool they choose?",
+      "score": 11,
+      "rank": 3
+    },
+    {
+      "id": "r8",
+      "agent": "competitive_strategy",
+      "title": "GitHub-native teams with no-cost issue tracking",
+      "recommendation": "Test whether teams already working in GitHub are satisfied with GitHub Issues and Projects, and whether Linear's integration depth or workflow differences are enough to win them from a free, bundled option.",
+      "rationale": "GitHub Issues and Projects are included on every GitHub plan, including Free. Linear's free plan is limited to 2 teams and 250 issues. Teams that live in GitHub have a no-additional-cost tracker that may satisfy them without a separate purchase, which is a competitive gap for Linear to address.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e15",
+        "e6"
+      ],
+      "sub_scores": {
+        "pain": 2,
+        "gap_size": 3,
+        "competitor_weakness": 2,
+        "fit": 3
+      },
+      "disconfirming_evidence": "The evidence does not describe GitHub Issues' feature depth, reporting, or workflow capabilities compared with Linear. Teams may choose Linear despite the cost because of product quality, which the evidence does not measure.",
+      "validation_question": "For teams that use GitHub for code, what do they gain from Linear beyond GitHub Issues and Projects, and at what scale do they pay for a separate tracker?",
+      "score": 10,
+      "rank": 4
+    },
+    {
+      "id": "r9",
+      "agent": "competitive_strategy",
+      "title": "Per-user price gap against Shortcut and Jira Standard",
+      "recommendation": "Test whether a value message that explains Linear's per-user price relative to Shortcut and Jira Standard, rather than a discount, improves win rates among price-sensitive teams.",
+      "rationale": "Linear's Basic plan is $10 per user per month. Shortcut's paid plans start at $8.50 per user per month after a free tier for up to 10 users, and Jira's Standard plan is $8.48 per user per month with a free tier for 10 users. The gap is a $1.50 to $1.52 per-user difference at entry-level paid tiers against two competitors that both offer free tiers covering 10 users.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e8",
+        "e13",
+        "e20",
+        "e21"
+      ],
+      "sub_scores": {
+        "pain": 2,
+        "gap_size": 2,
+        "competitor_weakness": 2,
+        "fit": 3
+      },
+      "disconfirming_evidence": "The evidence does not show whether price is a deciding factor for buyers in this category. Plans are not compared on equal feature sets, and Linear's free plan may offer a different path to adoption. The per-user difference is small.",
+      "validation_question": "When price-sensitive buyers compare Linear Basic with Shortcut and Jira Standard, is the roughly $1.50 per-user difference a factor in their decision, and what other factors outweigh it?",
+      "score": 9,
+      "rank": 5
+    },
+    {
+      "id": "r10",
+      "agent": "challenger_salesman",
+      "title": "Target product and engineering teams as the core ICP",
+      "recommendation": "Define the primary ICP as product and engineering teams that plan and build products, and lead outreach with planning and building workflows rather than generic project tracking.",
+      "rationale": "Linear positions itself as purpose-built for planning and building products and as shaped by the practices of world-class product teams. The evidence supports this as the company's stated focus, but does not directly identify the buyer title or who signs the purchase.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e4",
+        "e18"
+      ]
+    },
+    {
+      "id": "r11",
+      "agent": "challenger_salesman",
+      "title": "Reframe the problem around customer feedback becoming routed work",
+      "recommendation": "Reframe the buyer's problem from 'tracking issues' to 'customer conversations and feedback not reaching the right team as prioritized work,' and use that framing in discovery and outreach to product teams.",
+      "rationale": "Linear's offering centers on turning conversations and customer feedback into issues that are routed, labeled, and prioritized for the right team. Whether buyers feel this gap strongly is not established by the evidence.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e2"
+      ]
+    },
+    {
+      "id": "r12",
+      "agent": "challenger_salesman",
+      "title": "Use the free tier as a land motion with defined upgrade limits",
+      "recommendation": "Use the free plan as the entry point for teams, and build upgrade conversations around the free plan's 250-issue and 2-team limits as they are reached.",
+      "rationale": "The pricing page states a free plan for everyone with a 250-issue limit and 2 teams, and a Basic plan at $10 per user per month that adds 5 teams. The evidence states these limits and prices but does not show that hitting them converts teams to paid plans.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e6",
+        "e8"
+      ]
+    },
+    {
+      "id": "r13",
+      "agent": "challenger_salesman",
+      "title": "Route larger accounts to contact-sales enterprise motion",
+      "recommendation": "Route larger buyers with security and admin needs to the contact-sales Enterprise path, and lead those conversations with SAML/SCIM, granular admin controls, and migration and onboarding support.",
+      "rationale": "The Enterprise plan is sold through contact sales, billed annually only, and includes SAML and SCIM, granular admin controls, advanced org modeling, and migration and onboarding support.",
+      "basis": "evidence_based",
+      "evidence_ids": [
+        "e9"
+      ]
+    },
+    {
+      "id": "r14",
+      "agent": "challenger_salesman",
+      "title": "Target teams switching from legacy tools with migration support",
+      "recommendation": "Build outreach sequences aimed at teams currently on legacy issue trackers, offering migration and onboarding support as the switching path.",
+      "rationale": "Linear states that companies choose it over legacy tools to move faster, and the Enterprise plan includes migration and onboarding support. The evidence does not show how many prospects are on legacy tools or how they switch.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e3",
+        "e9"
+      ]
+    },
+    {
+      "id": "r15",
+      "agent": "challenger_salesman",
+      "title": "Address price comparison against Jira and Shortcut",
+      "recommendation": "Prepare sales responses for price-sensitive prospects who compare Linear's $10 per user Basic plan with Jira's $8.48 Standard plan and Shortcut's $8.50 paid plan, emphasizing features and workflow fit rather than headline price alone.",
+      "rationale": "Jira lists a $8.48 per user Standard plan and free use for 10 users. Shortcut is described as a lighter alternative with paid plans from $8.50 per user per month. Linear's Basic plan is listed at $10 per user per month. The evidence does not show which features justify the difference.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e8",
+        "e20",
+        "e21",
+        "e13"
+      ]
+    },
+    {
+      "id": "r16",
+      "agent": "challenger_salesman",
+      "title": "Prepare for self-hosted and free alternatives",
+      "recommendation": "Create a qualification step for buyers who want self-hosting or a zero-cost option, and route them to a clear comparison or fit assessment rather than the standard paid funnel.",
+      "rationale": "Plane offers a free Community Edition under AGPL-3.0 that teams self-host, plus a free cloud tier. The evidence does not show whether Linear offers self-hosting or how many prospects prioritize it.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e24"
+      ]
+    },
+    {
+      "id": "r17",
+      "agent": "challenger_salesman",
+      "title": "Use customer logos in outreach to product leaders",
+      "recommendation": "Include relevant named customer examples and the company's customer count in outreach to product and engineering leaders, selecting examples that match each prospect's segment.",
+      "rationale": "Linear states that over 15,000 companies, including named firms, choose it over legacy tools, and its pricing page says it is trusted by more than 50,000 companies. These are the company's own claims and do not show that they influence buying decisions.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e3",
+        "e7"
+      ]
+    },
+    {
+      "id": "r18",
+      "agent": "challenger_salesman",
+      "title": "Position for teams working with AI agents",
+      "recommendation": "Test positioning that connects Linear's product development system for teams and agents with AI-era planning, and use it with buyers who are actively adopting AI in product work.",
+      "rationale": "Linear describes itself as a product development system for teams and agents and as designed for the AI era. The evidence does not show buyer demand for agent workflows.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e4",
+        "e5"
+      ]
+    }
+  ],
+  "themes": [
+    {
+      "title": "Anchor strategy in project management software",
+      "recommendation_ids": [
+        "r1"
+      ],
+      "agents": [
+        "market_analysis"
+      ]
+    },
+    {
+      "title": "Prioritize product and engineering teams as ICP",
+      "recommendation_ids": [
+        "r4",
+        "r10"
+      ],
+      "agents": [
+        "challenger_salesman",
+        "market_analysis"
+      ]
+    },
+    {
+      "title": "Lead with feedback-to-issue routing use case",
+      "recommendation_ids": [
+        "r3",
+        "r7",
+        "r11"
+      ],
+      "agents": [
+        "challenger_salesman",
+        "competitive_strategy",
+        "market_analysis"
+      ]
+    },
+    {
+      "title": "Target teams building AI agent workflows",
+      "recommendation_ids": [
+        "r2",
+        "r18"
+      ],
+      "agents": [
+        "challenger_salesman",
+        "market_analysis"
+      ]
+    },
+    {
+      "title": "Free tier land motion and self-hosted alternatives",
+      "recommendation_ids": [
+        "r6",
+        "r12",
+        "r16"
+      ],
+      "agents": [
+        "challenger_salesman",
+        "competitive_strategy"
+      ]
+    },
+    {
+      "title": "Value messaging against per-user price comparisons",
+      "recommendation_ids": [
+        "r9",
+        "r15"
+      ],
+      "agents": [
+        "challenger_salesman",
+        "competitive_strategy"
+      ]
+    },
+    {
+      "title": "Multi-team dependency planning for mid-size organizations",
+      "recommendation_ids": [
+        "r5"
+      ],
+      "agents": [
+        "competitive_strategy"
+      ]
+    },
+    {
+      "title": "Win GitHub-native teams using no-cost issue tracking",
+      "recommendation_ids": [
+        "r8"
+      ],
+      "agents": [
+        "competitive_strategy"
+      ]
+    },
+    {
+      "title": "Route larger accounts to contact-sales Enterprise path",
+      "recommendation_ids": [
+        "r13"
+      ],
+      "agents": [
+        "challenger_salesman"
+      ]
+    },
+    {
+      "title": "Outreach to legacy tracker users with migration support",
+      "recommendation_ids": [
+        "r14"
+      ],
+      "agents": [
+        "challenger_salesman"
+      ]
+    },
+    {
+      "title": "Use matched customer logos in product-leader outreach",
+      "recommendation_ids": [
+        "r17"
+      ],
+      "agents": [
+        "challenger_salesman"
+      ]
+    }
+  ],
+  "merge": {
+    "status": "merged",
+    "error": ""
+  },
+  "snapshot": {
+    "schema_version": 1,
+    "status": "complete",
+    "company": {
+      "name": "Linear",
+      "website": "https://linear.app/"
+    },
+    "lines": {
+      "mission": {
+        "status": "found",
+        "text": "To inspire and accelerate builders, as Linear states in its own words: \"We're continuing our mission to inspire and accelerate builders.\"",
+        "basis": "evidence_based",
+        "evidence_ids": [
+          "e25"
+        ],
+        "recommendation_ids": []
+      },
+      "vision": {
+        "status": "unknown",
+        "text": "",
+        "basis": "",
+        "evidence_ids": [],
+        "recommendation_ids": []
+      },
+      "problem": {
+        "status": "found",
+        "text": "Teams need to ship with high velocity and focus, and Linear says it reduces the noise that gets in the way of that momentum.",
+        "basis": "evidence_based",
+        "evidence_ids": [
+          "e1"
+        ],
+        "recommendation_ids": []
+      },
+      "target_market": {
+        "status": "found",
+        "text": "Companies using Linear, which says it is trusted by more than 50,000 companies, within a project management software market valued at USD 7.9 billion in 2025.",
+        "basis": "evidence_based",
+        "evidence_ids": [
+          "e7",
+          "e10"
+        ],
+        "recommendation_ids": []
+      },
+      "icp": {
+        "status": "found",
+        "text": "Product and engineering teams that plan and build products, the segment Linear's product development system is designed for and that its practices are shaped by.",
+        "basis": "hypothesis",
+        "evidence_ids": [
+          "e18",
+          "e7"
+        ],
+        "recommendation_ids": [
+          "r10"
+        ]
+      },
+      "product": {
+        "status": "found",
+        "text": "Linear is a product development system for teams and agents, purpose-built for planning and building products, that turns customer conversations and feedback into issues routed, labeled, and prioritized for the right team.",
+        "basis": "evidence_based",
+        "evidence_ids": [
+          "e5",
+          "e4",
+          "e2"
+        ],
+        "recommendation_ids": []
+      },
+      "client_value": {
+        "status": "found",
+        "text": "Linear helps teams ship with high velocity and focus by reducing noise, and automatically turns customer feedback into prioritized issues routed to the right team.",
+        "basis": "evidence_based",
+        "evidence_ids": [
+          "e1",
+          "e2",
+          "e4",
+          "e5"
+        ],
+        "recommendation_ids": []
+      },
+      "market_brief": {
+        "status": "found",
+        "text": "The project management software market was valued at USD 7.9 billion in 2025 and is projected to reach USD 19.8 billion by 2033 at an 11.1% CAGR. AI agents are becoming part of project management, with Epicflow describing agents that draft status reports, chase missing updates, and prepare task changes for approval, and Linear says customers are building AI features and agents that work with it. Recommended focus is the core project management category and teams building AI agent workflows.",
+        "basis": "evidence_based",
+        "evidence_ids": [
+          "e10",
+          "e11",
+          "e17",
+          "e19"
+        ],
+        "recommendation_ids": [
+          "r1",
+          "r2"
+        ]
+      },
+      "competitive_landscape": {
+        "status": "found",
+        "text": "Alternatives named for Linear include Jira for deep configuration and cross-team planning, Shortcut as a lighter tracker with sprints and docs, Plane as a free, self-hosted open-source option, and GitHub Issues and Projects for teams already on GitHub. Linear's relative position is untested: the recommendations suggest testing whether its multi-team planning and customer-feedback routing justify its per-user price against Shortcut and Jira Standard, and whether teams outgrowing its free limits of 2 teams and 250 issues move to free alternatives.",
+        "basis": "hypothesis",
+        "evidence_ids": [
+          "e12",
+          "e13",
+          "e14",
+          "e15"
+        ],
+        "recommendation_ids": [
+          "r5",
+          "r6",
+          "r7",
+          "r8",
+          "r9"
+        ]
+      }
+    },
+    "missing": [],
+    "line_errors": {},
+    "error": ""
+  }
+}

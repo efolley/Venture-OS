@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ventureos-pm"
+version = "0.1.0"
+description = "VentureOS PM agent: checks a GTM strategy pack, applies HITL 1, and writes the action plan and builder briefs"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+pm = ["anthropic>=1.0", "deepagents>=0.7", "langchain-anthropic>=1.0", "python-dotenv>=1.0,<2"]
+test = []
+
+[project.scripts]
+ventureos-pm = "pm.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["pm*"]
