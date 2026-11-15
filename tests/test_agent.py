@@ -156,7 +156,11 @@ class AgentLoop(unittest.TestCase):
     def test_pricing_pages_have_their_own_company_page_limit(self) -> None:
         pages = [page(f"https://acmecloud.com/p{n}", "Acme Cloud", f"Acme Cloud page {n} text.")
                  for n in range(3)]
+        about = page("https://acmecloud.com/about", "About Acme Cloud",
+                     "Acme Cloud sells a client workspace for agencies. Our mission is to help "
+                     "agencies ship client work. Agencies lose hours chasing client feedback.")
         routes = {"product what it does": pages + [page("https://acmecloud.com/x", "Acme", "x")],
+                  "about us mission vision": [about],
                   "pricing plans customers": [
                       page("https://acmecloud.com/careers", "Jobs", "Join Acme Cloud."),
                       page("https://acmecloud.com/pricing", "Pricing", "Acme Cloud pricing."),
@@ -164,9 +168,22 @@ class AgentLoop(unittest.TestCase):
                       page("https://acmecloud.com/customers/big", "Big", "Acme Cloud case."),
                       page("https://acmecloud.com/customers/huge", "Huge", "Acme Cloud case 2."),
                       page("https://www.acmecloud.com/pricing/", "Dup", "Acme Cloud pricing.")]}
-        result = self.agent(routes, WorldModel(), limits=Limits(rounds=3)).run(
+        model = WorldModel({
+            "https://acmecloud.com/about": [
+                {"statement": "Acme Cloud sells a client workspace for agencies.",
+                 "excerpt": "Acme Cloud sells a client workspace for agencies.",
+                 "tags": ["company.offering"]},
+                {"statement": "Its mission is to help agencies ship client work.",
+                 "excerpt": "Our mission is to help agencies ship client work.",
+                 "tags": ["company.mission"]},
+                {"statement": "Agencies lose hours chasing client feedback.",
+                 "excerpt": "Agencies lose hours chasing client feedback.",
+                 "tags": ["company.problem"]}]})
+        result = self.agent(routes, model, limits=Limits(rounds=3)).run(
             "Acme Cloud", "acmecloud.com")
         urls = [s["url"] for s in result.pack["sources"]]  # type: ignore[index]
+        # The about page has its own slot, so it is kept after the 3 general pages are used.
+        self.assertIn("https://acmecloud.com/about", urls)
         self.assertNotIn("https://acmecloud.com/x", urls)
         self.assertEqual(len(self.search.calls[1]), 2)
         self.assertIn("https://acmecloud.com/pricing", urls)

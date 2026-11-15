@@ -1,8 +1,8 @@
 # VentureOS | GTM Orchestrator
 
-> Version **V.0.1** (`0.1.0`, `src/gtm/__init__.py`). Branch `agents/GTM_orchestrator`.
+> Version **V.0.2** (`0.2.0`, `src/gtm/__init__.py`). Branch `agents/GTM_orchestrator`.
 > Each update published to GitHub increments the version by 0.1. The branch
-> also carries the upstream Research agent (V.0.2), whose evidence-pack
+> also carries the upstream Research agent (V.0.3), whose evidence-pack
 > contracts GTM reuses.
 
 This branch builds a standalone **GTM Orchestrator** and 3 focused sub-agents.
@@ -14,7 +14,7 @@ search the web or alter Research data.
 
 ## Input
 
-- A validated Research evidence pack (currently schema v3), including company
+- A validated Research evidence pack (currently schema v4), including company
   details, cited evidence, market findings, competitors, sales context, and
   coverage gaps.
 - Optional instructions such as target region, segment, or planning constraints.
@@ -65,15 +65,36 @@ flowchart TD
     MARKET --> MERGE["Validate and merge<br/>evidence IDs · hypotheses · gaps"]
     COMPETE --> MERGE
     SALES --> MERGE
-    MERGE --> OUTPUT["Strategy pack v3<br/>themes · ranked hypotheses · de-duplicated gaps"]
+    MERGE --> SNAP["Company snapshot<br/>9 cited lines · unknown when unsupported"]
+    SNAP --> OUTPUT["Strategy pack v4<br/>snapshot · themes · ranked hypotheses · gaps"]
 ```
 
 ## Output
 
-A JSON strategy pack (`schema_version` 3) contains the input run ID and company,
-each sub-agent result, merged recommendations (each with an `id` such as `r4`;
+A JSON strategy pack (`schema_version` 4) contains the input run ID and company,
+the company `snapshot`, each sub-agent result, merged recommendations (each with an `id` such as `r4`;
 competitive strategy hypotheses in rank order, with `score` and `rank`),
 `themes`, de-duplicated `gaps`, Research gaps, and any sub-agent errors.
+
+**Company snapshot.** The top-level summary of the strategy pack, 1 model call
+after the merge step:
+
+| Line | May cite (decided in code) |
+| --- | --- |
+| Company name and URL | from the Research pack |
+| `mission`, `vision` (1 bullet each) | Research `company.mission`, `company.vision` |
+| `problem` (1 line) | Research `company.problem` |
+| `target_market`, `icp` (1 line each) | Research target customer, category, buyer role; Challenger salesman recommendations for the ICP |
+| `product`, `client_value` (1 line each) | Research offering and problem |
+| `market_brief` (2 to 3 sentences) | Research market evidence and Market analysis recommendations |
+| `competitive_landscape` (2 to 3 sentences) | Research competitor evidence and Competitive strategy recommendations |
+
+A line with nothing to cite is `unknown` and is never sent to the model, so the
+snapshot cannot invent a mission or a vision. Code checks every citation, label,
+and length, retries once with the error, and otherwise falls back to a snapshot
+where every line is `unknown` (`snapshot.status` is `fallback`). Vision is
+optional because many companies publish only a mission; any other `unknown`
+line makes the snapshot, and the strategy pack, `partial`.
 
 **Merge step.** After the 3 sub-agents finish, 1 model call groups
 recommendations that express the same idea into `themes` (a title, the
@@ -86,9 +107,9 @@ back to exact-text gap de-duplication and 1 theme per recommendation, and
 Research gaps are also de-duplicated in code, so a field is not listed both as
 partial coverage and as a GTM gap.
 The status is `complete` when the Research pack is complete with no coverage
-gaps and every sub-agent returned at least 1 recommendation. It is `partial`
-when Research is partial, a sub-agent failed, or a sub-agent returned no
-recommendations. Evidence gaps that sub-agents report are listed in `gaps` but
+gaps, every sub-agent returned at least 1 recommendation, and the snapshot is
+complete. It is `partial` when Research is partial, a sub-agent failed or
+returned no recommendations, or a required snapshot line is `unknown`. Evidence gaps that sub-agents report are listed in `gaps` but
 do not make the result `partial`, because a real model almost always lists some.
 
 ## Run locally
@@ -178,10 +199,13 @@ costs.
   sub-agents.
 - Step 12 complete: a validated merge step adds `themes` and de-duplicated
   gaps (strategy pack v3), with a safe fallback. 21 offline GTM tests pass.
+- V.0.2: reads Research schema v4 (mission, vision, problem) and adds the
+  company snapshot (strategy pack v4). Samples are now `data/notion.json`,
+  `data/baseten.json`, and `data/linear.json`. 25 offline GTM tests pass.
 
 ## Status
 
-Implemented: Research-pack validation, evidence-only Market analysis,
+Implemented: Research-pack validation, the company snapshot, evidence-only Market analysis,
 Competitive strategy (with code-ranked hypotheses), and Challenger salesman
 sub-agents, parallel orchestration, citation validation,
 coverage-gap reporting, and a JSON-output CLI. The sub-agents use a language

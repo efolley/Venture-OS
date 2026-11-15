@@ -7,7 +7,7 @@ from research.contracts import JsonObject
 SUB_AGENTS = ("market_analysis", "competitive_strategy", "challenger_salesman")
 RANKED_SUB_AGENT = "competitive_strategy"
 SUB_SCORE_KEYS = ("pain", "gap_size", "competitor_weakness", "fit")
-STRATEGY_SCHEMA_VERSION = 3
+STRATEGY_SCHEMA_VERSION = 4
 RecommendationBasis = Literal["evidence_based", "hypothesis"]
 
 
@@ -58,6 +58,7 @@ class StrategyPack(TypedDict):
     recommendations: list[dict[str, object]]
     themes: list[dict[str, object]]
     merge: dict[str, str]
+    snapshot: dict[str, object]
 
 
 def _text(value: object, message: str) -> str:
@@ -273,6 +274,12 @@ def validate_strategy_pack(value: object, allowed_evidence_ids: set[str]) -> Str
     ) not in ("merged", "fallback"):
         raise ValueError("GTM strategy pack merge status must be merged or fallback.")
 
+    snapshot_value = raw.get("snapshot")
+    if not isinstance(snapshot_value, dict) or cast(dict[object, object], snapshot_value).get(
+        "status"
+    ) not in ("complete", "partial", "fallback"):
+        raise ValueError("GTM strategy pack snapshot status must be complete, partial, or fallback.")
+
     company_value = raw.get("company")
     if not isinstance(company_value, dict):
         raise ValueError("GTM strategy pack company must be an object.")
@@ -300,4 +307,5 @@ def validate_strategy_pack(value: object, allowed_evidence_ids: set[str]) -> Str
         "recommendations": cast(list[dict[str, object]], merged),
         "themes": cast(list[dict[str, object]], themes_value),
         "merge": cast(dict[str, str], merge_value),
+        "snapshot": cast(dict[str, object], snapshot_value),
     })

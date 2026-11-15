@@ -77,7 +77,10 @@ G2 = "https://g2.com/acme-cloud-alternatives"
 HOME_TEXT = (
     "Accept all cookies to continue. Acme Cloud sells a document collaboration workspace for "
     "agencies. Acme Cloud is built for agency operations managers who run client projects. "
-    "Start a free trial or book a demo with our sales team."
+    "Start a free trial or book a demo with our sales team. "
+    "Our mission is to give every agency one calm place to run client work. "
+    "We envision a world where no agency loses a client brief in a tool switch. "
+    "Agencies waste hours every week chasing client feedback across email and chat."
 )
 PRICING_TEXT = (
     "Acme Cloud pricing is per seat, starting at $12 per user per month. "
@@ -115,6 +118,15 @@ FULL_ITEMS: dict[str, list[JsonObject]] = {
         {"statement": "It offers a free trial and demos with a sales team.",
          "excerpt": "Start a free trial or book a demo with our sales team.",
          "tags": ["sales.channel"]},
+        {"statement": "Its mission is to give every agency one calm place to run client work.",
+         "excerpt": "Our mission is to give every agency one calm place to run client work.",
+         "tags": ["company.mission"]},
+        {"statement": "It envisions no agency losing a client brief in a tool switch.",
+         "excerpt": "We envision a world where no agency loses a client brief in a tool switch.",
+         "tags": ["company.vision"]},
+        {"statement": "Agencies waste hours every week chasing client feedback across email and chat.",
+         "excerpt": "Agencies waste hours every week chasing client feedback across email and chat.",
+         "tags": ["company.problem"]},
     ],
     PRICING: [
         {"statement": "Pricing is per seat from $12 per user per month.",

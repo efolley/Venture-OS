@@ -81,6 +81,15 @@ class ItemRules(unittest.TestCase):
         self.assertEqual(item["tags"], ["market.category"])
         self.assertTrue(notes)
 
+    def test_mission_and_vision_must_cite_the_company_site(self) -> None:
+        for tag in ("company.mission", "company.vision"):
+            with self.subTest(tag=tag):
+                item, notes = self.check(kind="news", tags=[tag, "market.category"])
+                self.assertEqual(item["tags"], ["market.category"])
+                self.assertIn(f"dropped {tag}: must cite the company's own website", notes)
+        item, _ = self.check(kind="news", tags=["company.problem"])
+        self.assertEqual(item["tags"], ["company.problem"])
+
     def test_forum_fact_becomes_inference(self) -> None:
         item, _ = self.check(kind="forum", has_first_party=False)
         self.assertEqual(item["basis"], "inference")
@@ -105,9 +114,12 @@ class ItemRules(unittest.TestCase):
 
 class ChecklistAndPack(unittest.TestCase):
     def test_empty_pack_lists_every_gap(self) -> None:
-        cov = checklist.coverage({"name": "Acme", "website": "https://acme.com/", "offering": []},
+        cov = checklist.coverage({"name": "Acme", "website": "https://acme.com/", "offering": [],
+                                  "mission": [], "vision": [], "problem": []},
                                  {}, [], {})
-        self.assertEqual(cov["company"]["missing"], ["company.offering"])
+        # Vision is optional: many companies publish only a mission.
+        self.assertEqual(cov["company"]["missing"],
+                         ["company.offering", "company.mission", "company.problem"])
         self.assertEqual(cov["market"]["missing"],
                          ["market.category", "market.size_growth", "market.trends"])
         self.assertEqual(cov["competitors"]["missing"], ["competitors.alternative"])
@@ -115,7 +127,8 @@ class ChecklistAndPack(unittest.TestCase):
 
     def test_trends_need_2_and_pricing_status(self) -> None:
         cov = checklist.coverage(
-            {"name": "A", "website": "https://a.com/", "offering": ["e1"]},
+            {"name": "A", "website": "https://a.com/", "offering": ["e1"], "mission": ["e1"],
+             "vision": [], "problem": ["e1"]},
             {"category": ["e1"], "size_growth": ["e1"], "trends": ["e1"]},
             [{"name": n, "website": "https://x.com/", "evidence_ids": ["e1"], "positioning": ["e1"],
               "pricing": [], "pricing_status": s}

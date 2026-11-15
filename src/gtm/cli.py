@@ -3,6 +3,7 @@
 import argparse
 import json
 import sys
+from typing import cast
 from pathlib import Path
 
 from research.providers import default_model
@@ -58,6 +59,9 @@ def main(argv: list[str] | None = None) -> int:
     ]
     print(f"GTM strategy status: {strategy['status']}")
     print(f"Company: {strategy['company']['name']}")
+    snapshot = strategy["snapshot"]
+    missing = cast(list[str], snapshot.get("missing", []))
+    print(f"Snapshot: {snapshot['status']}" + (f" (missing: {', '.join(missing)})" if missing else ""))
     print(f"Recommendations: {len(strategy['recommendations'])}")
     print(f"Gaps: {len(strategy['gaps'])}")
     print(f"Output: {output_path}")

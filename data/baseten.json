@@ -1,33 +1,96 @@
 {
-  "schema_version": 3,
-  "run_id": "45df2d2a-2283-4a69-b5c4-f454a14a79d4",
+  "schema_version": 4,
+  "run_id": "b7b2106b-35d3-4eb1-85b7-836d3019ec57",
   "parent_run_id": null,
-  "status": "partial",
+  "status": "complete",
   "company": {
     "name": "Baseten",
     "website": "https://baseten.co/",
     "offering": [
-      "e1",
-      "e2",
-      "e3",
-      "e4",
+      "e1"
+    ],
+    "mission": [
+      "e24"
+    ],
+    "vision": [],
+    "problem": [
       "e5"
     ]
   },
   "market": {
     "category": [
-      "e7",
-      "e8"
+      "e10",
+      "e12"
     ],
-    "size_growth": [],
-    "trends": []
+    "size_growth": [
+      "e10"
+    ],
+    "trends": [
+      "e11",
+      "e13"
+    ]
   },
   "competitors": [
     {
-      "name": "Modal",
-      "website": "",
+      "name": "Fireworks AI",
+      "website": "https://fireworks.ai",
       "evidence_ids": [
-        "e9"
+        "e14",
+        "e20",
+        "e22"
+      ],
+      "positioning": [
+        "e22"
+      ],
+      "pricing": [
+        "e20"
+      ],
+      "pricing_status": "found"
+    },
+    {
+      "name": "Modal",
+      "website": "https://modal.com",
+      "evidence_ids": [
+        "e15",
+        "e19",
+        "e23"
+      ],
+      "positioning": [
+        "e19"
+      ],
+      "pricing": [
+        "e23"
+      ],
+      "pricing_status": "found"
+    },
+    {
+      "name": "Together AI",
+      "website": "https://together.ai",
+      "evidence_ids": [
+        "e18",
+        "e21"
+      ],
+      "positioning": [
+        "e21"
+      ],
+      "pricing": [],
+      "pricing_status": "not_published"
+    },
+    {
+      "name": "RunPod",
+      "website": "https://runpod.io",
+      "evidence_ids": [
+        "e16"
+      ],
+      "positioning": [],
+      "pricing": [],
+      "pricing_status": "not_checked"
+    },
+    {
+      "name": "Replicate",
+      "website": "https://replicate.com",
+      "evidence_ids": [
+        "e17"
       ],
       "positioning": [],
       "pricing": [],
@@ -35,233 +98,600 @@
     }
   ],
   "sales": {
-    "target_customer": [],
-    "buyer_role": [],
-    "pricing_model": [
-      "e6"
+    "target_customer": [
+      "e2"
     ],
-    "channel": [],
-    "buying_signals": []
+    "buyer_role": [
+      "e3"
+    ],
+    "pricing_model": [
+      "e7",
+      "e8"
+    ],
+    "channel": [
+      "e4",
+      "e9"
+    ],
+    "buying_signals": [
+      "e6"
+    ]
   },
   "evidence": [
     {
       "id": "e1",
-      "statement": "Baseten provides an inference platform for deploying AI models in production.",
-      "excerpt": "Inference is everything The fastest model runtimes, cross-cloud high availability, and seamless developer workflows. Powered by the Baseten Inference Stack.",
+      "statement": "Baseten offers dedicated inference, model APIs, training, sandboxes, and Grid products.",
+      "excerpt": "Dedicated InferenceInference for your specialized models + Model APIsServe frontier model APIs on day zero + TrainingOutperform closed models with your own + SandboxesGive your agents a secure place to run + GridControl model access and cut AI spend",
       "basis": "fact",
       "tags": [
         "company.offering"
       ],
-      "source_id": "s2",
-      "url": "https://www.baseten.co",
-      "retrieved_at": "2026-11-14T22:52:08.144930+00:00",
+      "source_id": "s6",
+      "url": "https://www.baseten.co/talk-to-us/enterprise-pricing",
+      "retrieved_at": "2026-11-15T20:04:17.229661+00:00",
       "published_at": null,
       "competitor": null,
-      "round": 1
+      "round": 3
     },
     {
       "id": "e2",
-      "statement": "Baseten offers Multi-cloud Capacity Management (MCM) to provision and manage GPUs across cloud providers and geographic regions.",
-      "excerpt": "Multi-cloud Capacity Management (MCM) provisions and manages GPUs across cloud providers and geographic regions.",
+      "statement": "Baseten says it is powering production inference for AI-native startups and enterprises.",
+      "excerpt": "Today, we’re powering production inference for AI-native startups and enterprises.",
       "basis": "fact",
       "tags": [
-        "company.offering"
+        "sales.target_customer"
       ],
       "source_id": "s1",
-      "url": "https://docs.baseten.co/concepts/howbasetenworks",
-      "retrieved_at": "2026-11-14T22:52:08.144205+00:00",
+      "url": "https://www.baseten.co/blog/ten-reasons-to-join-baseten",
+      "retrieved_at": "2026-11-15T20:04:13.429907+00:00",
       "published_at": null,
       "competitor": null,
-      "round": 1
+      "round": 3
     },
     {
       "id": "e3",
-      "statement": "Baseten enables users to run training with Loops SDK and deploy models to production inference on the same stack.",
-      "excerpt": "Run Training on Baseten Train your models with frontier RL using the Loops SDK and easily deploy them to production inference on the same stack.",
+      "statement": "Baseten says it builds products for engineering and machine learning teams.",
+      "excerpt": "At Baseten, we build delightful products for engineering and machine learning teams to deliver their best work.",
       "basis": "fact",
       "tags": [
-        "company.offering"
+        "sales.buyer_role"
       ],
-      "source_id": "s2",
-      "url": "https://www.baseten.co",
-      "retrieved_at": "2026-11-14T22:52:08.144930+00:00",
+      "source_id": "s1",
+      "url": "https://www.baseten.co/blog/ten-reasons-to-join-baseten",
+      "retrieved_at": "2026-11-15T20:04:13.429907+00:00",
       "published_at": null,
       "competitor": null,
-      "round": 1
+      "round": 3
     },
     {
       "id": "e4",
-      "statement": "Baseten provides pre-optimized model APIs to test new workloads, prototype products, or evaluate the latest AI models.",
-      "excerpt": "Pre-optimized Model APIs Test new workloads, prototype products, or evaluate the latest AI models optimized to be the fastest in production — instantly.",
+      "statement": "Baseten's enterprise pricing is handled by its enterprise sales team, which customers contact to discuss.",
+      "excerpt": "Connect with our enterprise sales team to discuss.",
       "basis": "fact",
       "tags": [
-        "company.offering"
+        "sales.channel"
       ],
-      "source_id": "s2",
-      "url": "https://www.baseten.co",
-      "retrieved_at": "2026-11-14T22:52:08.144930+00:00",
+      "source_id": "s6",
+      "url": "https://www.baseten.co/talk-to-us/enterprise-pricing",
+      "retrieved_at": "2026-11-15T20:04:17.229661+00:00",
       "published_at": null,
       "competitor": null,
-      "round": 1
+      "round": 3
     },
     {
       "id": "e5",
-      "statement": "Users can get the performance of a managed service directly in their own VPCs with self-hosted options.",
-      "excerpt": "Self-hosted Get the low latency, high throughput, and dev experience you expect from a managed service, right in your own VPCs.",
+      "statement": "Baseten says its customers come to it with hard technical challenges in model serving beyond simple out-of-the-box models.",
+      "excerpt": "Customers don't just use Baseten to run simple models out of the box.",
       "basis": "fact",
       "tags": [
-        "company.offering"
+        "company.problem"
       ],
-      "source_id": "s2",
-      "url": "https://www.baseten.co",
-      "retrieved_at": "2026-11-14T22:52:08.144930+00:00",
+      "source_id": "s1",
+      "url": "https://www.baseten.co/blog/ten-reasons-to-join-baseten",
+      "retrieved_at": "2026-11-15T20:04:13.429907+00:00",
       "published_at": null,
       "competitor": null,
-      "round": 1
+      "round": 3
     },
     {
       "id": "e6",
-      "statement": "Baseten offers transparent usage-based pricing with no contracts or capacity planning required for pay-as-you-go users.",
-      "excerpt": "No contracts or capacity planning. Use Model APIs, Dedicated Inference, Training, and Sandboxes with transparent usage-based pricing.",
+      "statement": "Baseten is a Series B company backed by Greylock, IVP, and Spark.",
+      "excerpt": "We’re a Series B company backed by Greylock, IVP, Spark, and many other world-class investors and angels.",
+      "basis": "fact",
+      "tags": [
+        "sales.buying_signals"
+      ],
+      "source_id": "s1",
+      "url": "https://www.baseten.co/blog/ten-reasons-to-join-baseten",
+      "retrieved_at": "2026-11-15T20:04:13.429907+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 3
+    },
+    {
+      "id": "e7",
+      "statement": "Baseten lists a plan at $0 per month, pay as you go.",
+      "excerpt": "Deployment options $0 per month, pay as you go Get started Pro Unlimited autoscaling and priority compute access",
       "basis": "fact",
       "tags": [
         "sales.pricing_model"
       ],
-      "source_id": "s6",
-      "url": "https://baseten.co/pricing/self-hosted",
-      "retrieved_at": "2026-11-14T22:52:12.894080+00:00",
-      "published_at": null,
-      "competitor": null,
-      "round": 2
-    },
-    {
-      "id": "e7",
-      "statement": "Baseten is an inference platform that serves and scales open-source and custom AI models.",
-      "excerpt": "Baseten is an inference platform that serves and scales open-source and custom AI models on the fastest, most reliable inference platform.",
-      "basis": "fact",
-      "tags": [
-        "market.category"
-      ],
       "source_id": "s7",
-      "url": "https://tavily.com/knowledge/company/xALCrbT2rzWZ",
-      "retrieved_at": "2026-11-14T22:52:17.134255+00:00",
+      "url": "https://www.baseten.co/pricing",
+      "retrieved_at": "2026-11-15T20:04:17.231153+00:00",
       "published_at": null,
       "competitor": null,
       "round": 3
     },
     {
       "id": "e8",
-      "statement": "Baseten operates in the AI infrastructure space and provides an AI infrastructure platform offering tooling, expertise, and hardware.",
-      "excerpt": "Baseten is a software development company based in San Francisco, California, operating in the AI infrastructure space. It provides an AI infrastructure platform offering tooling, expertise, and hardware to help bring AI products to market quickly.",
+      "statement": "Baseten says dedicated deployments are billed only for compute used, down to the minute.",
+      "excerpt": "Only pay for the compute you use, down to the minute. Volume discounts available",
       "basis": "fact",
       "tags": [
-        "market.category"
+        "sales.pricing_model"
       ],
-      "source_id": "s8",
-      "url": "https://leadiq.com/c/baseten/60a7c0443b112d2d98663d58/email-format",
-      "retrieved_at": "2026-11-14T22:52:17.135673+00:00",
+      "source_id": "s7",
+      "url": "https://www.baseten.co/pricing",
+      "retrieved_at": "2026-11-15T20:04:17.231153+00:00",
       "published_at": null,
       "competitor": null,
       "round": 3
     },
     {
       "id": "e9",
-      "statement": "Modal is a managed serverless competitor to Baseten.",
-      "excerpt": "The strongest Baseten alternatives for production LLM inference sort into three archetypes: managed serverless platforms (Modal, RunPod, Cerebrium), OpenAI-compatible model APIs (Fireworks AI, Together AI), and dedicated or self-managed GPU offerings (Anyscale, AWS SageMaker).",
+      "statement": "Baseten offers a 'Get a quote' option with volume discounts available.",
+      "excerpt": "Volume discounts available Get a quote Enterprise Full control in your cloud and ours",
+      "basis": "fact",
+      "tags": [
+        "sales.channel"
+      ],
+      "source_id": "s7",
+      "url": "https://www.baseten.co/pricing",
+      "retrieved_at": "2026-11-15T20:04:17.231153+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 3
+    },
+    {
+      "id": "e10",
+      "statement": "MarketsandMarkets projects the AI inference platform-as-a-service market to grow from $18.84 billion in 2025 to $105.22 billion by 2030.",
+      "excerpt": "The global AI inference PaaS market is anticipated to be valued at USD 18.84 billion in 2025 and USD 105.22 billion by 2030, registering a CAGR of 41.1%",
+      "basis": "fact",
+      "tags": [
+        "market.size_growth",
+        "market.category"
+      ],
+      "source_id": "s8",
+      "url": "https://finance.yahoo.com/news/ai-inference-platform-paas-market-140100318.html",
+      "retrieved_at": "2026-11-15T20:04:33.443756+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 5
+    },
+    {
+      "id": "e11",
+      "statement": "MarketsandMarkets says inference capabilities are being integrated into industry-specific SaaS platforms, expanding use cases.",
+      "excerpt": "the increasing integration of inference capabilities with industry-specific SaaS platforms is expanding use cases across sectors such as finance, retail, and healthcare",
+      "basis": "fact",
+      "tags": [
+        "market.trends"
+      ],
+      "source_id": "s8",
+      "url": "https://finance.yahoo.com/news/ai-inference-platform-paas-market-140100318.html",
+      "retrieved_at": "2026-11-15T20:04:33.443756+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 5
+    },
+    {
+      "id": "e12",
+      "statement": "MarketsandMarkets describes the category as AI inference platform-as-a-service (PaaS) providers offering inference environments.",
+      "excerpt": "As enterprises shift toward cloud-native AI architectures, PaaS providers emerge as critical enablers by offering flexible, cost-efficient, high-performance inference environments.",
+      "basis": "fact",
+      "tags": [
+        "market.category"
+      ],
+      "source_id": "s8",
+      "url": "https://finance.yahoo.com/news/ai-inference-platform-paas-market-140100318.html",
+      "retrieved_at": "2026-11-15T20:04:33.443756+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 6
+    },
+    {
+      "id": "e13",
+      "statement": "AI inference software growth is driven by rising deployment of generative AI and wider use of distributed inference.",
+      "excerpt": "Growth is supported by rising deployment of generative AI, increasing demand for efficient model serving, wider use of distributed inference, and the need to reduce latency and inference costs",
+      "basis": "fact",
+      "tags": [
+        "market.trends"
+      ],
+      "source_id": "s9",
+      "url": "https://www.polarismarketresearch.com/industry-analysis/ai-inference-software-market",
+      "retrieved_at": "2026-11-15T20:04:33.447316+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 6
+    },
+    {
+      "id": "e14",
+      "statement": "DigitalOcean's article lists Fireworks AI as a Baseten alternative.",
+      "excerpt": "The best Baseten alternatives include DigitalOcean, Fireworks AI™, Together AI™, RunPod™, Modal™, Replicate™, and Spheron™.",
       "basis": "fact",
       "tags": [
         "competitors.alternative"
       ],
-      "source_id": "s9",
-      "url": "https://cerebrium.ai/resources/baseten-alternatives-production-llm-inference",
-      "retrieved_at": "2026-11-14T22:52:20.776964+00:00",
+      "source_id": "s13",
+      "url": "https://www.digitalocean.com/resources/articles/baseten-alternatives",
+      "retrieved_at": "2026-11-15T20:04:46.929836+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Fireworks AI",
+        "website": "https://fireworks.ai"
+      },
+      "round": 9
+    },
+    {
+      "id": "e15",
+      "statement": "DigitalOcean's article lists Modal as a Baseten alternative.",
+      "excerpt": "The best Baseten alternatives include DigitalOcean, Fireworks AI™, Together AI™, RunPod™, Modal™, Replicate™, and Spheron™.",
+      "basis": "fact",
+      "tags": [
+        "competitors.alternative"
+      ],
+      "source_id": "s13",
+      "url": "https://www.digitalocean.com/resources/articles/baseten-alternatives",
+      "retrieved_at": "2026-11-15T20:04:46.929836+00:00",
       "published_at": null,
       "competitor": {
         "name": "Modal",
-        "website": ""
+        "website": "https://modal.com"
       },
-      "round": 4
+      "round": 9
+    },
+    {
+      "id": "e16",
+      "statement": "DigitalOcean's article lists RunPod as a Baseten alternative.",
+      "excerpt": "The best Baseten alternatives include DigitalOcean, Fireworks AI™, Together AI™, RunPod™, Modal™, Replicate™, and Spheron™.",
+      "basis": "fact",
+      "tags": [
+        "competitors.alternative"
+      ],
+      "source_id": "s13",
+      "url": "https://www.digitalocean.com/resources/articles/baseten-alternatives",
+      "retrieved_at": "2026-11-15T20:04:46.929836+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "RunPod",
+        "website": "https://runpod.io"
+      },
+      "round": 9
+    },
+    {
+      "id": "e17",
+      "statement": "DigitalOcean's article lists Replicate as a Baseten alternative.",
+      "excerpt": "The best Baseten alternatives include DigitalOcean, Fireworks AI™, Together AI™, RunPod™, Modal™, Replicate™, and Spheron™.",
+      "basis": "fact",
+      "tags": [
+        "competitors.alternative"
+      ],
+      "source_id": "s13",
+      "url": "https://www.digitalocean.com/resources/articles/baseten-alternatives",
+      "retrieved_at": "2026-11-15T20:04:46.929836+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Replicate",
+        "website": "https://replicate.com"
+      },
+      "round": 9
+    },
+    {
+      "id": "e18",
+      "statement": "DigitalOcean's article lists Together AI as a Baseten alternative.",
+      "excerpt": "The best Baseten alternatives include DigitalOcean, Fireworks AI™, Together AI™, RunPod™, Modal™, Replicate™, and Spheron™.",
+      "basis": "fact",
+      "tags": [
+        "competitors.alternative"
+      ],
+      "source_id": "s13",
+      "url": "https://www.digitalocean.com/resources/articles/baseten-alternatives",
+      "retrieved_at": "2026-11-15T20:04:46.929836+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Together AI",
+        "website": "https://together.ai"
+      },
+      "round": 9
+    },
+    {
+      "id": "e19",
+      "statement": "Modal positions its infrastructure as rebuilt for AI, from the container runtime and storage to a multi-cloud capacity pool.",
+      "excerpt": "Infrastructure rebuilt for AI, from the container runtime and storage to a multi-cloud capacity pool",
+      "basis": "fact",
+      "tags": [
+        "competitors.positioning"
+      ],
+      "source_id": "s18",
+      "url": "https://modal.com/pricing",
+      "retrieved_at": "2026-11-15T20:05:04.848094+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Modal",
+        "website": "https://modal.com"
+      },
+      "round": 12
+    },
+    {
+      "id": "e20",
+      "statement": "Serverless inference is priced per token.",
+      "excerpt": "Serverless inference is priced per token.",
+      "basis": "fact",
+      "tags": [
+        "competitors.pricing"
+      ],
+      "source_id": "s21",
+      "url": "https://docs.fireworks.ai/serverless/pricing",
+      "retrieved_at": "2026-11-15T20:05:06.744416+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Fireworks AI",
+        "website": "https://fireworks.ai"
+      },
+      "round": 12
+    },
+    {
+      "id": "e21",
+      "statement": "Serverless access to 100+ open-source models is offered with per-token pricing and no provisioning latency.",
+      "excerpt": "Call 100+ open-source models with per-token pricing and no provisioning latency.",
+      "basis": "fact",
+      "tags": [
+        "competitors.positioning"
+      ],
+      "source_id": "s17",
+      "url": "https://docs.together.ai/docs/serverless/overview",
+      "retrieved_at": "2026-11-15T20:05:04.840408+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Together AI",
+        "website": "https://together.ai"
+      },
+      "round": 12
+    },
+    {
+      "id": "e22",
+      "statement": "Fireworks describes its GenAI platform as fast, affordable, and customizable.",
+      "excerpt": "Fireworks.ai releases the fast, affordable, and customizable Fireworks GenAI Platform.",
+      "basis": "fact",
+      "tags": [
+        "competitors.positioning"
+      ],
+      "source_id": "s23",
+      "url": "https://fireworks.ai/blog/fireworks-ai-fast-affordable-customizable-gen-ai-platform",
+      "retrieved_at": "2026-11-15T20:05:06.749855+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Fireworks AI",
+        "website": "https://fireworks.ai"
+      },
+      "round": 12
+    },
+    {
+      "id": "e23",
+      "statement": "Modal lists an Nvidia H100 SXM5 at $0.001097 per second.",
+      "excerpt": "Nvidia H100 SXM5 $0.001097 0.001097 / sec",
+      "basis": "fact",
+      "tags": [
+        "competitors.pricing"
+      ],
+      "source_id": "s18",
+      "url": "https://modal.com/pricing",
+      "retrieved_at": "2026-11-15T20:05:04.848094+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Modal",
+        "website": "https://modal.com"
+      },
+      "round": 12
+    },
+    {
+      "id": "e24",
+      "statement": "Baseten's stated mission is powering the world's AI-driven applications with performant, scalable, and reliable inference infrastructure.",
+      "excerpt": "Baseten's mission of powering the world's AI-driven applications with the most performant, scalable, and reliable infrastructure for machine learning inference.",
+      "basis": "fact",
+      "tags": [
+        "company.mission"
+      ],
+      "source_id": "s2",
+      "url": "https://www.baseten.co/blog/announcing-the-acquihire-of-inferless-by-baseten",
+      "retrieved_at": "2026-11-15T20:04:13.430846+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 12
     }
   ],
   "sources": [
     {
       "id": "s1",
-      "url": "https://docs.baseten.co/concepts/howbasetenworks",
-      "title": "How Baseten works - Baseten",
+      "url": "https://www.baseten.co/blog/ten-reasons-to-join-baseten",
+      "title": "Ten reasons to join Baseten",
       "kind": "first_party",
-      "retrieved_at": "2026-11-14T22:52:08.144205+00:00",
+      "retrieved_at": "2026-11-15T20:04:13.429907+00:00",
       "published_at": null
     },
     {
       "id": "s2",
-      "url": "https://www.baseten.co",
-      "title": "Inference Platform: Deploy AI models in production | Baseten",
+      "url": "https://www.baseten.co/blog/announcing-the-acquihire-of-inferless-by-baseten",
+      "title": "Announcing the acquihire of Inferless by Baseten",
       "kind": "first_party",
-      "retrieved_at": "2026-11-14T22:52:08.144930+00:00",
+      "retrieved_at": "2026-11-15T20:04:13.430846+00:00",
       "published_at": null
     },
     {
       "id": "s3",
-      "url": "https://www.baseten.co/blog/ten-reasons-to-join-baseten",
-      "title": "Ten reasons to join Baseten",
+      "url": "https://www.baseten.co/resources/type/event?page=13",
+      "title": "Events",
       "kind": "first_party",
-      "retrieved_at": "2026-11-14T22:52:08.145911+00:00",
+      "retrieved_at": "2026-11-15T20:04:13.434132+00:00",
       "published_at": null
     },
     {
       "id": "s4",
-      "url": "https://www.baseten.co/blog/introducing-baseten",
-      "title": "The platform for inference, training, and execution | Baseten",
+      "url": "https://www.baseten.co/blog/baseten-partners-with-google-cloud-to-deliver-high-performance-ai-infra",
+      "title": "Baseten partners with Google Cloud to deliver high-performance AI infrastructure to a broader audience",
       "kind": "first_party",
-      "retrieved_at": "2026-11-14T22:52:08.145944+00:00",
+      "retrieved_at": "2026-11-15T20:04:16.178892+00:00",
       "published_at": null
     },
     {
       "id": "s5",
-      "url": "https://www.baseten.co/resources/customers/openevidence-delivers-instant-medical-information-with-baseten",
-      "title": "The platform for inference, training, and execution | Baseten",
+      "url": "https://docs.baseten.co/inference/model-apis/pricing-and-limits",
+      "title": "Pricing and limits - Baseten",
       "kind": "first_party",
-      "retrieved_at": "2026-11-14T22:52:08.145974+00:00",
+      "retrieved_at": "2026-11-15T20:04:17.228885+00:00",
       "published_at": null
     },
     {
       "id": "s6",
-      "url": "https://baseten.co/pricing/self-hosted",
-      "title": "The platform for inference, training, and execution | Baseten",
+      "url": "https://www.baseten.co/talk-to-us/enterprise-pricing",
+      "title": "Enterprise Pricing",
       "kind": "first_party",
-      "retrieved_at": "2026-11-14T22:52:12.894080+00:00",
+      "retrieved_at": "2026-11-15T20:04:17.229661+00:00",
       "published_at": null
     },
     {
       "id": "s7",
-      "url": "https://tavily.com/knowledge/company/xALCrbT2rzWZ",
-      "title": "Baseten",
-      "kind": "other",
-      "retrieved_at": "2026-11-14T22:52:17.134255+00:00",
+      "url": "https://www.baseten.co/pricing",
+      "title": "Cloud Pricing",
+      "kind": "first_party",
+      "retrieved_at": "2026-11-15T20:04:17.231153+00:00",
       "published_at": null
     },
     {
       "id": "s8",
-      "url": "https://leadiq.com/c/baseten/60a7c0443b112d2d98663d58/email-format",
-      "title": "Baseten Email Formats & Email Address Examples | LeadIQ",
-      "kind": "aggregator",
-      "retrieved_at": "2026-11-14T22:52:17.135673+00:00",
+      "url": "https://finance.yahoo.com/news/ai-inference-platform-paas-market-140100318.html",
+      "title": "AI Inference Platform-as-a-Service (PaaS) Market worth $105.22 billion by 2030 - Exclusive Report by MarketsandMarkets™",
+      "kind": "market_report",
+      "retrieved_at": "2026-11-15T20:04:33.443756+00:00",
       "published_at": null
     },
     {
       "id": "s9",
-      "url": "https://cerebrium.ai/resources/baseten-alternatives-production-llm-inference",
-      "title": "Baseten Alternatives for Production LLM Inference",
-      "kind": "other",
-      "retrieved_at": "2026-11-14T22:52:20.776964+00:00",
+      "url": "https://www.polarismarketresearch.com/industry-analysis/ai-inference-software-market",
+      "title": "AI Inference Software Market to Reach USD 140.36 Bn by 2034",
+      "kind": "market_report",
+      "retrieved_at": "2026-11-15T20:04:33.447316+00:00",
       "published_at": null
     },
     {
       "id": "s10",
-      "url": "https://leadiq.com/c/baseten/60a7c0443b112d2d98663d58",
-      "title": "Baseten Company Overview, Contact Details & Competitors | LeadIQ",
-      "kind": "aggregator",
-      "retrieved_at": "2026-11-14T22:52:20.782461+00:00",
+      "url": "https://www.grandviewresearch.com/industry-analysis/artificial-intelligence-ai-inference-market-report",
+      "title": "AI Inference Market Size, Share & Trends Report, 2026-2033",
+      "kind": "market_report",
+      "retrieved_at": "2026-11-15T20:04:33.449643+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s11",
+      "url": "https://tavily.com/knowledge/company/xALCrbT2rzWZ",
+      "title": "Baseten",
+      "kind": "other",
+      "retrieved_at": "2026-11-15T20:04:43.916205+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s12",
+      "url": "https://www.spheron.network/blog/baseten-alternatives",
+      "title": "Baseten Alternatives: 10 ML Inference Platforms Compared (2026)",
+      "kind": "other",
+      "retrieved_at": "2026-11-15T20:04:46.926544+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s13",
+      "url": "https://www.digitalocean.com/resources/articles/baseten-alternatives",
+      "title": "7 Baseten Alternatives for AI Model Deployment in 2026 | DigitalOcean",
+      "kind": "other",
+      "retrieved_at": "2026-11-15T20:04:46.929836+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s14",
+      "url": "https://www.runpod.io/articles/alternatives/baseten",
+      "title": "The 10 Best Baseten Alternatives in 2026",
+      "kind": "other",
+      "retrieved_at": "2026-11-15T20:04:46.931804+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s15",
+      "url": "https://docs.together.ai/docs/dedicated-endpoints/pricing",
+      "title": "Pricing - Together AI docs",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T20:05:04.836957+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s16",
+      "url": "https://www.together.ai/blog/august-2023-pricing-update",
+      "title": "Faster inference enables up to 5x price reduction on Together API",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T20:05:04.839892+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s17",
+      "url": "https://docs.together.ai/docs/serverless/overview",
+      "title": "Overview - Together AI docs",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T20:05:04.840408+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s18",
+      "url": "https://modal.com/pricing",
+      "title": "Pricing: Pay per second for GPUs and CPUs | Modal",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T20:05:04.848094+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s19",
+      "url": "https://modal.com/resources/best-cloud-gpu-providers",
+      "title": "Best Cloud GPU Providers in 2026 | Modal",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T20:05:04.849373+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s20",
+      "url": "https://modal.com/resources/best-free-cloud-gpu-tiers",
+      "title": "Best Free Cloud GPU Tiers for Evaluating Providers in 2026 | Modal Blog",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T20:05:04.850389+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s21",
+      "url": "https://docs.fireworks.ai/serverless/pricing",
+      "title": "Serverless Pricing - Fireworks AI Docs",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T20:05:06.744416+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s22",
+      "url": "https://fireworks.ai/blog/fast-llm-inference-platform",
+      "title": "Fast LLM Inference and LoRA Model Serving Platform | Fireworks",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T20:05:06.747445+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s23",
+      "url": "https://fireworks.ai/blog/fireworks-ai-fast-affordable-customizable-gen-ai-platform",
+      "title": "Fast LLM Inference and LoRA Model Serving Platform | Fireworks",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T20:05:06.749855+00:00",
       "published_at": null
     }
   ],
@@ -271,104 +701,172 @@
       "missing": []
     },
     "market": {
-      "status": "partial",
-      "missing": [
-        "market.size_growth",
-        "market.trends"
-      ]
+      "status": "complete",
+      "missing": []
     },
     "competitors": {
-      "status": "partial",
-      "missing": [
-        "competitors.alternative",
-        "competitors.website:Modal",
-        "competitors.positioning:Modal",
-        "competitors.pricing:Modal"
-      ]
+      "status": "complete",
+      "missing": []
     },
     "sales": {
-      "status": "partial",
-      "missing": [
-        "sales.target_customer",
-        "sales.buyer_role",
-        "sales.channel"
-      ]
+      "status": "complete",
+      "missing": []
     }
   },
-  "limits_hit": [
-    "rounds"
+  "limits_hit": [],
+  "uncertainties": [
+    "No vision statement found on Baseten's own site; search budget exhausted before checking the about page. Mission found only in a blog post (Inferless acquihire), not an about page. RunPod and Replicate positioning/pricing not checked; Together AI pricing not captured as a plan price (only batch 50% "
   ],
-  "uncertainties": [],
   "rejected_sources": [
+    {
+      "url": "https://www.baseten.co/resources/careers",
+      "reason": "low-value page",
+      "round": 1
+    },
+    {
+      "url": "https://www.baseten.co",
+      "reason": "round page limit reached",
+      "round": 1
+    },
+    {
+      "url": "https://www.baseten.co/blog/announcing-baseten-75m-series-c",
+      "reason": "company signals page limit reached",
+      "round": 3
+    },
+    {
+      "url": "https://www.baseten.co/blog/welcoming-dannie-herzberg-to-baseten",
+      "reason": "company website page limit reached",
+      "round": 3
+    },
+    {
+      "url": "https://www.baseten.co/blog/high-performance-agents-for-financial-services-with-nvidia-nemotron-on-baseten",
+      "reason": "company website page limit reached",
+      "round": 3
+    },
     {
       "url": "https://www.baseten.co/resources/changelog/usage-based-pricing-with-no-platform-fee",
       "reason": "company website page limit reached",
       "round": 2
     },
     {
-      "url": "https://baseten.co/pricing",
-      "reason": "company pricing and customer page limit reached",
+      "url": "https://www.baseten.co/blog/baseten-postman-building-agents-for-enterprise",
+      "reason": "round page limit reached",
       "round": 2
     },
     {
-      "url": "https://www.baseten.co/pricing",
-      "reason": "company pricing and customer page limit reached",
-      "round": 2
+      "url": "https://www.prnewswire.com/news-releases/ai-inference-market-worth-254-98-billion-by-2030---exclusive-report-by-marketsandmarkets-302388315.html",
+      "reason": "round page limit reached",
+      "round": 5
     },
     {
-      "url": "https://www.baseten.co/blog/announcing-our-series-f",
+      "url": "https://www.marketsandmarkets.com/Market-Reports/ai-inference-market-189921964.html",
+      "reason": "round page limit reached",
+      "round": 5
+    },
+    {
+      "url": "https://www.baseten.co/blog/baseten-delivers-open-source-inference-for-youcom",
       "reason": "company website page limit reached",
-      "round": 3
+      "round": 4
     },
     {
-      "url": "https://www.baseten.co/blog/announcing-baseten-s-300m-series-e",
+      "url": "https://www.baseten.co/resources/guide/the-baseten-inference-stack",
       "reason": "company website page limit reached",
-      "round": 3
-    },
-    {
-      "url": "https://cloud.google.com/blog/products/ai-machine-learning/how-baseten-achieves-better-cost-performance-for-ai-inference",
-      "reason": "does not mention the company",
-      "round": 3
-    },
-    {
-      "url": "https://www.digitalocean.com/resources/articles/baseten-alternatives",
-      "reason": "does not mention the company",
       "round": 4
     },
     {
-      "url": "https://www.spheron.network/blog/baseten-alternatives",
+      "url": "https://www.cbinsights.com/company/together-4/alternatives-competitors",
       "reason": "does not mention the company",
-      "round": 4
+      "round": 6
     },
     {
-      "url": "https://www.runpod.io/articles/alternatives/baseten",
-      "reason": "does not mention the company",
-      "round": 4
+      "url": "https://www.cbinsights.com/company/baseten/alternatives-competitors",
+      "reason": "does not mention the company website",
+      "round": 6
     },
     {
-      "url": "https://checkthat.ai/brands/modal/pricing",
-      "reason": "does not mention the company",
-      "round": 5
+      "url": "https://qz.com/fireworks-ai-series-d-fundraise-valuation-open-source-071626",
+      "reason": "does not mention the company website",
+      "round": 6
     },
     {
-      "url": "https://www.beam.cloud/blog/modal-pricing-explained",
-      "reason": "does not mention the company",
-      "round": 5
+      "url": "https://www.cbinsights.com/company/lepton-ai/alternatives-competitors",
+      "reason": "does not mention the company website",
+      "round": 6
     },
     {
-      "url": "https://blaxel.ai/blog/modal-pricing-alternatives-guide",
-      "reason": "does not mention the company",
-      "round": 5
+      "url": "https://www.analyticsinsight.net/tech-news/top-news-today-qualcomms-2nm-ai-chips-modal-baseten-funding-talks-hiring-growth-tap-global-ai-earbuds",
+      "reason": "low-value page",
+      "round": 6
     },
     {
-      "url": "https://modal.com/pricing",
+      "url": "https://tavily.com/knowledge/company/m40GOEj1wrG1",
       "reason": "does not mention the company",
-      "round": 5
+      "round": 7
     },
     {
-      "url": "https://modal.com/docs/guide/billing",
+      "url": "https://tavily.com/knowledge/company/XTvkAB43DFjA",
       "reason": "does not mention the company",
-      "round": 5
+      "round": 7
+    },
+    {
+      "url": "https://www.datamintelligence.com/blogs/nvidia-vs-amd-vs-broadcom-ai-inference-2026",
+      "reason": "does not mention the company",
+      "round": 7
+    },
+    {
+      "url": "https://www.baseten.co/blog/baseten-joins-the-nvidia-nemotron-coalition-to-advance-custom-ai-in-production",
+      "reason": "company website page limit reached",
+      "round": 9
+    },
+    {
+      "url": "https://www.baseten.co/blog/baseten-training-is-ga",
+      "reason": "company website page limit reached",
+      "round": 9
+    },
+    {
+      "url": "https://www.baseten.co/blog/announcing-our-series-a",
+      "reason": "company signals page limit reached",
+      "round": 9
+    },
+    {
+      "url": "https://cerebrium.ai/resources/baseten-alternatives-production-llm-inference",
+      "reason": "round page limit reached",
+      "round": 8
+    },
+    {
+      "url": "https://rocketreach.co/baseten-competitors_b7e9cff5c2a8af88",
+      "reason": "round page limit reached",
+      "round": 8
+    },
+    {
+      "url": "https://www.together.ai/pricing",
+      "reason": "round page limit reached",
+      "round": 11
+    },
+    {
+      "url": "https://www.together.ai/dedicated-model-inference",
+      "reason": "round page limit reached",
+      "round": 11
+    },
+    {
+      "url": "https://modal.com/resources/best-serverless-platforms-mcp-servers",
+      "reason": "round page limit reached",
+      "round": 12
+    },
+    {
+      "url": "https://modal.com/blog/how-to-price-serverless",
+      "reason": "round page limit reached",
+      "round": 12
+    },
+    {
+      "url": "https://fireworks.ai/docs/guides/inference-introduction",
+      "reason": "round page limit reached",
+      "round": 10
+    },
+    {
+      "url": "https://readme.fireworks.ai/serverless/pricing",
+      "reason": "round page limit reached",
+      "round": 10
     }
   ]
 }

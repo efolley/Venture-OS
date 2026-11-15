@@ -1,0 +1,897 @@
+{
+  "schema_version": 4,
+  "run_id": "2f1e37c1-ef97-41e4-a8ea-1cc5b8bc165a",
+  "parent_run_id": null,
+  "status": "complete",
+  "company": {
+    "name": "Linear",
+    "website": "https://linear.app/",
+    "offering": [
+      "e1",
+      "e2",
+      "e8",
+      "e11"
+    ],
+    "mission": [
+      "e7"
+    ],
+    "vision": [],
+    "problem": [
+      "e9",
+      "e10"
+    ]
+  },
+  "market": {
+    "category": [
+      "e12"
+    ],
+    "size_growth": [
+      "e14",
+      "e15"
+    ],
+    "trends": [
+      "e13",
+      "e16"
+    ]
+  },
+  "competitors": [
+    {
+      "name": "Shortcut",
+      "website": "https://shortcut.com",
+      "evidence_ids": [
+        "e17",
+        "e20",
+        "e23",
+        "e24"
+      ],
+      "positioning": [
+        "e23"
+      ],
+      "pricing": [
+        "e20",
+        "e24"
+      ],
+      "pricing_status": "found"
+    },
+    {
+      "name": "Jira",
+      "website": "https://www.atlassian.com/software/jira",
+      "evidence_ids": [
+        "e18",
+        "e25",
+        "e26"
+      ],
+      "positioning": [
+        "e26"
+      ],
+      "pricing": [
+        "e25"
+      ],
+      "pricing_status": "found"
+    },
+    {
+      "name": "ClickUp",
+      "website": "https://clickup.com",
+      "evidence_ids": [
+        "e19",
+        "e21",
+        "e22"
+      ],
+      "positioning": [
+        "e22"
+      ],
+      "pricing": [
+        "e21"
+      ],
+      "pricing_status": "found"
+    }
+  ],
+  "sales": {
+    "target_customer": [
+      "e27",
+      "e28"
+    ],
+    "buyer_role": [
+      "e27",
+      "e29"
+    ],
+    "pricing_model": [
+      "e3",
+      "e4",
+      "e5"
+    ],
+    "channel": [
+      "e4",
+      "e6"
+    ],
+    "buying_signals": []
+  },
+  "evidence": [
+    {
+      "id": "e1",
+      "statement": "Linear's pricing page says it is trusted by more than 50,000 companies.",
+      "excerpt": "Trusted by more than50,000 companies Customer stories→",
+      "basis": "fact",
+      "tags": [
+        "company.offering"
+      ],
+      "source_id": "s4",
+      "url": "https://linear.app/pricing",
+      "retrieved_at": "2026-11-15T20:04:16.878743+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 2
+    },
+    {
+      "id": "e2",
+      "statement": "Linear's own page describes itself as a software tool that supports and enhances the creativity of builders, with its founder writing about building software.",
+      "excerpt": "At Linear our focus has been on empowering builders to focus on their work of creating software.",
+      "basis": "fact",
+      "tags": [
+        "company.offering"
+      ],
+      "source_id": "s3",
+      "url": "https://linear.app/now/linear-raises-usd13m-in-series-a-funding-from-sequoia-capital",
+      "retrieved_at": "2026-11-15T20:04:13.073662+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 2
+    },
+    {
+      "id": "e3",
+      "statement": "Linear's Basic plan costs $10 per user per month.",
+      "excerpt": "Basic $10 per user/month$10 per user/month$10 per user/month All Free features + 5 teams",
+      "basis": "fact",
+      "tags": [
+        "sales.pricing_model"
+      ],
+      "source_id": "s4",
+      "url": "https://linear.app/pricing",
+      "retrieved_at": "2026-11-15T20:04:16.878743+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 2
+    },
+    {
+      "id": "e4",
+      "statement": "Linear's Enterprise plan is available on annual billing only and includes invoice or PO billing.",
+      "excerpt": "Enterprise Annual billing only All Business features + Invoice/PO billing SAML and SCIM",
+      "basis": "fact",
+      "tags": [
+        "sales.channel",
+        "sales.pricing_model"
+      ],
+      "source_id": "s4",
+      "url": "https://linear.app/pricing",
+      "retrieved_at": "2026-11-15T20:04:16.878743+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 2
+    },
+    {
+      "id": "e5",
+      "statement": "Linear's pricing page lists a Free plan that is free for everyone.",
+      "excerpt": "Free Free for everyone Unlimited members 2 teams 250 issues",
+      "basis": "fact",
+      "tags": [
+        "sales.pricing_model"
+      ],
+      "source_id": "s4",
+      "url": "https://linear.app/pricing",
+      "retrieved_at": "2026-11-15T20:04:16.878743+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 2
+    },
+    {
+      "id": "e6",
+      "statement": "Linear's pricing page offers Get started and Contact sales options for its plans.",
+      "excerpt": "Get startedGet startedContact sales Enterprise Annual billing only",
+      "basis": "fact",
+      "tags": [
+        "sales.channel"
+      ],
+      "source_id": "s4",
+      "url": "https://linear.app/pricing",
+      "retrieved_at": "2026-11-15T20:04:16.878743+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 2
+    },
+    {
+      "id": "e7",
+      "statement": "Linear's stated mission is to create a tool that feels magical and lets people create magic.",
+      "excerpt": "Our mission is to create the tool for the story at hand. A tool that feels magical, but more importantly, a tool that grants whoever owns it the ability to create magic.",
+      "basis": "fact",
+      "tags": [
+        "company.mission"
+      ],
+      "source_id": "s2",
+      "url": "https://linear.app/readme",
+      "retrieved_at": "2026-11-15T20:04:13.072090+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 3
+    },
+    {
+      "id": "e8",
+      "statement": "Linear's about page says more than 50,000 companies use it to plan, build, and ship their products.",
+      "excerpt": "Founded in 2019, Linear has become the tool of choice for more than 50,000companies (including OpenAI, Coinbase, and Ramp) to plan, build, and ship their products.",
+      "basis": "fact",
+      "tags": [
+        "company.offering"
+      ],
+      "source_id": "s5",
+      "url": "https://linear.app/about",
+      "retrieved_at": "2026-11-15T20:04:31.060752+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 3
+    },
+    {
+      "id": "e9",
+      "statement": "Linear says software has become noisy and distracting, with work coordination taking more time than the work itself.",
+      "excerpt": "We are spending more time with the coordination of our work than with the work we actually want to get done.",
+      "basis": "fact",
+      "tags": [
+        "company.problem"
+      ],
+      "source_id": "s2",
+      "url": "https://linear.app/readme",
+      "retrieved_at": "2026-11-15T20:04:13.072090+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 3
+    },
+    {
+      "id": "e10",
+      "statement": "Linear says AI raises what teams can create but also raises the bar for clarity and coordination in product development.",
+      "excerpt": "AI increases what teams can create, but it also raises the bar for clarity and coordination.",
+      "basis": "fact",
+      "tags": [
+        "company.problem"
+      ],
+      "source_id": "s5",
+      "url": "https://linear.app/about",
+      "retrieved_at": "2026-11-15T20:04:31.060752+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 3
+    },
+    {
+      "id": "e11",
+      "statement": "Linear says it is building tools for a new era of product development where teams and agents work together.",
+      "excerpt": "At Linear, we are building the tools for this new era of product development. A purpose-built system where teams and agents operate together in a shared, structured environment.",
+      "basis": "fact",
+      "tags": [
+        "company.offering"
+      ],
+      "source_id": "s5",
+      "url": "https://linear.app/about",
+      "retrieved_at": "2026-11-15T20:04:31.060752+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 3
+    },
+    {
+      "id": "e12",
+      "statement": "The issue tracking software market covers software that lets organizations capture, assign, prioritize, track, and resolve issues and project work items.",
+      "excerpt": "The Issue Tracking Software Market encompasses software solutions and associated professional services that enable organizations to capture, assign, prioritize, track, and resolve issues, bugs, tasks, incidents, and project work items",
+      "basis": "fact",
+      "tags": [
+        "market.category"
+      ],
+      "source_id": "s6",
+      "url": "https://www.nextmsc.com/report/issue-tracking-software-market-ic4963",
+      "retrieved_at": "2026-11-15T20:04:44.043534+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 5
+    },
+    {
+      "id": "e13",
+      "statement": "A market report says cloud-native and SaaS deployment models now account for the dominant share of new issue tracking deployments.",
+      "excerpt": "Cloud-native and SaaS deployment models now account for the dominant share of new deployments, driven by subscription economics",
+      "basis": "fact",
+      "tags": [
+        "market.trends"
+      ],
+      "source_id": "s6",
+      "url": "https://www.nextmsc.com/report/issue-tracking-software-market-ic4963",
+      "retrieved_at": "2026-11-15T20:04:44.043534+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 5
+    },
+    {
+      "id": "e14",
+      "statement": "A market report projects project management software to grow at a CAGR of 15.8% from 2024 to 2032.",
+      "excerpt": "growing at a CAGR of 15.8% during the forecast period of 2024 and 2032.",
+      "basis": "fact",
+      "tags": [
+        "market.size_growth"
+      ],
+      "source_id": "s7",
+      "url": "https://finance.yahoo.com/news/project-management-software-market-reach-130400456.html",
+      "retrieved_at": "2026-11-15T20:04:44.046730+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 5
+    },
+    {
+      "id": "e15",
+      "statement": "The issue tracking software market is projected to reach USD 5.12 billion by 2035 at a CAGR of 11.2% from 2026 to 2035.",
+      "excerpt": "propel the market to USD 5.12 billion by 2035, advancing at a CAGR of 11.2% from 2026 to 2035.",
+      "basis": "fact",
+      "tags": [
+        "market.size_growth"
+      ],
+      "source_id": "s6",
+      "url": "https://www.nextmsc.com/report/issue-tracking-software-market-ic4963",
+      "retrieved_at": "2026-11-15T20:04:44.043534+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 5
+    },
+    {
+      "id": "e16",
+      "statement": "A market report says artificial intelligence is being integrated into issue tracking workflows.",
+      "excerpt": "The third and current phase integrates artificial intelligence, natural language processing, and machine learning capabilities directly within issue tracking workflows",
+      "basis": "fact",
+      "tags": [
+        "market.trends"
+      ],
+      "source_id": "s6",
+      "url": "https://www.nextmsc.com/report/issue-tracking-software-market-ic4963",
+      "retrieved_at": "2026-11-15T20:04:44.043534+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 5
+    },
+    {
+      "id": "e17",
+      "statement": "A comparison guide describes Shortcut as offering Linear's feel with more control for engineering teams.",
+      "excerpt": "Engineering teams wanting Linear's feel with more control",
+      "basis": "fact",
+      "tags": [
+        "competitors.alternative"
+      ],
+      "source_id": "s9",
+      "url": "https://codegen.com/alternatives/linear",
+      "retrieved_at": "2026-11-15T20:04:54.907128+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Shortcut",
+        "website": "https://shortcut.com"
+      },
+      "round": 6
+    },
+    {
+      "id": "e18",
+      "statement": "A comparison guide positions Jira as removing nearly every workflow constraint that Linear imposes.",
+      "excerpt": "Where Linear constrains workflows for speed, Jira removes nearly every constraint.",
+      "basis": "fact",
+      "tags": [
+        "competitors.alternative"
+      ],
+      "source_id": "s9",
+      "url": "https://codegen.com/alternatives/linear",
+      "retrieved_at": "2026-11-15T20:04:54.907128+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Jira",
+        "website": "https://www.atlassian.com/software/jira"
+      },
+      "round": 6
+    },
+    {
+      "id": "e19",
+      "statement": "A comparison guide describes ClickUp as the most direct answer to rigidity.",
+      "excerpt": "ClickUp is the most direct answer to Linear’s rigidity.",
+      "basis": "fact",
+      "tags": [
+        "competitors.alternative"
+      ],
+      "source_id": "s9",
+      "url": "https://codegen.com/alternatives/linear",
+      "retrieved_at": "2026-11-15T20:04:54.907128+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "ClickUp",
+        "website": "https://clickup.com"
+      },
+      "round": 6
+    },
+    {
+      "id": "e20",
+      "statement": "The Team plan costs $8.50 per user per month.",
+      "excerpt": "Team $8.50/user/mo, Business $12/user/mo (annual)",
+      "basis": "fact",
+      "tags": [
+        "competitors.pricing"
+      ],
+      "source_id": "s9",
+      "url": "https://codegen.com/alternatives/linear",
+      "retrieved_at": "2026-11-15T20:04:54.907128+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Shortcut",
+        "website": "https://shortcut.com"
+      },
+      "round": 7
+    },
+    {
+      "id": "e21",
+      "statement": "ClickUp's pricing page lists the Unlimited plan at $7 per user per month billed yearly.",
+      "excerpt": "yearly price:$7Per user/month, billed yearlyunlimited monthly price:$10Per user/month, billed monthly",
+      "basis": "fact",
+      "tags": [
+        "competitors.pricing"
+      ],
+      "source_id": "s13",
+      "url": "https://clickup.com/pricing",
+      "retrieved_at": "2026-11-15T20:05:09.450762+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "ClickUp",
+        "website": "https://clickup.com"
+      },
+      "round": 7
+    },
+    {
+      "id": "e22",
+      "statement": "ClickUp's pricing page positions its plans as the best work solution for the best price.",
+      "excerpt": "The best work solution, for the best price.",
+      "basis": "fact",
+      "tags": [
+        "competitors.positioning"
+      ],
+      "source_id": "s13",
+      "url": "https://clickup.com/pricing",
+      "retrieved_at": "2026-11-15T20:05:09.450762+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "ClickUp",
+        "website": "https://clickup.com"
+      },
+      "round": 7
+    },
+    {
+      "id": "e23",
+      "statement": "Shortcut positions itself as issue tracking built for engineering workflows, with tracks for engineering, product, leadership, and design.",
+      "excerpt": "For Engineering Issue tracking built for engineering workflows.",
+      "basis": "fact",
+      "tags": [
+        "competitors.positioning"
+      ],
+      "source_id": "s16",
+      "url": "https://www.shortcut.com/pricing",
+      "retrieved_at": "2026-11-15T20:05:17.161050+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Shortcut",
+        "website": "https://www.shortcut.com"
+      },
+      "round": 9
+    },
+    {
+      "id": "e24",
+      "statement": "Shortcut offers a Free plan and a free 14-day full-access trial with no credit card required.",
+      "excerpt": "Free 14 day full access. No credit card required.",
+      "basis": "fact",
+      "tags": [
+        "competitors.pricing"
+      ],
+      "source_id": "s16",
+      "url": "https://www.shortcut.com/pricing",
+      "retrieved_at": "2026-11-15T20:05:17.161050+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Shortcut",
+        "website": "https://www.shortcut.com"
+      },
+      "round": 9
+    },
+    {
+      "id": "e25",
+      "statement": "Jira's own guide says its Free plan runs Jira for up to 10 users at no cost with no time limit.",
+      "excerpt": "The Free plan runs Jira for up to 10 users at no cost, with no time limit",
+      "basis": "fact",
+      "tags": [
+        "competitors.pricing"
+      ],
+      "source_id": "s18",
+      "url": "https://www.atlassian.com/software/jira/guides/more/jira-editions",
+      "retrieved_at": "2026-11-15T20:05:24.377520+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Jira",
+        "website": "https://www.atlassian.com/software/jira"
+      },
+      "round": 10
+    },
+    {
+      "id": "e26",
+      "statement": "Jira's own guide positions Jira Enterprise as the plan for running Jira at scale.",
+      "excerpt": "Pick Enterprise to run Jira at scale.",
+      "basis": "fact",
+      "tags": [
+        "competitors.positioning"
+      ],
+      "source_id": "s18",
+      "url": "https://www.atlassian.com/software/jira/guides/more/jira-editions",
+      "retrieved_at": "2026-11-15T20:05:24.377520+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Jira",
+        "website": "https://www.atlassian.com/software/jira"
+      },
+      "round": 10
+    },
+    {
+      "id": "e27",
+      "statement": "Linear's customer story says Linear is designed specifically for product teams.",
+      "excerpt": "Linear is designed specifically for product teams, but ironically, it’s such a great piece of software",
+      "basis": "fact",
+      "tags": [
+        "sales.buyer_role",
+        "sales.target_customer"
+      ],
+      "source_id": "s21",
+      "url": "https://linear.app/customers/pulley",
+      "retrieved_at": "2026-11-15T20:05:31.180892+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 11
+    },
+    {
+      "id": "e28",
+      "statement": "Linear's customer story says Pulley uses Linear across finance, marketing, people, and customer experience teams.",
+      "excerpt": "Pulley now utilizes Linear across teams including finance, marketing, people, and customer experience.",
+      "basis": "fact",
+      "tags": [
+        "sales.target_customer"
+      ],
+      "source_id": "s21",
+      "url": "https://linear.app/customers/pulley",
+      "retrieved_at": "2026-11-15T20:05:31.180892+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 11
+    },
+    {
+      "id": "e29",
+      "statement": "Linear's customer story says product teams use Linear for every step of the project lifecycle, from ideation to delivery.",
+      "excerpt": "Our product teams use Linear for every step of the project lifecycle, from ideation to delivery,",
+      "basis": "fact",
+      "tags": [
+        "sales.buyer_role"
+      ],
+      "source_id": "s21",
+      "url": "https://linear.app/customers/pulley",
+      "retrieved_at": "2026-11-15T20:05:31.180892+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 11
+    }
+  ],
+  "sources": [
+    {
+      "id": "s1",
+      "url": "https://linear.app/now/the-profitable-startup",
+      "title": "The profitable startup - Linear",
+      "kind": "first_party",
+      "retrieved_at": "2026-11-15T20:04:13.069971+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s2",
+      "url": "https://linear.app/readme",
+      "title": "README – Linear",
+      "kind": "first_party",
+      "retrieved_at": "2026-11-15T20:04:13.072090+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s3",
+      "url": "https://linear.app/now/linear-raises-usd13m-in-series-a-funding-from-sequoia-capital",
+      "title": "Linear raises $13M in Series A funding from Sequoia Capital",
+      "kind": "first_party",
+      "retrieved_at": "2026-11-15T20:04:13.073662+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s4",
+      "url": "https://linear.app/pricing",
+      "title": "Pricing – Linear",
+      "kind": "first_party",
+      "retrieved_at": "2026-11-15T20:04:16.878743+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s5",
+      "url": "https://linear.app/about",
+      "title": "About – Linear",
+      "kind": "first_party",
+      "retrieved_at": "2026-11-15T20:04:31.060752+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s6",
+      "url": "https://www.nextmsc.com/report/issue-tracking-software-market-ic4963",
+      "title": "Issue Tracking Software Market Size & Forecast 2035",
+      "kind": "market_report",
+      "retrieved_at": "2026-11-15T20:04:44.043534+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s7",
+      "url": "https://finance.yahoo.com/news/project-management-software-market-reach-130400456.html",
+      "title": "Project Management Software Market to Reach US$ 27.29 Billion by 2032, Driven by AI Integration and the Hybrid Work Revolution | Research by SNS Insider",
+      "kind": "market_report",
+      "retrieved_at": "2026-11-15T20:04:44.046730+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s8",
+      "url": "https://www.mordorintelligence.com/industry-reports/project-management-software-systems-market",
+      "title": "Project Management Software Systems Market Size Report, 2031",
+      "kind": "market_report",
+      "retrieved_at": "2026-11-15T20:04:44.049034+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s9",
+      "url": "https://codegen.com/alternatives/linear",
+      "title": "7 Best Linear Alternatives in 2026 (We Tested Them)",
+      "kind": "other",
+      "retrieved_at": "2026-11-15T20:04:54.907128+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s10",
+      "url": "https://plane.so/blog/best-linear-alternatives-in-2026",
+      "title": "Best Linear alternatives in 2026 | Plane blog",
+      "kind": "other",
+      "retrieved_at": "2026-11-15T20:04:54.911295+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s11",
+      "url": "https://atono.io/blog/most-popular-jira-alternatives-compared",
+      "title": "The most popular Jira alternatives, compared in 2026 | Atono",
+      "kind": "other",
+      "retrieved_at": "2026-11-15T20:04:54.913988+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s12",
+      "url": "https://help.clickup.com/hc/en-us/articles/40980356364311-ClickUp-vs-Monday-com-Which-project-management-tool-fits-your-team",
+      "title": "ClickUp vs. Monday.com: Which project management tool fits your team – ClickUp Help",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T20:05:09.447611+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s13",
+      "url": "https://clickup.com/pricing",
+      "title": "ClickUp Pricing and Plans",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T20:05:09.450762+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s14",
+      "url": "https://help.clickup.com/hc/en-us/articles/10129535087383-Intro-to-pricing",
+      "title": "Intro to pricing – ClickUp Help",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T20:05:09.452259+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s15",
+      "url": "https://www.shortcut.com/faq",
+      "title": "Frequently Asked Questions — Shortcut",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T20:05:17.160195+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s16",
+      "url": "https://www.shortcut.com/pricing",
+      "title": "Pricing — Shortcut",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T20:05:17.161050+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s17",
+      "url": "https://www.shortcut.com/blog/best-project-management-tools-for-startup-teams-in-2025-the-real-guide",
+      "title": "Best Project Management Tools for Startup Teams in 2025: The Real Guide — Shortcut Blog",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T20:05:17.161852+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s18",
+      "url": "https://www.atlassian.com/software/jira/guides/more/jira-editions",
+      "title": "What are the different Jira plans? | Atlassian",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T20:05:24.377520+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s19",
+      "url": "https://www.atlassian.com/software/jira/product-discovery/pricing",
+      "title": "Jira Product Discovery: Pricing Plans to Fuel Innovation | Atlassian",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T20:05:24.378266+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s20",
+      "url": "https://support.atlassian.com/jira-cloud-administration/docs/explore-jira-cloud-plans",
+      "title": "Explore Jira Cloud plans | Atlassian Support",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T20:05:24.381912+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s21",
+      "url": "https://linear.app/customers/pulley",
+      "title": "How Pulley uses Linear beyond their product teams",
+      "kind": "first_party",
+      "retrieved_at": "2026-11-15T20:05:31.180892+00:00",
+      "published_at": null
+    }
+  ],
+  "coverage": {
+    "company": {
+      "status": "complete",
+      "missing": []
+    },
+    "market": {
+      "status": "complete",
+      "missing": []
+    },
+    "competitors": {
+      "status": "complete",
+      "missing": []
+    },
+    "sales": {
+      "status": "complete",
+      "missing": []
+    }
+  },
+  "limits_hit": [],
+  "uncertainties": [
+    "company.vision: Linear's about, README, and pricing pages state a mission but no explicit vision statement was found on the company site. Not recorded."
+  ],
+  "rejected_sources": [
+    {
+      "url": "https://linear.app/careers",
+      "reason": "low-value page",
+      "round": 1
+    },
+    {
+      "url": "https://linear.app/now/building-our-way",
+      "reason": "round page limit reached",
+      "round": 1
+    },
+    {
+      "url": "https://linear.app/switch",
+      "reason": "company website page limit reached",
+      "round": 2
+    },
+    {
+      "url": "https://linear.app/docs/members-roles",
+      "reason": "company website page limit reached",
+      "round": 2
+    },
+    {
+      "url": "https://linear.app/docs/billing-and-plans",
+      "reason": "company website page limit reached",
+      "round": 2
+    },
+    {
+      "url": "https://linear.app/startups",
+      "reason": "company website page limit reached",
+      "round": 2
+    },
+    {
+      "url": "https://linear.app/careers/1d652292-04d9-405c-8101-578efd020e94",
+      "reason": "low-value page",
+      "round": 3
+    },
+    {
+      "url": "https://linear.app/careers/1aa6f672-5917-49aa-b015-70ebff901923",
+      "reason": "low-value page",
+      "round": 3
+    },
+    {
+      "url": "https://linear.app/careers/0c7c2e26-0a98-42cf-a47c-9a3999fb513b",
+      "reason": "low-value page",
+      "round": 3
+    },
+    {
+      "url": "https://linear.app",
+      "reason": "company website page limit reached",
+      "round": 4
+    },
+    {
+      "url": "https://linear.app/build",
+      "reason": "company website page limit reached",
+      "round": 4
+    },
+    {
+      "url": "https://linear.app/ai",
+      "reason": "company website page limit reached",
+      "round": 4
+    },
+    {
+      "url": "https://linear.app/docs/start-guide",
+      "reason": "company website page limit reached",
+      "round": 4
+    },
+    {
+      "url": "https://www.linkedin.com/pulse/issue-tracking-software-market-innovation-xticf",
+      "reason": "round page limit reached",
+      "round": 5
+    },
+    {
+      "url": "https://www.grandviewresearch.com/industry-analysis/project-management-software-market-report",
+      "reason": "round page limit reached",
+      "round": 5
+    },
+    {
+      "url": "https://till-freitag.com/en/blog/best-project-management-tools",
+      "reason": "round page limit reached",
+      "round": 6
+    },
+    {
+      "url": "https://www.reddit.com/r/agile/comments/18lreel/comparing_paper_vs_trello_vs_clickup_vs_mondaycom",
+      "reason": "round page limit reached",
+      "round": 6
+    },
+    {
+      "url": "https://clickup.com/blog/project-management-tools-that-integrate-with-microsoft-teams",
+      "reason": "round page limit reached",
+      "round": 7
+    },
+    {
+      "url": "https://clickup.com/blog/clickup-vs-trello",
+      "reason": "round page limit reached",
+      "round": 7
+    },
+    {
+      "url": "https://linear.app/releases/2022",
+      "reason": "company website page limit reached",
+      "round": 8
+    },
+    {
+      "url": "https://www.shortcut.com/blog/choosing-the-right-pricing-plan",
+      "reason": "round page limit reached",
+      "round": 9
+    },
+    {
+      "url": "https://www.shortcut.com",
+      "reason": "round page limit reached",
+      "round": 9
+    },
+    {
+      "url": "https://www.atlassian.com/software/jira/pricing",
+      "reason": "page limit for this site reached",
+      "round": 10
+    },
+    {
+      "url": "https://www.atlassian.com/software/jira/premium",
+      "reason": "round page limit reached",
+      "round": 10
+    },
+    {
+      "url": "https://linear.app/data",
+      "reason": "company website page limit reached",
+      "round": 11
+    }
+  ]
+}

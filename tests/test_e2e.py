@@ -30,7 +30,9 @@ RIVALS = {"Alpha Docs": "alphadocs.com", "Beta Wiki": "betawiki.io", "Gamma Page
 
 TEXT = {
     HOME: "Nimbus Notes is a shared knowledge base for remote product teams. Heads of product "
-          "operations choose Nimbus Notes to keep specs and decisions in 1 place.",
+          "operations choose Nimbus Notes to keep specs and decisions in 1 place. Our mission "
+          "is to make every product decision easy to find. Remote teams lose decisions in "
+          "scattered chat threads and docs.",
     PRICING: "Nimbus Notes charges $10 per user per month on the Team plan. Teams sign up "
              "self-serve with a 14-day free trial, and larger companies talk to sales.",
     CUSTOMERS: "Nimbus Notes customers are software companies with 50 to 500 employees.",
@@ -64,6 +66,12 @@ ITEMS: dict[str, list[JsonObject]] = {
         _item(HOME, "Heads of product operations choose Nimbus Notes.",
               "Heads of product operations choose Nimbus Notes to keep specs and decisions in 1 place.",
               ["sales.buyer_role"]),
+        _item(HOME, "Its mission is to make every product decision easy to find.",
+              "Our mission is to make every product decision easy to find.",
+              ["company.mission"]),
+        _item(HOME, "Remote teams lose decisions in scattered chat threads and docs.",
+              "Remote teams lose decisions in scattered chat threads and docs.",
+              ["company.problem"]),
     ],
     PRICING: [
         _item(PRICING, "Nimbus Notes charges $10 per user per month on the Team plan.",
