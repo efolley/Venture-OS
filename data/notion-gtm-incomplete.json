@@ -1,0 +1,814 @@
+{
+  "schema_version": 4,
+  "input_run_id": "2eef825a-6255-4339-a6d2-787009288806",
+  "company": {
+    "name": "Notion",
+    "website": "https://notion.com/"
+  },
+  "research_status": "partial",
+  "status": "complete",
+  "research_gaps": [],
+  "gaps": [
+    "market_analysis: No segmentation of the market by company size, industry, region, or use case, so segment priorities cannot be sized or ranked against each other.",
+    "competitive_strategy, market_analysis: No evidence that Notion competes within the project management software category as defined, or of Notion's current market share or revenue.",
+    "challenger_salesman, competitive_strategy, market_analysis: Asana's own-site pricing and positioning were not collected; the only Asana price is a third-party list price of $13.49 per user per month from an Airtable article (e13).",
+    "challenger_salesman, market_analysis: No pricing comparison across plans or against competitors, so value-based prioritization of tiers is unsupported.",
+    "challenger_salesman, competitive_strategy, market_analysis: No evidence on buyer roles, purchase drivers, or adoption barriers for Plus, Business, or Enterprise customers beyond the plan descriptions.",
+    "challenger_salesman, competitive_strategy, market_analysis: Notion's mission and vision statements in its own words were not retrieved.",
+    "market_analysis: No evidence on the market's key trends beyond cloud share and business-software demand, such as AI adoption or integration needs, to support deeper segment prioritization.",
+    "competitive_strategy: Notion's AI features and any AI usage limits or inclusions by plan are not documented in the evidence.",
+    "competitive_strategy: No feature-level comparison between Notion's plans and the alternatives is available, so price gaps cannot be tied to specific capabilities.",
+    "competitive_strategy: The competitor list and prices come from a single third-party Airtable article (e10 to e13) and may be out of date; no primary competitor pages for Asana were checked.",
+    "competitive_strategy: No Notion Enterprise pricing details beyond 'Contact us' are available (e1).",
+    "competitive_strategy: No evidence on Notion's guarantee, refund or trial terms on paid plans.",
+    "challenger_salesman: No conversion, trial-to-paid, churn, or win-loss data was provided, so the self-serve and trigger recommendations cannot be validated.",
+    "challenger_salesman: No channel data beyond the pricing page's call-to-action design, including partner, reseller, or marketplace channels.",
+    "challenger_salesman: No market size, growth rate, or customer-pain evidence supports the reframing of competition."
+  ],
+  "sub_agents": {
+    "market_analysis": {
+      "name": "market_analysis",
+      "status": "complete",
+      "recommendations": [
+        {
+          "title": "Keep Plus focused on small teams and early-stage companies",
+          "recommendation": "Retain small teams and companies just getting started as a core priority segment for the Plus plan, and keep messaging centered on organizing team knowledge and projects in one place.",
+          "rationale": "Notion's own pricing page says the Plus plan is for small teams and professionals working together, and its blog says Plus is for companies just getting started that want to organize team knowledge and projects in one place. This is the segment Notion currently targets, but the evidence does not size it or show it is the most valuable one.",
+          "basis": "evidence_based",
+          "evidence_ids": [
+            "e4",
+            "e20"
+          ]
+        },
+        {
+          "title": "Use the Business plan to target growing businesses",
+          "recommendation": "Treat growing businesses as the next priority segment for the Business plan, since they sit between the Plus and Enterprise tiers and are the stated audience for team streamlining.",
+          "rationale": "The pricing page states the Business plan is for growing businesses to streamline teamwork. Project management software demand is projected to grow (CAGR 11.1%, USD 7.9B in 2025 to USD 19.8B in 2033) and the market is driven by organizations' need to reduce disparities and chaos, so growing organizations are a plausible expansion path. The evidence does not quantify growing-business demand specifically, so the prioritization is a judgment.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e2",
+            "e7",
+            "e9"
+          ]
+        },
+        {
+          "title": "Pursue enterprise accounts as a growth lever",
+          "recommendation": "Invest in enterprise sales motions for organizations that need scalability, control, and security, with buyer engagement through the contact-sales path.",
+          "rationale": "The Enterprise plan is priced custom and targets organizations needing scalability, control, and security, with a contact-sales call to action. The market growth signal (USD 7.9B to 19.8B by 2033) and the cloud-based majority share suggest a large addressable base, but the evidence contains no enterprise-specific size, win rate, or competitor data, so the enterprise priority is a hypothesis.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e5",
+            "e7",
+            "e8"
+          ]
+        },
+        {
+          "title": "Emphasize cloud delivery as the market norm",
+          "recommendation": "Make cloud-based delivery a prominent part of the go-to-market story, since cloud deployment is the majority delivery model in this market.",
+          "rationale": "Cloud-based deployment held about 57% of project management software market share in 2025. The evidence does not state how Notion's deployment compares to this share, so the advice that cloud is central to the offer is a hypothesis.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e8"
+          ]
+        },
+        {
+          "title": "Frame growth around the category's expansion",
+          "recommendation": "Use the projected category growth to justify investment across plan tiers, and track progress against the market's expected 11.1% CAGR.",
+          "rationale": "The market is projected to grow from USD 8.7B in 2026 to USD 19.8B in 2033 at a CAGR of 11.1%, with a 2025 base of USD 7.9B. The evidence does not confirm that Notion competes in this exact category or reports its share, so applying this growth figure to Notion's own plans is a hypothesis.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e7"
+          ]
+        }
+      ],
+      "gaps": [
+        "No segmentation of the market by company size, industry, region, or use case, so segment priorities cannot be sized or ranked against each other.",
+        "No evidence that Notion competes within the project management software category as defined, or of Notion's current market share or revenue.",
+        "No competitor evidence in the supplied set: Asana positioning and own-site pricing were not collected, and the Airtable list price is not among the available evidence IDs.",
+        "No pricing comparison across plans or against competitors, so value-based prioritization of tiers is unsupported.",
+        "No evidence on buyer roles, purchase drivers, or adoption barriers for Plus, Business, or Enterprise customers beyond the plan descriptions.",
+        "No company mission or vision statement from Notion's own site, so recommendations cannot be checked against stated strategic intent.",
+        "No evidence on the market's key trends beyond cloud share and business-software demand, such as AI adoption or integration needs, to support deeper segment prioritization."
+      ]
+    },
+    "competitive_strategy": {
+      "name": "competitive_strategy",
+      "status": "complete",
+      "recommendations": [
+        {
+          "title": "Test a value-tier response to the $20 Business price",
+          "recommendation": "Test whether a lower-priced or bundled mid-tier offer closes the price gap between Notion's Business plan and the lower starting prices of its listed alternatives, for teams that compare per-seat cost first.",
+          "rationale": "Notion's Business plan is $20 per seat per month (e1). The listed starting prices of alternatives are ClickUp at $10 (e10), Coda at $12 (e11), Asana at $13.49 (e13) and Monday.com at $14 (e12), and Monday.com's Pro plan is $19 per seat (e15). Notion's Plus plan at $10 per seat (e1) matches ClickUp's entry point, but the evidence does not show what Business adds over Plus, so the gap may be in perceived value rather than list price.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e1",
+            "e10",
+            "e11",
+            "e12",
+            "e13",
+            "e15"
+          ],
+          "sub_scores": {
+            "pain": 3,
+            "gap_size": 3,
+            "competitor_weakness": 2,
+            "fit": 3
+          },
+          "disconfirming_evidence": "The price comparison mixes list prices from a third-party article (e10 to e13) with Notion's own pricing page, and the feature sets are not compared. Teams may accept a $20 price if Business includes capabilities the alternatives lack. Asana's list price is third-party only.",
+          "validation_question": "For teams evaluating Notion Business against ClickUp, Coda, Asana or Monday.com, which Business features justify the $20 per-seat price, and would a lower-priced bundle change the decision?",
+          "score": 11,
+          "rank": 1
+        },
+        {
+          "title": "Address per-seat cost objections with non-seat pricing messaging",
+          "recommendation": "Test messaging or a pricing option aimed at large or cross-functional teams that object to per-seat costs, using the argument that per-seat pricing limits team size, similar to how Coda frames its own pricing.",
+          "rationale": "Coda says per-seat charging 'does not sit well' with it and that it prices differently to 'erase the limits that hold back great teams' (e18). Coda's own Pro plan is priced per Doc Maker at $12 (e17). Notion's pricing is per seat across Free, Plus, Business and Enterprise (e1). Coda is explicitly positioning against seat-based limits, which Notion's current pricing does not address.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e1",
+            "e17",
+            "e18"
+          ],
+          "sub_scores": {
+            "pain": 3,
+            "gap_size": 2,
+            "competitor_weakness": 2,
+            "fit": 3
+          },
+          "disconfirming_evidence": "The evidence contains Coda's claim about its own pricing, not evidence that per-seat pricing hurts Notion's conversions or that customers want alternative pricing. Coda's pricing unit (Doc Makers) differs from seats, so the comparison may not be like-for-like.",
+          "validation_question": "Do large or cross-functional prospects cite per-seat cost as a reason to delay or choose a different tool, and would a team-based or usage-based option change that?",
+          "score": 10,
+          "rank": 2
+        },
+        {
+          "title": "Make AI inclusion per tier explicit against agent-included offers",
+          "recommendation": "Test whether stating clearly which AI capabilities are included in each Notion tier counters competitor offers that present agents as included in the base plan.",
+          "rationale": "Notion describes itself as an 'AI workspace for work' (e3), but the evidence does not state what AI features or usage are included in Free, Plus, Business or Enterprise (e1). Monday.com positions its plans with 'agents included' and a 'start free, no credit card needed' offer (e16). This is a gap in how Notion's AI offer is priced and explained relative to a competitor's explicit inclusion claim.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e1",
+            "e3",
+            "e16"
+          ],
+          "sub_scores": {
+            "pain": 2,
+            "gap_size": 3,
+            "competitor_weakness": 2,
+            "fit": 3
+          },
+          "disconfirming_evidence": "Notion's pricing page may include AI details that were not captured in the research excerpt. Monday.com's 'agents' may differ in kind from Notion's AI features, so the two offers may not be directly comparable.",
+          "validation_question": "When prospects compare Notion with monday.com, do they ask which AI features are included at each price, and would a clearer per-tier AI statement shorten evaluation?",
+          "score": 10,
+          "rank": 3
+        },
+        {
+          "title": "Test a risk-reversal offer against ClickUp's value guarantee",
+          "recommendation": "Test whether a money-back or trial-risk guarantee on paid plans reduces hesitation for buyers who are comparing price-led alternatives.",
+          "rationale": "ClickUp positions itself as 'the best work solution, for the best price' and offers a 100% money-back guarantee (e14). Monday.com offers 'start free, no credit card needed' (e16). The research records Notion's Free plan at $0 per seat (e1) but no comparable guarantee or risk-reversal offer, so Notion's price-led positioning lacks a stated low-risk commitment against these competitors.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e1",
+            "e14",
+            "e16"
+          ],
+          "sub_scores": {
+            "pain": 2,
+            "gap_size": 2,
+            "competitor_weakness": 2,
+            "fit": 2
+          },
+          "disconfirming_evidence": "Notion may already offer refunds or trial terms that were not captured. Guarantees may not change conversion for teams that have already committed to a tool. No evidence shows how often buyers use or claim these guarantees.",
+          "validation_question": "Would a money-back or extended trial guarantee on Plus or Business change buying decisions, and do prospects currently ask about refunds or trial terms?",
+          "score": 8,
+          "rank": 4
+        }
+      ],
+      "gaps": [
+        "Asana's own-site pricing and positioning were not collected; the only Asana price is a third-party list price of $13.49 per user per month from an Airtable article (e13).",
+        "Notion's mission and vision statements in its own words were not retrieved.",
+        "Notion's AI features and any AI usage limits or inclusions by plan are not documented in the evidence.",
+        "No feature-level comparison between Notion's plans and the alternatives is available, so price gaps cannot be tied to specific capabilities.",
+        "No customer evidence on pain points, switching behavior, win/loss outcomes or willingness to pay was collected.",
+        "No evidence on Notion's market share or how it is positioned within the project management software market (e7 gives market size only).",
+        "The competitor list and prices come from a single third-party Airtable article (e10 to e13) and may be out of date; no primary competitor pages for Asana were checked.",
+        "No Notion Enterprise pricing details beyond 'Contact us' are available (e1).",
+        "No evidence on Notion's guarantee, refund or trial terms on paid plans."
+      ]
+    },
+    "challenger_salesman": {
+      "name": "challenger_salesman",
+      "status": "complete",
+      "recommendations": [
+        {
+          "title": "Segment ICP by pricing tier",
+          "recommendation": "Define separate ICPs for each tier: small teams and professionals for Plus, growing businesses for Business, and organizations with scale, control, and security needs for Enterprise.",
+          "rationale": "Notion's own pricing page assigns each tier a distinct target customer: Plus for small teams and professionals, Business for growing businesses, and Enterprise for organizations needing scalability, control, and security.",
+          "basis": "evidence_based",
+          "evidence_ids": [
+            "e2",
+            "e4",
+            "e5"
+          ]
+        },
+        {
+          "title": "Position Plus for companies just starting out",
+          "recommendation": "Use Plus as the entry offer for early-stage companies, with messaging around organizing team knowledge and projects in one place.",
+          "rationale": "Notion describes Plus as perfect for companies just getting started that want to organize team knowledge and projects in the same place.",
+          "basis": "evidence_based",
+          "evidence_ids": [
+            "e20",
+            "e4"
+          ]
+        },
+        {
+          "title": "Keep Enterprise sales-led",
+          "recommendation": "Route Enterprise prospects to a sales conversation with custom pricing rather than self-serve checkout.",
+          "rationale": "Enterprise is listed with custom pricing and a Contact Sales call to action, while the lower tiers use per-seat list prices.",
+          "basis": "evidence_based",
+          "evidence_ids": [
+            "e5",
+            "e1"
+          ]
+        },
+        {
+          "title": "Use self-serve motion for Business tier",
+          "recommendation": "Run Business as a self-serve, product-led path with a direct Get started action, and track conversions from trial to paid seats to test whether it carries most growing-business purchases.",
+          "rationale": "The Business plan carries a Get started call to action rather than a sales-contact action, which suggests self-serve purchase, but this is an inference from page design, not a stated sales motion.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e6",
+            "e2"
+          ]
+        },
+        {
+          "title": "Justify the Business price premium",
+          "recommendation": "Test whether the $20 per-seat Business price can hold against listed alternatives by tying the premium to the AI workspace and cross-team alignment value rather than to feature lists alone.",
+          "rationale": "Notion's Business tier is $20 per seat, while listed alternatives start at $10 to $14 per user per month. Notion's AI workspace claim and its cross-functional alignment use case are stated, but no evidence shows buyers pay more for them.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e1",
+            "e3",
+            "e21",
+            "e10",
+            "e11",
+            "e12",
+            "e13"
+          ]
+        },
+        {
+          "title": "Reframe competition from single-function tools",
+          "recommendation": "Frame the comparison around replacing several single-purpose tools with one workspace for knowledge, projects, and cross-functional alignment, rather than competing feature-by-feature on task or visual management.",
+          "rationale": "Third-party comparisons classify alternatives by a single function (all-in-one, document-based project management, visual project management, task and project management), and Notion says workspaces drive alignment across cross-functional teams. Whether buyers accept this reframe is untested.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e10",
+            "e11",
+            "e12",
+            "e13",
+            "e21"
+          ]
+        },
+        {
+          "title": "Outreach angle for cross-functional leaders",
+          "recommendation": "Use outreach messaging for leaders of cross-functional teams that centers on aligning goals and work in one shared workspace.",
+          "rationale": "Notion states that people create workspaces to drive alignment across cross-functional teams, which identifies that use case, but the evidence does not name a specific buyer title.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e21"
+          ]
+        },
+        {
+          "title": "Trigger-based outreach",
+          "recommendation": "Time outreach to signals such as a company starting its first shared projects, growing past small-team size, or needing scale, control, or security features.",
+          "rationale": "Notion's tiers map to these stages: starting out (Plus), growing (Business), and needing scalability, control, and security (Enterprise). The signals themselves are inferred from tier targeting, not observed as buying triggers.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e20",
+            "e2",
+            "e5"
+          ]
+        },
+        {
+          "title": "Invest in third-party comparison content",
+          "recommendation": "Place Notion in third-party alternative roundups and comparison content that buyers already use, and check how Notion is described there.",
+          "rationale": "A third-party alternatives article lists Notion's competitors with pricing and functional categories, which indicates that buyers encounter comparisons in such roundups. Whether this drives Notion's pipeline is not shown.",
+          "basis": "hypothesis",
+          "evidence_ids": [
+            "e10",
+            "e11",
+            "e12",
+            "e13"
+          ]
+        }
+      ],
+      "gaps": [
+        "Notion's own mission and vision statements were not retrieved, so brand positioning in the company's own words is unverified.",
+        "Asana's own positioning and pricing were not collected; only a third-party list price is available.",
+        "No buyer persona, job-title, or decision-maker data was found for Business or Enterprise purchases.",
+        "No conversion, trial-to-paid, churn, or win-loss data was provided, so the self-serve and trigger recommendations cannot be validated.",
+        "No channel data beyond the pricing page's call-to-action design, including partner, reseller, or marketplace channels.",
+        "No market size, growth rate, or customer-pain evidence supports the reframing of competition.",
+        "No pricing evidence for Monday.com or Coda uses the same unit as Notion's per-seat plans, which limits direct price comparison."
+      ]
+    }
+  },
+  "recommendations": [
+    {
+      "id": "r1",
+      "agent": "market_analysis",
+      "title": "Keep Plus focused on small teams and early-stage companies",
+      "recommendation": "Retain small teams and companies just getting started as a core priority segment for the Plus plan, and keep messaging centered on organizing team knowledge and projects in one place.",
+      "rationale": "Notion's own pricing page says the Plus plan is for small teams and professionals working together, and its blog says Plus is for companies just getting started that want to organize team knowledge and projects in one place. This is the segment Notion currently targets, but the evidence does not size it or show it is the most valuable one.",
+      "basis": "evidence_based",
+      "evidence_ids": [
+        "e4",
+        "e20"
+      ]
+    },
+    {
+      "id": "r2",
+      "agent": "market_analysis",
+      "title": "Use the Business plan to target growing businesses",
+      "recommendation": "Treat growing businesses as the next priority segment for the Business plan, since they sit between the Plus and Enterprise tiers and are the stated audience for team streamlining.",
+      "rationale": "The pricing page states the Business plan is for growing businesses to streamline teamwork. Project management software demand is projected to grow (CAGR 11.1%, USD 7.9B in 2025 to USD 19.8B in 2033) and the market is driven by organizations' need to reduce disparities and chaos, so growing organizations are a plausible expansion path. The evidence does not quantify growing-business demand specifically, so the prioritization is a judgment.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e2",
+        "e7",
+        "e9"
+      ]
+    },
+    {
+      "id": "r3",
+      "agent": "market_analysis",
+      "title": "Pursue enterprise accounts as a growth lever",
+      "recommendation": "Invest in enterprise sales motions for organizations that need scalability, control, and security, with buyer engagement through the contact-sales path.",
+      "rationale": "The Enterprise plan is priced custom and targets organizations needing scalability, control, and security, with a contact-sales call to action. The market growth signal (USD 7.9B to 19.8B by 2033) and the cloud-based majority share suggest a large addressable base, but the evidence contains no enterprise-specific size, win rate, or competitor data, so the enterprise priority is a hypothesis.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e5",
+        "e7",
+        "e8"
+      ]
+    },
+    {
+      "id": "r4",
+      "agent": "market_analysis",
+      "title": "Emphasize cloud delivery as the market norm",
+      "recommendation": "Make cloud-based delivery a prominent part of the go-to-market story, since cloud deployment is the majority delivery model in this market.",
+      "rationale": "Cloud-based deployment held about 57% of project management software market share in 2025. The evidence does not state how Notion's deployment compares to this share, so the advice that cloud is central to the offer is a hypothesis.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e8"
+      ]
+    },
+    {
+      "id": "r5",
+      "agent": "market_analysis",
+      "title": "Frame growth around the category's expansion",
+      "recommendation": "Use the projected category growth to justify investment across plan tiers, and track progress against the market's expected 11.1% CAGR.",
+      "rationale": "The market is projected to grow from USD 8.7B in 2026 to USD 19.8B in 2033 at a CAGR of 11.1%, with a 2025 base of USD 7.9B. The evidence does not confirm that Notion competes in this exact category or reports its share, so applying this growth figure to Notion's own plans is a hypothesis.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e7"
+      ]
+    },
+    {
+      "id": "r6",
+      "agent": "competitive_strategy",
+      "title": "Test a value-tier response to the $20 Business price",
+      "recommendation": "Test whether a lower-priced or bundled mid-tier offer closes the price gap between Notion's Business plan and the lower starting prices of its listed alternatives, for teams that compare per-seat cost first.",
+      "rationale": "Notion's Business plan is $20 per seat per month (e1). The listed starting prices of alternatives are ClickUp at $10 (e10), Coda at $12 (e11), Asana at $13.49 (e13) and Monday.com at $14 (e12), and Monday.com's Pro plan is $19 per seat (e15). Notion's Plus plan at $10 per seat (e1) matches ClickUp's entry point, but the evidence does not show what Business adds over Plus, so the gap may be in perceived value rather than list price.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e1",
+        "e10",
+        "e11",
+        "e12",
+        "e13",
+        "e15"
+      ],
+      "sub_scores": {
+        "pain": 3,
+        "gap_size": 3,
+        "competitor_weakness": 2,
+        "fit": 3
+      },
+      "disconfirming_evidence": "The price comparison mixes list prices from a third-party article (e10 to e13) with Notion's own pricing page, and the feature sets are not compared. Teams may accept a $20 price if Business includes capabilities the alternatives lack. Asana's list price is third-party only.",
+      "validation_question": "For teams evaluating Notion Business against ClickUp, Coda, Asana or Monday.com, which Business features justify the $20 per-seat price, and would a lower-priced bundle change the decision?",
+      "score": 11,
+      "rank": 1
+    },
+    {
+      "id": "r7",
+      "agent": "competitive_strategy",
+      "title": "Address per-seat cost objections with non-seat pricing messaging",
+      "recommendation": "Test messaging or a pricing option aimed at large or cross-functional teams that object to per-seat costs, using the argument that per-seat pricing limits team size, similar to how Coda frames its own pricing.",
+      "rationale": "Coda says per-seat charging 'does not sit well' with it and that it prices differently to 'erase the limits that hold back great teams' (e18). Coda's own Pro plan is priced per Doc Maker at $12 (e17). Notion's pricing is per seat across Free, Plus, Business and Enterprise (e1). Coda is explicitly positioning against seat-based limits, which Notion's current pricing does not address.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e1",
+        "e17",
+        "e18"
+      ],
+      "sub_scores": {
+        "pain": 3,
+        "gap_size": 2,
+        "competitor_weakness": 2,
+        "fit": 3
+      },
+      "disconfirming_evidence": "The evidence contains Coda's claim about its own pricing, not evidence that per-seat pricing hurts Notion's conversions or that customers want alternative pricing. Coda's pricing unit (Doc Makers) differs from seats, so the comparison may not be like-for-like.",
+      "validation_question": "Do large or cross-functional prospects cite per-seat cost as a reason to delay or choose a different tool, and would a team-based or usage-based option change that?",
+      "score": 10,
+      "rank": 2
+    },
+    {
+      "id": "r8",
+      "agent": "competitive_strategy",
+      "title": "Make AI inclusion per tier explicit against agent-included offers",
+      "recommendation": "Test whether stating clearly which AI capabilities are included in each Notion tier counters competitor offers that present agents as included in the base plan.",
+      "rationale": "Notion describes itself as an 'AI workspace for work' (e3), but the evidence does not state what AI features or usage are included in Free, Plus, Business or Enterprise (e1). Monday.com positions its plans with 'agents included' and a 'start free, no credit card needed' offer (e16). This is a gap in how Notion's AI offer is priced and explained relative to a competitor's explicit inclusion claim.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e1",
+        "e3",
+        "e16"
+      ],
+      "sub_scores": {
+        "pain": 2,
+        "gap_size": 3,
+        "competitor_weakness": 2,
+        "fit": 3
+      },
+      "disconfirming_evidence": "Notion's pricing page may include AI details that were not captured in the research excerpt. Monday.com's 'agents' may differ in kind from Notion's AI features, so the two offers may not be directly comparable.",
+      "validation_question": "When prospects compare Notion with monday.com, do they ask which AI features are included at each price, and would a clearer per-tier AI statement shorten evaluation?",
+      "score": 10,
+      "rank": 3
+    },
+    {
+      "id": "r9",
+      "agent": "competitive_strategy",
+      "title": "Test a risk-reversal offer against ClickUp's value guarantee",
+      "recommendation": "Test whether a money-back or trial-risk guarantee on paid plans reduces hesitation for buyers who are comparing price-led alternatives.",
+      "rationale": "ClickUp positions itself as 'the best work solution, for the best price' and offers a 100% money-back guarantee (e14). Monday.com offers 'start free, no credit card needed' (e16). The research records Notion's Free plan at $0 per seat (e1) but no comparable guarantee or risk-reversal offer, so Notion's price-led positioning lacks a stated low-risk commitment against these competitors.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e1",
+        "e14",
+        "e16"
+      ],
+      "sub_scores": {
+        "pain": 2,
+        "gap_size": 2,
+        "competitor_weakness": 2,
+        "fit": 2
+      },
+      "disconfirming_evidence": "Notion may already offer refunds or trial terms that were not captured. Guarantees may not change conversion for teams that have already committed to a tool. No evidence shows how often buyers use or claim these guarantees.",
+      "validation_question": "Would a money-back or extended trial guarantee on Plus or Business change buying decisions, and do prospects currently ask about refunds or trial terms?",
+      "score": 8,
+      "rank": 4
+    },
+    {
+      "id": "r10",
+      "agent": "challenger_salesman",
+      "title": "Segment ICP by pricing tier",
+      "recommendation": "Define separate ICPs for each tier: small teams and professionals for Plus, growing businesses for Business, and organizations with scale, control, and security needs for Enterprise.",
+      "rationale": "Notion's own pricing page assigns each tier a distinct target customer: Plus for small teams and professionals, Business for growing businesses, and Enterprise for organizations needing scalability, control, and security.",
+      "basis": "evidence_based",
+      "evidence_ids": [
+        "e2",
+        "e4",
+        "e5"
+      ]
+    },
+    {
+      "id": "r11",
+      "agent": "challenger_salesman",
+      "title": "Position Plus for companies just starting out",
+      "recommendation": "Use Plus as the entry offer for early-stage companies, with messaging around organizing team knowledge and projects in one place.",
+      "rationale": "Notion describes Plus as perfect for companies just getting started that want to organize team knowledge and projects in the same place.",
+      "basis": "evidence_based",
+      "evidence_ids": [
+        "e20",
+        "e4"
+      ]
+    },
+    {
+      "id": "r12",
+      "agent": "challenger_salesman",
+      "title": "Keep Enterprise sales-led",
+      "recommendation": "Route Enterprise prospects to a sales conversation with custom pricing rather than self-serve checkout.",
+      "rationale": "Enterprise is listed with custom pricing and a Contact Sales call to action, while the lower tiers use per-seat list prices.",
+      "basis": "evidence_based",
+      "evidence_ids": [
+        "e5",
+        "e1"
+      ]
+    },
+    {
+      "id": "r13",
+      "agent": "challenger_salesman",
+      "title": "Use self-serve motion for Business tier",
+      "recommendation": "Run Business as a self-serve, product-led path with a direct Get started action, and track conversions from trial to paid seats to test whether it carries most growing-business purchases.",
+      "rationale": "The Business plan carries a Get started call to action rather than a sales-contact action, which suggests self-serve purchase, but this is an inference from page design, not a stated sales motion.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e6",
+        "e2"
+      ]
+    },
+    {
+      "id": "r14",
+      "agent": "challenger_salesman",
+      "title": "Justify the Business price premium",
+      "recommendation": "Test whether the $20 per-seat Business price can hold against listed alternatives by tying the premium to the AI workspace and cross-team alignment value rather than to feature lists alone.",
+      "rationale": "Notion's Business tier is $20 per seat, while listed alternatives start at $10 to $14 per user per month. Notion's AI workspace claim and its cross-functional alignment use case are stated, but no evidence shows buyers pay more for them.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e1",
+        "e3",
+        "e21",
+        "e10",
+        "e11",
+        "e12",
+        "e13"
+      ]
+    },
+    {
+      "id": "r15",
+      "agent": "challenger_salesman",
+      "title": "Reframe competition from single-function tools",
+      "recommendation": "Frame the comparison around replacing several single-purpose tools with one workspace for knowledge, projects, and cross-functional alignment, rather than competing feature-by-feature on task or visual management.",
+      "rationale": "Third-party comparisons classify alternatives by a single function (all-in-one, document-based project management, visual project management, task and project management), and Notion says workspaces drive alignment across cross-functional teams. Whether buyers accept this reframe is untested.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e10",
+        "e11",
+        "e12",
+        "e13",
+        "e21"
+      ]
+    },
+    {
+      "id": "r16",
+      "agent": "challenger_salesman",
+      "title": "Outreach angle for cross-functional leaders",
+      "recommendation": "Use outreach messaging for leaders of cross-functional teams that centers on aligning goals and work in one shared workspace.",
+      "rationale": "Notion states that people create workspaces to drive alignment across cross-functional teams, which identifies that use case, but the evidence does not name a specific buyer title.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e21"
+      ]
+    },
+    {
+      "id": "r17",
+      "agent": "challenger_salesman",
+      "title": "Trigger-based outreach",
+      "recommendation": "Time outreach to signals such as a company starting its first shared projects, growing past small-team size, or needing scale, control, or security features.",
+      "rationale": "Notion's tiers map to these stages: starting out (Plus), growing (Business), and needing scalability, control, and security (Enterprise). The signals themselves are inferred from tier targeting, not observed as buying triggers.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e20",
+        "e2",
+        "e5"
+      ]
+    },
+    {
+      "id": "r18",
+      "agent": "challenger_salesman",
+      "title": "Invest in third-party comparison content",
+      "recommendation": "Place Notion in third-party alternative roundups and comparison content that buyers already use, and check how Notion is described there.",
+      "rationale": "A third-party alternatives article lists Notion's competitors with pricing and functional categories, which indicates that buyers encounter comparisons in such roundups. Whether this drives Notion's pipeline is not shown.",
+      "basis": "hypothesis",
+      "evidence_ids": [
+        "e10",
+        "e11",
+        "e12",
+        "e13"
+      ]
+    }
+  ],
+  "themes": [
+    {
+      "title": "Plus targets small teams and early-stage companies",
+      "recommendation_ids": [
+        "r1",
+        "r11"
+      ],
+      "agents": [
+        "challenger_salesman",
+        "market_analysis"
+      ]
+    },
+    {
+      "title": "Business targets growing businesses via self-serve",
+      "recommendation_ids": [
+        "r2",
+        "r13"
+      ],
+      "agents": [
+        "challenger_salesman",
+        "market_analysis"
+      ]
+    },
+    {
+      "title": "Enterprise accounts stay sales-led and growth-focused",
+      "recommendation_ids": [
+        "r3",
+        "r12"
+      ],
+      "agents": [
+        "challenger_salesman",
+        "market_analysis"
+      ]
+    },
+    {
+      "title": "Define separate ICPs for each pricing tier",
+      "recommendation_ids": [
+        "r10"
+      ],
+      "agents": [
+        "challenger_salesman"
+      ]
+    },
+    {
+      "title": "Emphasize cloud delivery as the market norm",
+      "recommendation_ids": [
+        "r4"
+      ],
+      "agents": [
+        "market_analysis"
+      ]
+    },
+    {
+      "title": "Frame growth around category expansion",
+      "recommendation_ids": [
+        "r5"
+      ],
+      "agents": [
+        "market_analysis"
+      ]
+    },
+    {
+      "title": "Address price objections against cheaper alternatives",
+      "recommendation_ids": [
+        "r6",
+        "r7",
+        "r14"
+      ],
+      "agents": [
+        "challenger_salesman",
+        "competitive_strategy"
+      ]
+    },
+    {
+      "title": "Make AI inclusion per tier explicit",
+      "recommendation_ids": [
+        "r8"
+      ],
+      "agents": [
+        "competitive_strategy"
+      ]
+    },
+    {
+      "title": "Test a risk-reversal guarantee offer",
+      "recommendation_ids": [
+        "r9"
+      ],
+      "agents": [
+        "competitive_strategy"
+      ]
+    },
+    {
+      "title": "Reframe competition around consolidating single-function tools",
+      "recommendation_ids": [
+        "r15"
+      ],
+      "agents": [
+        "challenger_salesman"
+      ]
+    },
+    {
+      "title": "Targeted outreach messaging and trigger timing",
+      "recommendation_ids": [
+        "r16",
+        "r17"
+      ],
+      "agents": [
+        "challenger_salesman"
+      ]
+    },
+    {
+      "title": "Invest in third-party comparison content",
+      "recommendation_ids": [
+        "r18"
+      ],
+      "agents": [
+        "challenger_salesman"
+      ]
+    }
+  ],
+  "merge": {
+    "status": "merged",
+    "error": ""
+  },
+  "snapshot": {
+    "schema_version": 1,
+    "status": "complete",
+    "company": {
+      "name": "Notion",
+      "website": "https://notion.com/"
+    },
+    "lines": {
+      "mission": {
+        "status": "unknown",
+        "text": "",
+        "basis": "",
+        "evidence_ids": [],
+        "recommendation_ids": []
+      },
+      "vision": {
+        "status": "unknown",
+        "text": "",
+        "basis": "",
+        "evidence_ids": [],
+        "recommendation_ids": []
+      },
+      "problem": {
+        "status": "found",
+        "text": "Teams need to organize team knowledge, execute on projects, and move faster together.",
+        "basis": "evidence_based",
+        "evidence_ids": [
+          "e19"
+        ],
+        "recommendation_ids": []
+      },
+      "target_market": {
+        "status": "found",
+        "text": "Notion targets growing businesses, small teams and professionals, and organizations that need scalability, control, and security, through its Business, Plus, and Enterprise plans.",
+        "basis": "evidence_based",
+        "evidence_ids": [
+          "e2",
+          "e4",
+          "e5"
+        ],
+        "recommendation_ids": []
+      },
+      "icp": {
+        "status": "found",
+        "text": "Notion targets small teams and professionals on Plus, growing businesses on Business, and organizations needing scalability, control, and security on Enterprise.",
+        "basis": "evidence_based",
+        "evidence_ids": [
+          "e2",
+          "e4",
+          "e5"
+        ],
+        "recommendation_ids": [
+          "r10"
+        ]
+      },
+      "product": {
+        "status": "found",
+        "text": "Notion describes its product as the AI workspace for work that matters.",
+        "basis": "evidence_based",
+        "evidence_ids": [
+          "e3"
+        ],
+        "recommendation_ids": []
+      },
+      "client_value": {
+        "status": "found",
+        "text": "Notion helps companies organize team knowledge, execute on projects, and move faster together.",
+        "basis": "evidence_based",
+        "evidence_ids": [
+          "e19"
+        ],
+        "recommendation_ids": []
+      },
+      "market_brief": {
+        "status": "found",
+        "text": "The global project management software market was valued at USD 7.9 billion in 2025 and is projected to reach USD 19.8 billion by 2033, a CAGR of 11.1%. Cloud-based deployment held about 57% market share in 2025, and a rising need for business software to reduce disparities and chaos is expected to drive growth. Notion can build its go-to-market story around cloud delivery and the category's expansion.",
+        "basis": "evidence_based",
+        "evidence_ids": [
+          "e7",
+          "e8",
+          "e9"
+        ],
+        "recommendation_ids": [
+          "r4",
+          "r5"
+        ]
+      },
+      "competitive_landscape": {
+        "status": "unknown",
+        "text": "",
+        "basis": "",
+        "evidence_ids": [],
+        "recommendation_ids": []
+      }
+    },
+    "missing": [],
+    "line_errors": {},
+    "error": ""
+  }
+}

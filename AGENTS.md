@@ -9,9 +9,9 @@ Implemented on `dev`:
 | Agent | Package | Version | Source branch |
 | --- | --- | --- | --- |
 | 1 Research | `src/research/` | V.0.3 (`0.3.0`) | `agents/research` |
-| 2 GTM orchestrator | `src/gtm/` | V.0.3 (`0.3.0`) | `agents/GTM_orchestrator` |
+| 2 GTM orchestrator | `src/gtm/` | V.0.4 (`0.4.0`) | `agents/GTM_orchestrator` |
 
-Also implemented: the pipeline (`src/pipeline/`, V.0.1), the first harness slice, which runs Research and then GTM in 1 command and passes the evidence pack in memory. Planned: the rest of the harness, PM agent, Presentation builder, Product builder, Executor, eval gates, and both HITL points. Never describe planned behavior as working software.
+Also implemented: the PM agent (`src/pm/`, V.0.1, from `agents/pm`) and the pipeline (`src/pipeline/`, V.0.2), the first harness slice, which runs Research, GTM, and PM in 1 command, passes each result in memory, and stops at HITL 1 when PM's baseline fails. Planned: the rest of the harness, Presentation builder, Product builder, Executor, eval gates, and both HITL points. Never describe planned behavior as working software.
 
 ## Source of truth
 
@@ -21,7 +21,7 @@ The `## Architecture` section of README.md is the benchmark for flow and archite
 
 1. **Research agent** (implemented): a bounded ReAct loop (DeepAgents on Claude) that collects verified web evidence about a company into an evidence pack (schema v4) with company (including mission, vision, and problem), market, competitors, and sales sections. It gathers and organizes; it does not analyze.
 2. **GTM orchestrator** (implemented): validates the evidence pack and runs 3 sub-agents in parallel, all advising the researched company: market analysis, competitive strategy (hypotheses ranked in code), and challenger salesman. A merge step groups overlapping recommendations into themes and de-duplicates gaps, and a snapshot step writes a cited company snapshot (mission, vision, problem, target market, ICP, product, client value, market brief, competition landscape). Output: a strategy pack (schema v4).
-3. **PM agent** (planned): checks the company snapshot. If any field is empty, HITL 1 asks a human to send the gaps back to Research or proceed.
+3. **PM agent** (implemented): checks the strategy pack against a minimum baseline in code. If it fails, HITL 1 asks a human to send the gaps back to Research or proceed. Then it establishes 1 use case ("Help {ICP} solve {core problem} with {MVP solution}", with why and the key assumption) and derives the action plan and the presentation and product briefs from it, using a DeepAgents planner with code-validated tools.
 4. **Presentation builder** (1-pager proposal) and 5. **Product builder** (mini-MVP and demo GIF), in parallel (planned).
 6. **HITL 2** approves both, then the **Executor** (mini AI CRM) tracks contacts, deals, and follow-ups and drafts and dry-runs outreach. Real sends require approval (planned).
 
@@ -38,8 +38,9 @@ The harness is deterministic code, not an LLM agent. It will own routing, retrie
 
 - `src/research/`: Research agent (contracts, checklist, planner, sources, evidence, DeepAgents loop, pack and schema, store and migrations, providers, chat, FastAPI backend, CLI).
 - `src/gtm/`: GTM orchestrator (inputs, sub-agents, contracts and ranking, orchestrator, merge step, snapshot, CLI).
-- `src/pipeline/`: the first harness slice. Deterministic code that runs Research, stops on `clarify` or failure, then runs GTM on the evidence pack. It may import both agents; agents still never import each other except `gtm` reading `research` contracts.
-- `UI/`: Streamlit client for the pipeline API (`src/pipeline/api.py`: Research endpoints plus GTM endpoints). Research never imports GTM; the pipeline API adds GTM next to it. It only calls the API and renders output; never put processing in the UI.
+- `src/pm/`: PM agent (contracts, baseline, use case and planner tools, DeepAgents and JSON planners, CLI). It reads the GTM strategy pack as JSON and imports no other agent.
+- `src/pipeline/`: the first harness slice. Deterministic code that runs Research, stops on `clarify` or failure, runs GTM on the evidence pack, then PM on the strategy pack, stopping at HITL 1 when needed. It may import all agents; agents still never import each other except `gtm` reading `research` contracts.
+- `UI/`: Streamlit client for the pipeline API (`src/pipeline/api.py`: Research endpoints plus GTM and PM endpoints). Research never imports GTM or PM; the pipeline API adds them next to it. It only calls the API and renders output; never put processing in the UI.
 - `data/`: sample Research evidence packs (`notion.json`, `baseten.json`) used by the GTM tests. Test inputs only, never a production response or fallback.
 - `scripts/live_smoke.py`: live Research check that makes billed calls; not part of the tests.
 - `tests/`: offline tests for both agents.

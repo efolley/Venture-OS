@@ -18,9 +18,10 @@ from research.logs import setup_logging
 from research.providers import TavilySearch, default_model
 from research.store import default_store
 
-from .runner import run_pipeline, slug
+from .runner import default_pm, run_pipeline, slug
 
-EXIT_CODES = {"complete": 0, "partial": 0, "clarify": 3, "research_failed": 2, "gtm_failed": 1}
+EXIT_CODES = {"complete": 0, "partial": 0, "clarify": 3, "research_failed": 2, "gtm_failed": 1,
+              "pm_failed": 1, "hitl_required": 5, "research_requested": 4}
 
 
 def _load_env() -> None:
@@ -44,6 +45,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--instructions", default="", help='for example "EU only"')
     parser.add_argument("--output-dir", type=Path, default=Path("runs"),
                         help="where to write the JSON files (default: runs/)")
+    parser.add_argument("--decision", choices=["proceed", "research"], default=None,
+                        help="HITL 1 answer when PM's baseline fails")
+    parser.add_argument("--no-pm", action="store_true", help="stop after GTM")
     args = parser.parse_args(argv)
     _load_env()
     setup_logging()
@@ -54,6 +58,7 @@ def main(argv: list[str] | None = None) -> int:
     model = default_model()
     research = ResearchAgent(model, TavilySearch(), default_store())
     result = run_pipeline(research, GTMOrchestrator(model), args.company, args.website,
+                          pm=None if args.no_pm else default_pm(model), decision=args.decision,
                           instructions=args.instructions, progress=progress)
 
     print(f"Pipeline status: {result.status}")
@@ -77,6 +82,21 @@ def main(argv: list[str] | None = None) -> int:
         print(f"GTM ({result.strategy['status']}): {path}")
         print(f"Snapshot: {snapshot['status']}"
               + (f" (missing: {', '.join(missing)})" if missing else ""))
+    if result.pm is not None:
+        path = args.output_dir / f"{name}-pm.json"
+        _write(path, result.pm)
+        print(f"PM ({result.pm['status']}): {path}")
+        if result.pm["status"] == "hitl_required":
+            baseline = cast(JsonObject, result.pm["baseline"])
+            print(f"HITL 1: missing {', '.join(cast(list[str], baseline['missing']))}. Rerun with "
+                  "--decision research (collect more) or --decision proceed (plan anyway).")
+        elif result.pm["status"] == "research_requested":
+            request = cast(JsonObject, result.pm["research_request"])
+            print(f"Research gaps to collect: {', '.join(cast(list[str], request['gaps']))}")
+        elif result.pm.get("use_case"):
+            use_case = cast(JsonObject, result.pm["use_case"])
+            print(f"Use case: {use_case['statement']}")
+            print(f"Actions: {len(cast(list[object], result.pm['action_plan']))}")
     return EXIT_CODES[result.status]
 
 
