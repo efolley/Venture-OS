@@ -9,13 +9,24 @@ from unittest.mock import patch
 from gtm import cli
 from gtm.contracts import SUB_AGENTS, validate_sub_agent_result
 from gtm.merge import MERGE_SYSTEM, merge_outputs
+from gtm.snapshot import REQUIRED_LINES, SNAPSHOT_SYSTEM, build_snapshot
 from gtm.inputs import evidence_id_index, load_research_pack, validate_research_pack
 from gtm.orchestrator import GTMOrchestrator
 from research.contracts import JsonObject
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SAMPLES = (ROOT / "data" / "notion.json", ROOT / "data" / "baseten.json")
+SAMPLES = tuple(ROOT / "data" / f"{name}.json" for name in ("notion", "baseten", "linear"))
+
+
+def partial_pack() -> JsonObject:
+    """A copy of the Notion sample with its market trends removed, so Research is partial."""
+    pack = load_research_pack(SAMPLES[0])
+    cast(dict[str, list[str]], pack["market"])["trends"] = []
+    coverage = cast(dict[str, JsonObject], pack["coverage"])
+    coverage["market"] = {"status": "partial", "missing": ["market.trends"]}
+    pack["status"] = "partial"
+    return validate_research_pack(pack)
 
 
 class FakeModel:
@@ -28,6 +39,7 @@ class FakeModel:
         with_gaps: bool = False,
         empty_agent: str = "",
         merge_reply: object = None,
+        snapshot_reply: object = None,
         barrier: Barrier | None = None,
     ) -> None:
         self.with_gaps = with_gaps
@@ -35,6 +47,8 @@ class FakeModel:
         self.systems: list[str] = []
         self.merge_reply = merge_reply
         self.merge_requests: list[JsonObject] = []
+        self.snapshot_reply = snapshot_reply
+        self.snapshot_requests: list[JsonObject] = []
         self.fail_agent = fail_agent
         self.invalid_citations = invalid_citations
         self.invalid_first_attempt = invalid_first_attempt
@@ -42,6 +56,23 @@ class FakeModel:
         self.prompts: list[JsonObject] = []
 
     def json(self, system: str, prompt: str) -> JsonObject:
+        if system == SNAPSHOT_SYSTEM:
+            request = cast(JsonObject, json.loads(prompt))
+            self.snapshot_requests.append(request)
+            if self.snapshot_reply is not None:
+                return cast(JsonObject, self.snapshot_reply)
+            lines: JsonObject = {}
+            for key, spec in cast(dict[str, JsonObject], request["lines"]).items():
+                evidence = cast(list[JsonObject], spec["allowed_evidence"])
+                recs = cast(list[JsonObject], spec["allowed_recommendations"])
+                lines[key] = {
+                    "status": "found",
+                    "text": f"Test {key} line.",
+                    "basis": "evidence_based",
+                    "evidence_ids": [evidence[0]["id"]] if evidence else [],
+                    "recommendation_ids": [] if evidence else [recs[0]["id"]],
+                }
+            return {"lines": lines}
         if system == MERGE_SYSTEM:
             request = cast(JsonObject, json.loads(prompt))
             self.merge_requests.append(request)
@@ -108,15 +139,14 @@ def hypothesis(title: str, pain: int, fit: int, evidence_ids: list[str]) -> Json
 
 
 class GTMInputTests(unittest.TestCase):
-    def test_both_sample_packs_validate_and_have_evidence_indexes(self):
-        counts: list[int] = []
+    def test_sample_packs_validate_and_have_evidence_indexes(self):
         for path in SAMPLES:
             with self.subTest(sample=path.name):
                 pack = load_research_pack(path)
                 index = evidence_id_index(pack)
+                self.assertEqual(pack["schema_version"], 4)
+                self.assertTrue(index)
                 self.assertEqual(len(index), len(cast(list[object], pack["evidence"])))
-                counts.append(len(index))
-        self.assertEqual(counts, [19, 9])
 
     def test_invalid_research_pack_is_rejected(self):
         pack = load_research_pack(SAMPLES[0])
@@ -248,7 +278,8 @@ class GTMMergeTests(unittest.TestCase):
         self.assertIn("exactly 1 theme", result["error"])
 
     def test_research_gtm_gaps_already_in_coverage_are_not_repeated(self):
-        result = GTMOrchestrator(FakeModel()).run(load_research_pack(SAMPLES[1]))
+        result = GTMOrchestrator(FakeModel()).run(partial_pack())
+        self.assertTrue(result["research_gaps"])
         gtm_lines = [gap for gap in result["research_gaps"] if gap.startswith("Research GTM gap")]
         coverage = [gap for gap in result["research_gaps"] if gap.startswith("Research coverage")]
         for line in gtm_lines:
@@ -256,11 +287,61 @@ class GTMMergeTests(unittest.TestCase):
             self.assertFalse(any(field in item for item in coverage), line)
 
 
+class GTMSnapshotTests(unittest.TestCase):
+    def test_snapshot_lines_cite_only_their_allowed_sources(self):
+        pack = load_research_pack(SAMPLES[0])
+        result = GTMOrchestrator(FakeModel()).run(pack)
+        snapshot = result["snapshot"]
+        self.assertEqual(snapshot["status"], "complete")
+        self.assertEqual(snapshot["company"]["name"], "Notion")
+        lines = cast(dict[str, JsonObject], snapshot["lines"])
+        company = cast(dict[str, list[str]], pack["company"])
+        self.assertTrue(set(cast(list[str], lines["mission"]["evidence_ids"])) <= set(company["mission"]))
+        self.assertTrue(set(cast(list[str], lines["problem"]["evidence_ids"])) <= set(company["problem"]))
+        self.assertTrue(set(cast(list[str], lines["product"]["evidence_ids"])) <= set(company["offering"]))
+        for key in REQUIRED_LINES:
+            self.assertEqual(lines[key]["status"], "found", key)
+
+    def test_line_without_evidence_is_unknown_and_never_asked(self):
+        pack = load_research_pack(SAMPLES[0])
+        company = cast(dict[str, list[str]], pack["company"])
+        company["mission"] = []
+        model = FakeModel()
+        snapshot = build_snapshot(model, pack, [])
+        self.assertNotIn("mission", cast(JsonObject, model.snapshot_requests[0]["lines"]))
+        self.assertEqual(cast(dict[str, JsonObject], snapshot["lines"])["mission"]["status"], "unknown")
+        self.assertEqual(snapshot["status"], "partial")
+        self.assertIn("mission", snapshot["missing"])
+
+    def test_missing_vision_does_not_make_snapshot_partial(self):
+        pack = load_research_pack(SAMPLES[0])
+        cast(dict[str, list[str]], pack["company"])["vision"] = []
+        result = GTMOrchestrator(FakeModel()).run(pack)
+        self.assertEqual(result["snapshot"]["status"], "complete")
+        self.assertNotIn("vision", result["snapshot"]["missing"])
+
+    def test_invalid_citation_retries_once_then_falls_back(self):
+        reply = {"lines": {"mission": {"status": "found", "text": "Made up.",
+                                       "basis": "evidence_based", "evidence_ids": ["e999"],
+                                       "recommendation_ids": []}}}
+        model = FakeModel(snapshot_reply=reply)
+        result = GTMOrchestrator(model).run(load_research_pack(SAMPLES[0]))
+        snapshot = result["snapshot"]
+        self.assertEqual(len(model.snapshot_requests), 2)
+        self.assertIn("validation_error", model.snapshot_requests[1])
+        self.assertEqual(snapshot["status"], "fallback")
+        self.assertTrue(all(
+            line["status"] == "unknown" for line in cast(dict[str, JsonObject], snapshot["lines"]).values()
+        ))
+        self.assertEqual(result["status"], "partial")
+
+
 class GTMOrchestratorTests(unittest.TestCase):
     def test_complete_and_partial_inputs_merge_three_cited_results(self):
-        for path, expected_status in ((SAMPLES[0], "complete"), (SAMPLES[1], "partial")):
-            with self.subTest(sample=path.name):
-                pack = load_research_pack(path)
+        cases = [(path.name, load_research_pack(path), "complete") for path in SAMPLES]
+        cases.append(("notion, partial", partial_pack(), "partial"))
+        for label, pack, expected_status in cases:
+            with self.subTest(sample=label):
                 result = GTMOrchestrator(FakeModel()).run(pack)
                 available = set(evidence_id_index(pack))
                 self.assertEqual(result["status"], expected_status)

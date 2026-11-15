@@ -8,8 +8,8 @@ VentureOS is a business operations harness that is designed to coordinate agents
 
 | # | Agent | Status | Version | Package |
 | -- | --- | --- | --- | --- |
-| 1 | Research | Implemented | V.0.2 | `src/research/` |
-| 2 | GTM orchestrator (market analysis, competitive strategy, challenger salesman) | Implemented | V.0.1 | `src/gtm/` |
+| 1 | Research | Implemented | V.0.3 | `src/research/` |
+| 2 | GTM orchestrator (market analysis, competitive strategy, challenger salesman, company snapshot) | Implemented | V.0.2 | `src/gtm/` |
 | 3 | PM agent | Planned | | |
 | 4 | Presentation builder | Planned | | |
 | 5 | Product builder | Planned | | |
@@ -27,8 +27,8 @@ Research and the GTM orchestrator run separately today: Research produces an evi
 User flow:
 1. Input: company name or URL
 2. Research agent (implemented): collects sourced evidence about the company until it has enough context
-3. GTM orchestrator (implemented): runs market analysis, competitive strategy, and challenger salesman in parallel
-4. PM agent (planned): turns their outputs into a company snapshot; if any field is missing, a human decides to research more or proceed (HITL 1)
+3. GTM orchestrator (implemented): runs market analysis, competitive strategy, and challenger salesman in parallel, then writes a cited company snapshot
+4. PM agent (planned): checks the company snapshot; if any field is missing, a human decides to research more or proceed (HITL 1)
 5. Presentation and Product builders (planned): create a 1-pager proposal and a mini-MVP in parallel, then a human approves both (HITL 2)
 6. Executor (planned): a mini AI CRM that runs approved follow-up and tracks all work
 
@@ -49,7 +49,7 @@ flowchart TD
         CH["2c Challenger salesman"]
     end
     GTM --> MA & CS & CH
-    MA & CS & CH --> PM["3 PM agent<br/>company snapshot"]
+    MA & CS & CH --> PM["3 PM agent<br/>checks the snapshot"]
     PM --> Q{"Snapshot complete?<br/>all fields filled"}
     Q -->|"yes"| BUILD
     Q -->|"no"| G1{"HITL 1<br/>research more or proceed"}
@@ -90,8 +90,8 @@ flowchart LR
 Pipeline rules:
 
 - Research is a ReAct loop (reason, search, observe) that stops when it has enough context for the downstream agents or reaches its search budget. (Implemented)
-- The GTM orchestrator passes the research context to 3 sub-agents that run in parallel, then merges their outputs for the PM agent. (Implemented)
-- The PM agent assembles a company snapshot. If every required field is filled, the pipeline continues to the builders automatically. If any field is empty, HITL 1 asks a human to send the gaps back to Research or proceed with the gaps marked as unknown. (Planned)
+- The GTM orchestrator passes the research context to 3 sub-agents that run in parallel, merges their outputs, and writes a cited company snapshot for the PM agent. (Implemented)
+- The PM agent checks the company snapshot. If every required field is filled, the pipeline continues to the builders automatically. If any field is empty, HITL 1 asks a human to send the gaps back to Research or proceed with the gaps marked as unknown. (Planned)
 - Downstream agents cite evidence IDs from the evidence pack. Anything not directly supported by its evidence is labeled a hypothesis.
 - An eval gate checks each stage output before the next stage starts. (Planned)
 - Presentation Builder and Product Builder run in parallel. Product Builder writes a spec first, builds from a fixed scaffold in a sandbox, and records a demo GIF. It solves the same job as the target product and does not copy it. (Planned)
@@ -103,16 +103,16 @@ Pipeline rules:
 | #  | Agent                | Responsibility                                                                                                                   | Deliverable                     |
 | -- | -------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
 | 1  | Research             | ReAct agent that collects information about the company, its industry, and trends from a name or URL until it has enough context | Sourced evidence pack           |
-| 2  | GTM orchestrator     | Runs the 3 GTM sub-agents in parallel on the research context and merges their outputs                                           | Strategy pack                   |
+| 2  | GTM orchestrator     | Runs the 3 GTM sub-agents in parallel on the research context, merges their outputs, and writes the company snapshot             | Strategy pack with snapshot     |
 | 2a | Market analysis      | Market category, size and growth, trends, and which segments to prioritize                                                       | Market recommendations          |
 | 2b | Competitive strategy | Compare alternatives, pricing, positioning, and gaps                                                                             | Ranked opportunity hypotheses   |
 | 2c | Challenger salesman  | Define the ICP, commercial insight, GTM and sales motion, and tailored outreach                                                  | ICP, motion, and outreach angles |
-| 3  | PM agent             | Turn GTM outputs into a company snapshot and check that every field is filled; trigger HITL when it is not                       | Company snapshot                |
+| 3  | PM agent             | Check that every field of the company snapshot is filled; trigger HITL when it is not                                            | Approved snapshot or HITL 1     |
 | 4  | Presentation builder | Package the offer and unique value proposition                                                                                   | 1-pager proposal                |
 | 5  | Product builder      | Build a scoped mini-MVP of a similar solution                                                                                    | Tested prototype and demo GIF   |
 | 6  | Executor             | Mini AI CRM: track contacts, deals, and follow-ups, and run approved outreach and onboarding steps                               | Action records and outcome data |
 
-## Agent 1: Research (V.0.2)
+## Agent 1: Research (V.0.3)
 
 **Input**
 
@@ -120,11 +120,11 @@ Pipeline rules:
 - Optional instructions, for example `focus on mid-market` or `EU only`.
 - Optional, on a re-run: a previous run ID and a list of gaps (for example `market.trends`), so only missing items are researched.
 
-**Output:** an evidence pack (schema v3, `src/research/pack.schema.json`) whose sections are checked against this checklist in code:
+**Output:** an evidence pack (schema v4, `src/research/pack.schema.json`) whose sections are checked against this checklist in code:
 
 | Field | Checklist (checked in code) |
 | --- | --- |
-| Company | name, website, what they sell |
+| Company | name, website, what they sell, mission, problem they solve; vision optional (mission and vision must cite the company site) |
 | Market | category, 1 or more size or growth signals, 2 or more trends |
 | Competitors | 3 to 5 alternatives, each with website, positioning, and pricing (or `not_published`) |
 | Sales | target customer, buyer role, pricing model, channel; buying signals optional |
@@ -142,9 +142,9 @@ Evidence rules enforced in code: excerpts are 25 to 400 characters and appear ve
 
 `research.pack.gtm_gaps(pack)` lists what still blocks the GTM agents (at least 1 cited item per section and 3 described competitors; buying signals optional).
 
-## Agent 2: GTM orchestrator (V.0.1)
+## Agent 2: GTM orchestrator (V.0.2)
 
-**Input:** a Research evidence pack (schema v3) as a JSON file, plus optional instructions such as a target region or segment. The orchestrator never searches the web.
+**Input:** a Research evidence pack (schema v4) as a JSON file, plus optional instructions such as a target region or segment. The orchestrator never searches the web.
 
 **Sub-agents.** 3 sub-agents run in parallel, and all act as consultants advising the researched company:
 
@@ -156,7 +156,9 @@ Each sub-agent sees only the evidence tagged for its purpose, and every recommen
 
 **Merge step.** 1 model call groups overlapping recommendations into themes and de-duplicates gaps. The model only groups existing IDs and never rewrites content; code validates the grouping and falls back to exact de-duplication if it fails.
 
-**Output:** a strategy pack (schema v3) with recommendations (each with an ID), themes, ranked hypotheses, de-duplicated gaps, Research gaps, and per-sub-agent results. Status is `complete` when Research is complete and every sub-agent returned at least 1 recommendation; otherwise `partial`.
+**Company snapshot.** After the merge step, 1 model call writes the snapshot: company name and URL, mission and vision (1 bullet each), the problem the company solves (1 line), target market and ICP (1 line each), product and how it helps clients (1 line each), a market analysis brief, and the competition landscape. Code decides which evidence and recommendations each line may cite; a line with nothing to cite is `unknown` and is never sent to the model, so the snapshot cannot invent a mission or vision. Invalid output gets 1 retry, then a `fallback` snapshot of `unknown` lines.
+
+**Output:** a strategy pack (schema v4) with the company snapshot, recommendations (each with an ID), themes, ranked hypotheses, de-duplicated gaps, Research gaps, and per-sub-agent results. Status is `complete` when Research is complete, every sub-agent returned at least 1 recommendation, and every required snapshot line is filled (vision is optional); otherwise `partial`.
 
 ## Quick start
 
@@ -237,7 +239,8 @@ docs/architecture/       Pipeline picture
 
 - [x] Research agent: bounded ReAct loop, evidence rules, checklist coverage, re-runs from gaps, storage, API, UI, CLI
 - [x] GTM orchestrator: 3 parallel sub-agents, code-ranked hypotheses, corrective retries, merge step, CLI
-- [ ] PM agent: company snapshot and completeness check with HITL 1 (research more or proceed)
+- [x] Company snapshot in the GTM strategy pack (mission, vision, problem, market, ICP, product, market brief, competition landscape)
+- [ ] PM agent: snapshot completeness check with HITL 1 (research more or proceed)
 - [ ] Harness that chains the agents, with eval gates between stages
 - [ ] GTM API and UI
 - [ ] Presentation builder and Product builder, then HITL 2 approval
