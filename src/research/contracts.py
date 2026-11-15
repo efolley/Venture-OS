@@ -12,7 +12,7 @@ JsonObject = dict[str, object]
 SCHEMA_VERSION = 3
 BASES: tuple[str, ...] = ("fact", "inference")
 SOURCE_KINDS: tuple[str, ...] = (
-    "first_party", "competitor", "aggregator", "review", "forum", "reference", "news", "other",
+    "first_party", "competitor", "market_report", "aggregator", "review", "forum", "reference", "news", "other",
 )
 FIELDS: tuple[str, ...] = ("company", "market", "competitors", "sales")
 TAGS: tuple[str, ...] = (
@@ -34,13 +34,18 @@ TAG_HELP: dict[str, str] = {
     "market.category": "the market category the company competes in",
     "market.size_growth": "a market size, growth rate, or growth signal",
     "market.trends": "a trend shaping this market",
-    "competitors.alternative": "a named alternative or competitor product",
+    "competitors.alternative": "a named product that buyers compare with or use instead of the "
+                               "researched company's main product, in the same category (not an "
+                               "integration, partner, acquired company, or the page's publisher)",
     "competitors.positioning": "how a named competitor positions itself",
     "competitors.pricing": "a named competitor's price or plan",
-    "sales.target_customer": "the researched company's target customer or segment",
-    "sales.buyer_role": "the role that buys or champions the product",
+    "sales.target_customer": "the researched company's target customer or segment "
+                             "(for example: startups, enterprises, software teams of 50 to 500)",
+    "sales.buyer_role": "the role or team that uses, champions, or buys it (for example: "
+                        "'built for engineering teams', 'product managers', 'CTOs', 'for developers')",
     "sales.pricing_model": "the researched company's pricing model (per seat, flat, usage, free tier)",
-    "sales.channel": "how the company sells (self-serve, sales-led, partners)",
+    "sales.channel": "how customers buy (self-serve: 'start for free', 'sign up', free trial; "
+                     "sales-led: 'contact sales', 'book a demo', enterprise plan; partners, marketplaces)",
     "sales.buying_signals": "hiring, funding, launches, or other buying signals",
 }
 RUN_STATUSES: tuple[str, ...] = ("running", "clarify", "complete", "partial", "failed")
@@ -49,9 +54,9 @@ PRICING_STATUSES: tuple[str, ...] = ("found", "not_published", "not_checked")
 
 @dataclass(frozen=True)
 class Limits:
-    rounds: int = 5
-    sources: int = 15
-    model_calls: int = 10
+    rounds: int = 12
+    sources: int = 36
+    model_calls: int = 36
 
     def as_dict(self) -> dict[str, int]:
         return asdict(self)

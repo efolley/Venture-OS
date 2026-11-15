@@ -9,13 +9,25 @@ from urllib.parse import urlsplit, urlunsplit
 
 _UNSAFE = "Use a public HTTPS website."
 
-# Sentence-level boilerplate: cookie banners, navigation, sign-in prompts, footers.
-BOILERPLATE = re.compile(
+# Sentence-level boilerplate. Strong markers drop any sentence. Weak markers ("sign up",
+# "subscribe") drop only short sentences, so navigation like "Sign up free" goes but real
+# evidence like "Teams sign up self-serve with a 14-day free trial" stays.
+_STRONG_BOILERPLATE = re.compile(
     r"cookie|consent|privacy policy|terms of (?:use|service)|skip to (?:main )?content|"
-    r"\bsign (?:in|up)\b|\blog ?in\b|subscribe|newsletter|accept all|all rights reserved|"
-    r"javascript (?:is )?(?:disabled|required)|\bmenu\b",
+    r"accept all|all rights reserved|javascript (?:is )?(?:disabled|required)",
     re.IGNORECASE,
 )
+_WEAK_BOILERPLATE = re.compile(
+    r"\bsign (?:in|up)\b|\blog ?in\b|subscribe|newsletter|\bmenu\b", re.IGNORECASE)
+_WEAK_MAX_CHARS = 60
+
+
+def is_boilerplate(text: str) -> bool:
+    if _STRONG_BOILERPLATE.search(text):
+        return True
+    return bool(_WEAK_BOILERPLATE.search(text)) and len(text.strip()) < _WEAK_MAX_CHARS
+
+
 _KIND_HOSTS: dict[str, tuple[str, ...]] = {
     "review": ("g2.com", "capterra.com", "trustpilot.com", "softwareadvice.com",
                "getapp.com", "gartner.com", "producthunt.com"),
@@ -117,7 +129,7 @@ def name_from_host(domain: str) -> str:
 def clean_text(text: str) -> str:
     """Drop sentences or lines that contain cookie, navigation, or sign-in markers."""
     pieces = re.split(r"(?<=[.!?])\s+|\n+", text)
-    return " ".join(p.strip() for p in pieces if p.strip() and not BOILERPLATE.search(p))
+    return " ".join(p.strip() for p in pieces if p.strip() and not is_boilerplate(p))
 
 
 def classify_source(url: str, company_host: str, competitor_hosts: tuple[str, ...] = ()) -> str:
@@ -133,27 +145,54 @@ def classify_source(url: str, company_host: str, competitor_hosts: tuple[str, ..
     return "other"
 
 
-def off_target_reason(kind: str, title: str, text: str, company: str, company_host: str) -> str | None:
+def _mentions(name: str, haystack: str) -> int:
+    key = name_key(name)
+    if not key:
+        return 0
+    count = len(re.findall(rf"\b{re.escape(key)}\b", haystack))
+    if not count:
+        # A name derived from a domain ("acmecloud") should still match "Acme Cloud".
+        count = len(re.findall(re.escape(key.replace(" ", "")), re.sub(r"[\s-]+", "", haystack)))
+    return count
+
+
+def off_target_reason(kind: str, title: str, text: str, company: str | list[str],
+                      company_host: str) -> str | None:
     """Reject pages that are probably about a different organization.
 
-    The company's own pages and known competitor pages pass. Aggregator pages and
-    unclassified pages with fewer than 3 name mentions must also mention the website,
-    because a name alone cannot separate 2 companies with the same name.
+    The company's own pages and known competitor pages pass. `company` may list several
+    aliases (the typed name, the confirmed name, the domain label); any of them counts.
+    Aggregator pages and unclassified pages with fewer than 3 name mentions must also
+    mention the website, because a name alone cannot separate 2 companies with the same name.
     """
     if kind in ("first_party", "competitor"):
         return None
     haystack = f"{title} {text}".casefold()
-    name = name_key(company)
-    mentions = len(re.findall(rf"\b{re.escape(name)}\b", haystack)) if name else 0
-    if name and not mentions:
-        # A name derived from a domain ("acmecloud") should still match "Acme Cloud".
-        squashed = name.replace(" ", "")
-        mentions = len(re.findall(re.escape(squashed), re.sub(r"[\s-]+", "", haystack)))
+    names = [company] if isinstance(company, str) else company
+    names = [n for n in names if name_key(n)]
+    mentions = max((_mentions(n, haystack) for n in names), default=0)
     mentions_host = bool(company_host) and company_host in haystack
-    if name and not mentions and not mentions_host:
+    if names and not mentions and not mentions_host:
         return "does not mention the company"
     if company_host and not mentions_host and (
         kind == "aggregator" or (kind == "other" and mentions < MIN_NAME_MENTIONS)
     ):
         return "does not mention the company website"
     return None
+
+
+_LOW_VALUE_URL = re.compile(
+    r"(?:/|-)(?:careers?|jobs?|hiring|benefits|legal|privacy|terms|security|status|"
+    r"login|sign-?in|sign-?up|cookies?)(?:/|-|$)|\.pdf$", re.IGNORECASE)
+
+
+def is_low_value_url(url: str) -> bool:
+    """Careers, benefits, legal, sign-in pages and PDFs: they rarely hold go-to-market evidence."""
+    return bool(_LOW_VALUE_URL.search(urlsplit(url).path))
+
+
+def url_key(url: str) -> str:
+    """Identity of a page for duplicate checks: ignores www., a trailing slash, and the scheme."""
+    parts = urlsplit(url)
+    path = parts.path.rstrip("/")
+    return f"{host(url)}{path}{'?' + parts.query if parts.query else ''}"

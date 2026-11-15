@@ -100,7 +100,7 @@ class ItemRules(unittest.TestCase):
                         "tags": ["sales.pricing_model"]},
                        sources={"s1": _source("s1", "https://acme.com/p", self.TEXT)},
                        company="Acme Cloud", has_first_party=True,
-                       used_excerpts={self.TEXT.casefold()})
+                       used_excerpts={self.TEXT.casefold() + "|"})
 
 
 class ChecklistAndPack(unittest.TestCase):

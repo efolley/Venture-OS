@@ -5,4 +5,4 @@ from .contracts import Limits
 from .store import MemoryStore, PostgresStore, default_store
 
 __all__ = ["Limits", "MemoryStore", "PostgresStore", "ResearchAgent", "RunResult", "default_store"]
-__version__ = "0.1.0"
+__version__ = "0.2.0"

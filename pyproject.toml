@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ventureos-research"
-version = "0.1.0"
+version = "0.2.0"
 description = "VentureOS Research agent: collects verified web evidence about a company into an evidence pack"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = []
 
 [project.optional-dependencies]
-research = ["psycopg[binary]>=3.2,<4", "python-dotenv>=1.0,<2"]
+research = ["anthropic>=1.0", "deepagents>=0.7", "langchain-anthropic>=1.0", "psycopg[binary]>=3.2,<4", "python-dotenv>=1.0,<2"]
 api = ["fastapi>=0.110,<1", "uvicorn>=0.29,<1"]
 ui = ["streamlit>=1.35,<2"]
 test = ["httpx>=0.27,<1"]

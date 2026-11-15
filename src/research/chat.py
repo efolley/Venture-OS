@@ -25,7 +25,9 @@ _REQUEST_PREFIX = re.compile(
     r"(?:on|about))\s+(?:(?:information|info|data)\s+(?:on|about|for)\s+)?(?:the\s+)?",
     re.IGNORECASE,
 )
-_COMPANY_SUFFIX = re.compile(r"\s+(?:company|startup|business|firm|brand|website|site)$", re.IGNORECASE)
+_COMPANY_SUFFIX = re.compile(
+    r"(?:\s+(?:for me|for us|please|pls|thanks|thank you|now|today))+$|"
+    r"\s+(?:company|startup|business|firm|brand|website|site)$", re.IGNORECASE)
 _YES = {"yes", "y", "yes please", "ok", "okay", "sure", "continue", "go", "research the gaps"}
 _NO = {"no", "n", "no thanks", "cancel", "stop", "skip"}
 
@@ -57,8 +59,10 @@ class Chat:
             if answer == "cancel":
                 return reply("text", "OK. Send another company name or website.")
             if answer:
-                return self._research(session, cast(str, pending["company"]), answer,
-                                      instructions, progress)
+                chosen_name, chosen_site = answer
+                typed = cast(str, pending["company"])
+                return self._research(session, chosen_name, chosen_site, instructions, progress,
+                                      aliases=[typed])
         if pending and pending.get("kind") == "rerun":
             lowered = text.casefold().strip(".! ")
             if lowered in _YES:
@@ -72,32 +76,37 @@ class Chat:
         return self._research(session, target, "", instructions, progress)
 
     @staticmethod
-    def _answer_clarify(pending: JsonObject, text: str) -> str | None:
+    def _answer_clarify(pending: JsonObject, text: str) -> tuple[str, str] | str | None:
+        """Return (name, website) for the chosen option, "cancel", or None for a new request."""
         candidates = cast(list[JsonObject], pending.get("candidates") or [])
+        corrected = cast(str, pending.get("corrected_name") or pending.get("company") or "")
         lowered = text.casefold().strip(".! ")
         if lowered in _NO:
             return "cancel"
         if lowered.isdigit() and 1 <= int(lowered) <= len(candidates):
-            return cast(str, candidates[int(lowered) - 1]["website"])
+            chosen = candidates[int(lowered) - 1]
+            return cast(str, chosen["name"]) or corrected, cast(str, chosen["website"])
         for candidate in candidates:
             website = cast(str, candidate["website"])
             if name_key(text) == name_key(cast(str, candidate["name"])) or host(
                     text if "://" in text else f"https://{text}") == host(website):
-                return website
+                return cast(str, candidate["name"]) or corrected, website
         if _WEBSITE.match(text):
-            return text
+            return corrected, text
         return None
 
     def _research(self, session: ChatSession, company: str, website: str, instructions: str,
-                  progress: Progress, parent_run_id: str | None = None) -> JsonObject:
+                  progress: Progress, parent_run_id: str | None = None,
+                  aliases: list[str] | None = None) -> JsonObject:
         result = self.agent.run(company, website, instructions=instructions,
-                                parent_run_id=parent_run_id, progress=progress)
+                                parent_run_id=parent_run_id, aliases=aliases, progress=progress)
         return self._result_reply(session, result, company)
 
     @staticmethod
     def _result_reply(session: ChatSession, result: RunResult, company: str) -> JsonObject:
         if result.status == "clarify":
-            session.pending = {"kind": "clarify", "company": company, "candidates": result.candidates}
+            session.pending = {"kind": "clarify", "company": company, "candidates": result.candidates,
+                               "corrected_name": result.corrected_name}
             lines = [result.message]
             lines += [f"{n}. {c['name']}: {c['website']}" for n, c in enumerate(result.candidates, 1)]
             lines.append("Reply with a number, a name, or a website." if result.candidates
@@ -123,7 +132,8 @@ def company_from_message(text: str) -> str:
     """Strip request phrasing: "Research Linear company" -> "Linear"."""
     target = text.strip().strip("?.!\"'")
     stripped = _REQUEST_PREFIX.sub("", target, count=1).strip()
-    stripped = _COMPANY_SUFFIX.sub("", stripped).strip().strip("?.!\"'")
+    for _ in range(2):  # "Baseten company for me" needs both suffixes removed
+        stripped = _COMPANY_SUFFIX.sub("", stripped).strip().strip("?.!\"',")
     return stripped or target
 
 

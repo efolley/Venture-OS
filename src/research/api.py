@@ -45,7 +45,7 @@ class Job:
 
 def create_app(agent: ResearchAgent, store: Store, *, run_inline: bool = False) -> FastAPI:
     """Build the app. run_inline=True runs jobs synchronously (for tests)."""
-    app = FastAPI(title="VentureOS Research agent", version="0.1.0")
+    app = FastAPI(title="VentureOS Research agent", version="0.2.0")
     chat = Chat(agent)
     sessions: dict[str, ChatSession] = {}
     jobs: dict[str, Job] = {}
@@ -143,11 +143,11 @@ def _default_app() -> FastAPI:
     except ImportError:
         pass
     setup_logging()
-    from .providers import GeminiModel, TavilySearch
+    from .providers import TavilySearch, default_model
     from .store import default_store
 
     store = default_store()
-    return create_app(ResearchAgent(GeminiModel(), TavilySearch(), store), store)
+    return create_app(ResearchAgent(default_model(), TavilySearch(), store), store)
 
 
 def main() -> None:

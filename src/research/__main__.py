@@ -8,7 +8,7 @@ from pathlib import Path
 from .agent import ResearchAgent
 from .contracts import JsonObject
 from .logs import setup_logging
-from .providers import GeminiModel, TavilySearch
+from .providers import TavilySearch, default_model
 from .store import default_store
 
 
@@ -34,7 +34,7 @@ def main(argv: list[str] | None = None) -> int:
     def progress(step: str, data: JsonObject, status: str) -> None:
         print(f"[{step}] {status} {json.dumps(data, ensure_ascii=False)[:200]}", file=sys.stderr)
 
-    agent = ResearchAgent(GeminiModel(), TavilySearch(), default_store())
+    agent = ResearchAgent(default_model(), TavilySearch(), default_store())
     try:
         result = agent.run(args.company, args.website, instructions=args.instructions,
                            gaps=args.gap, parent_run_id=args.parent_run, progress=progress)

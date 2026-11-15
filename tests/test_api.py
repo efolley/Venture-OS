@@ -69,6 +69,23 @@ class ApiChat(unittest.TestCase):
         history = client.get(f"/api/sessions/{self.session}").json()["history"]
         self.assertEqual([h["role"] for h in history], ["user", "assistant"] * 2)
 
+    def test_misspelled_name_then_pick_website(self) -> None:
+        routes = {"official website": [page("https://acmecloud.com/", "Acme Cloud", "home")],
+                  **FULL_ROUTES}
+        agent = ResearchAgent(WorldModel(FULL_ITEMS, resolve={"corrected_name": "Acme Cloud",
+                                                              "candidates": [{"name": "Acme Cloud",
+                                                                              "website": "https://acmecloud.com"}]}),
+                              FakeSearch(routes), self.store)
+        client = TestClient(create_app(agent, self.store, run_inline=True))
+        self.session = client.post("/api/sessions").json()["session_id"]
+        first = self.send(client, "Research Acme Clowd for me")["reply"]
+        self.assertEqual(first["kind"], "clarify")
+        self.assertIn("Did you mean Acme Cloud?", first["message"])
+        self.assertIn("1. Acme Cloud: https://acmecloud.com/", first["message"])
+        pack = self.send(client, "1")["reply"]["pack"]
+        self.assertEqual((pack["company"]["name"], pack["status"]), ("Acme Cloud", "complete"))
+        self.assertIn("corrected from Acme Clowd to Acme Cloud", pack["uncertainties"][0])
+
     def test_partial_pack_offers_rerun(self) -> None:
         client = self.client(limits=Limits(rounds=2))
         first = self.send(client, "acmecloud.com")["reply"]
@@ -94,6 +111,7 @@ class ChatParsing(unittest.TestCase):
                                ("Can you research linear.app?", "linear.app"),
                                ("tell me about Acme Cloud Inc.", "Acme Cloud Inc"),
                                ("find info about the Mercury startup", "Mercury"),
+                               ("Research Baseteen for me", "Baseteen"),
                                ("Research", "Research")):
             self.assertEqual(company_from_message(text), expected, text)
 
@@ -108,13 +126,13 @@ class ChatParsing(unittest.TestCase):
         self.assertEqual([c["website"] for c in result.candidates],
                          ["https://linear.app/", "https://en.wikipedia.org/"])
 
-    def test_confirmed_website_without_scheme(self) -> None:
+    def test_candidate_website_without_scheme(self) -> None:
         routes = {"official website": [page("https://www.linear.app/", "Linear", "x")]}
-        agent = ResearchAgent(WorldModel(resolve={"status": "confirmed", "name": "Linear",
-                                                  "website": "linear.app"}),
-                              FakeSearch(routes), MemoryStore(), limits=Limits(rounds=0))
+        agent = ResearchAgent(WorldModel(resolve={"corrected_name": "Linear", "candidates": [
+            {"name": "Linear", "website": "linear.app", "reason": "home"}]}),
+            FakeSearch(routes), MemoryStore())
         result = agent.run("Linear")
-        self.assertEqual(result.pack["company"]["website"], "https://linear.app/")  # type: ignore[index]
+        self.assertEqual(result.candidates[0]["website"], "https://linear.app/")
 
 
 class Rendering(unittest.TestCase):

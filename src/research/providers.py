@@ -1,7 +1,8 @@
-"""Small provider adapters for Tavily web search and Gemini JSON output (standard library only)."""
+"""Provider adapters: Tavily web search, and Claude (default) or Gemini for JSON output."""
 
 import json
 import os
+import time
 from typing import cast
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
@@ -16,15 +17,31 @@ def _object(value: object, error: str) -> JsonObject:
     return cast(JsonObject, value)
 
 
+RETRY_STATUS = {429, 500, 502, 503, 504}
+RETRY_DELAYS = (3.0, 10.0, 25.0)  # seconds between attempts for rate limits and server errors
+
+
 def _post(url: str, payload: JsonObject, headers: dict[str, str], timeout: float, label: str) -> JsonObject:
-    request = Request(url, data=json.dumps(payload).encode(), headers=headers, method="POST")
-    try:
-        with urlopen(request, timeout=timeout) as response:
-            return _object(json.loads(response.read()), f"{label} returned invalid JSON.")
-    except HTTPError as error:
-        raise ValueError(f"{label} returned HTTP {error.code}.") from error
-    except (URLError, TimeoutError, json.JSONDecodeError) as error:
-        raise ValueError(f"{label} request failed: {type(error).__name__}") from error
+    data = json.dumps(payload).encode()
+    for attempt in range(len(RETRY_DELAYS) + 1):
+        request = Request(url, data=data, headers=headers, method="POST")
+        try:
+            with urlopen(request, timeout=timeout) as response:
+                return _object(json.loads(response.read()), f"{label} returned invalid JSON.")
+        except HTTPError as error:
+            if error.code in RETRY_STATUS and attempt < len(RETRY_DELAYS):
+                logger.info("%s HTTP %d, retrying", label, error.code)
+                time.sleep(RETRY_DELAYS[attempt])
+                continue
+            raise ValueError(f"{label} returned HTTP {error.code}.") from error
+        except (URLError, TimeoutError) as error:
+            if attempt < len(RETRY_DELAYS):
+                time.sleep(RETRY_DELAYS[attempt])
+                continue
+            raise ValueError(f"{label} request failed: {type(error).__name__}") from error
+        except json.JSONDecodeError as error:
+            raise ValueError(f"{label} returned invalid JSON.") from error
+    raise ValueError(f"{label} request failed.")
 
 
 class TavilySearch:
@@ -102,3 +119,71 @@ class GeminiModel:
             return _object(json.loads(text), "Language model returned invalid JSON.")
         except json.JSONDecodeError as error:
             raise ValueError("Language model returned invalid JSON.") from error
+
+
+DEFAULT_MODEL = "claude-haiku-5-5"  # Anthropic's lowest-cost current model
+
+
+class AnthropicModel:
+    """Claude through the official Anthropic SDK. Returns 1 JSON object per call."""
+
+    def __init__(self, *, model: str | None = None, max_tokens: int = 16000,
+                 max_retries: int = 5, timeout: float = 120) -> None:
+        try:
+            import anthropic
+        except ImportError as error:
+            raise ValueError("anthropic is not installed. Run: pip install -e '.[research]'") from error
+        self._anthropic = anthropic
+        self.model = model or os.getenv("RESEARCH_MODEL", DEFAULT_MODEL)
+        self.max_tokens = max_tokens
+        # The SDK retries 429, 5xx, and connection errors with backoff and honors retry-after.
+        self.client = anthropic.Anthropic(max_retries=max_retries, timeout=timeout)
+
+    def chat_model(self) -> object:
+        """LangChain chat model for the DeepAgents loop (same model, same API key)."""
+        try:
+            from langchain_anthropic import ChatAnthropic
+        except ImportError as error:
+            raise ValueError("langchain-anthropic is not installed. "
+                             "Run: pip install -e '.[research]'") from error
+        return ChatAnthropic(model=self.model, max_tokens=8000, max_retries=6, timeout=120)
+
+    @logged
+    def json(self, system: str, prompt: str) -> JsonObject:
+        anthropic = self._anthropic
+        try:
+            response = self.client.messages.create(
+                model=self.model,
+                max_tokens=self.max_tokens,
+                system=system + " Reply with the JSON object only: no prose and no code fences.",
+                messages=[{"role": "user", "content": prompt}],
+            )
+        except anthropic.AuthenticationError as error:
+            raise ValueError("Set ANTHROPIC_API_KEY to a valid key.") from error
+        except anthropic.RateLimitError as error:
+            raise ValueError("Language model rate limit reached after retries.") from error
+        except anthropic.APIStatusError as error:
+            raise ValueError(f"Language model returned HTTP {error.status_code}.") from error
+        except anthropic.APIConnectionError as error:
+            raise ValueError("Language model request failed: connection error.") from error
+        if response.stop_reason == "max_tokens":
+            raise ValueError("Language model output was truncated; no result was accepted.")
+        if response.stop_reason == "refusal":
+            raise ValueError("Language model declined the request.")
+        text = "".join(block.text for block in response.content if block.type == "text").strip()
+        if text.startswith("```"):
+            text = text.split("\n", 1)[-1].rsplit("```", 1)[0]
+        start, end = text.find("{"), text.rfind("}")
+        try:
+            decoded = json.loads(text[start:end + 1]) if start >= 0 else None
+        except json.JSONDecodeError as error:
+            raise ValueError("Language model returned invalid JSON.") from error
+        logger.info("claude model=%s in=%d out=%d", self.model, response.usage.input_tokens,
+                    response.usage.output_tokens)
+        return _object(decoded, "Language model returned invalid JSON.")
+
+
+def default_model() -> "AnthropicModel | GeminiModel":
+    """Pick the model from RESEARCH_MODEL: a claude-* ID uses Anthropic, a gemini-* ID uses Gemini."""
+    name = os.getenv("RESEARCH_MODEL", DEFAULT_MODEL)
+    return GeminiModel(model=name) if name.startswith("gemini") else AnthropicModel(model=name)

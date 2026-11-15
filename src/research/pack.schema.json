@@ -91,7 +91,7 @@
           "id": {"type": "string"},
           "url": {"type": "string", "pattern": "^https://"},
           "title": {"type": "string"},
-          "kind": {"enum": ["first_party", "competitor", "aggregator", "review", "forum", "reference", "news", "other"]},
+          "kind": {"enum": ["first_party", "competitor", "market_report", "aggregator", "review", "forum", "reference", "news", "other"]},
           "retrieved_at": {"type": "string"},
           "published_at": {"type": ["string", "null"]}
         }

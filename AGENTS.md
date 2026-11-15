@@ -1,12 +1,12 @@
 # Coding agent instructions: Research agent
 
-> Version V.0.1 (`0.1.0`). Branch `agents/research`.
+> Version V.0.2 (`0.2.0`). Branch `agents/research`.
 
 ## Scope and current state
 
 This branch holds only the VentureOS Research agent (agent 1 of the pipeline), as the self-contained package `src/research/`. It collects web evidence about a company and stores an evidence pack (schema v3) for the GTM sub-agents. It gathers and organizes evidence; it does not analyze.
 
-Implemented: input normalization, website confirmation with `clarify`, the bounded loop, evidence checks, checklist coverage, re-runs from gaps, PostgreSQL and in-memory storage, a FastAPI backend, a Streamlit UI (chat and data management), and a CLI. Planned: live smoke check, updated golden fixture. Never describe planned behavior as working software.
+Implemented: input normalization, website confirmation with `clarify`, the bounded loop, evidence checks, checklist coverage, re-runs from gaps, PostgreSQL and in-memory storage, a FastAPI backend, a Streamlit UI (chat and data management), and a CLI. A live smoke check is in `scripts/live_smoke.py`. Planned: updated golden fixture. Never describe planned behavior as working software.
 
 README.md is the source of truth for this agent's input, output, functionality, and mini-architecture. Keep it, this file, and `src/research/pack.schema.json` consistent.
 
@@ -20,15 +20,15 @@ README.md is the source of truth for this agent's input, output, functionality, 
 
 - `contracts.py`: types, tags, limits. `checklist.py`: coverage rules. `planner.py`: next search from fixed templates.
 - `sources.py`: URL safety, cleaning, source kinds, wrong-company filter. `evidence.py`: item checks.
-- `agent.py`: the loop. `pack.py` and `pack.schema.json`: pack assembly and validation.
+- `deep.py`: the main research loop, a DeepAgents agent with 5 code-backed tools. `agent.py`: run setup, name check, page collection, and the fallback plain loop. `pack.py` and `pack.schema.json`: pack assembly and validation.
 - `store.py` and `migrations/`: `Store` interface, `PostgresStore`, `MemoryStore`.
-- `providers.py`: Tavily and Gemini adapters. `__main__.py`: CLI.
+- `providers.py`: Tavily search; Claude through the Anthropic SDK (default `claude-haiku-5-5`, set by `RESEARCH_MODEL`) and Gemini as an option. `__main__.py`: CLI.
 - `chat.py`: deterministic chat turns and follow-up questions. `api.py`: FastAPI backend (loopback only).
 - `UI/app.py`: Streamlit UI. It only calls the API and renders output (`UI/render.py`); never put processing in the UI.
 
 ## Architecture rules
 
-- Keep planning, limits (5 rounds, 15 sources, 10 model calls), validation, and coverage in code. The model only confirms a website and proposes evidence items.
+- DeepAgents is the main framework for the research loop. Keep limits (12 searches, 36 sources, 36 model calls), validation, page rules, and coverage in code behind the tools. The model checks the name and proposes websites, chooses searches and what to read, and proposes evidence items; it never writes the pack.
 - Hitting a limit returns a `partial` pack with its gaps, never an error.
 - Every value in the pack cites evidence IDs. Excerpts must be verbatim in a collected source. Reject any URL that search did not return.
 - Store every intermediate result: 1 transaction per round. Round 0 holds understanding and carried-over evidence.
@@ -52,7 +52,7 @@ The first implemented release is V.0.1 (`0.1.0`). Every update published to GitH
 
 ## Workflow and verification
 
-- Python 3.10+. The core package has no dependencies. Extras: `research` (psycopg, python-dotenv), `api` (FastAPI, uvicorn), `ui` (Streamlit), `test` (httpx).
+- Python 3.11+. Extras: `research` (anthropic, deepagents, langchain-anthropic, psycopg, python-dotenv), `api` (FastAPI, uvicorn), `ui` (Streamlit), `test` (httpx).
 - After changing backend code, restart the running API; it does not auto-reload.
 - Use digits for counts and avoid em dashes in documentation.
 - Do not commit or push unless the user authorizes it.

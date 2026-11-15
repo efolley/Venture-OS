@@ -31,7 +31,8 @@ def competitors_missing(competitors: list[Competitor]) -> list[str]:
     missing: list[str] = []
     if len(competitors) < MIN_COMPETITORS:
         missing.append("competitors.alternative")
-    for competitor in competitors:
+    # Details are required for the top 3 only; extra competitors are listed by name.
+    for competitor in competitors[:MIN_COMPETITORS]:
         if not competitor["website"]:
             missing.append(f"competitors.website:{competitor['name']}")
         if not competitor["positioning"]:

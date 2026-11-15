@@ -21,27 +21,35 @@ def _ids(evidence: list[EvidenceItem], tag: str) -> list[str]:
 def competitors(
     evidence: list[EvidenceItem], pricing_checked: set[str], known_websites: dict[str, str]
 ) -> list[Competitor]:
-    """Group competitor-tagged items by competitor name, in first-seen order, capped at 5."""
+    """Group competitor-tagged items by name, then keep the 5 named by the most sources.
+
+    Ranking by distinct sources (ties by first seen) keeps direct rivals named across several
+    alternatives pages ahead of a name that appears on a single list.
+    """
     grouped: dict[str, Competitor] = {}
+    sources_by: dict[str, set[str]] = {}
     for item in evidence:
         ref = item["competitor"]
         if ref is None:
             continue
         key = name_key(ref["name"])
         if key not in grouped:
-            if len(grouped) >= checklist.MAX_COMPETITORS:
-                continue
             grouped[key] = {
                 "name": ref["name"], "website": "", "evidence_ids": [],
                 "positioning": [], "pricing": [], "pricing_status": "not_checked",
             }
+            sources_by[key] = set()
         entry = grouped[key]
+        sources_by[key].add(item["source_id"])
         entry["website"] = entry["website"] or ref["website"]
         entry["evidence_ids"].append(item["id"])
         if "competitors.positioning" in item["tags"]:
             entry["positioning"].append(item["id"])
         if "competitors.pricing" in item["tags"]:
             entry["pricing"].append(item["id"])
+    order = list(grouped)
+    ranked = sorted(order, key=lambda k: (-len(sources_by[k]), order.index(k)))
+    grouped = {key: grouped[key] for key in ranked[:checklist.MAX_COMPETITORS]}
     for key, entry in grouped.items():
         entry["website"] = entry["website"] or known_websites.get(key, "")
         if entry["pricing"]:
@@ -159,3 +167,17 @@ def validate_pack(pack: JsonObject) -> None:
 
 def schema() -> JsonObject:
     return cast(JsonObject, json.loads(SCHEMA_PATH.read_text(encoding="utf-8")))
+
+
+def gtm_gaps(pack: EvidencePack) -> list[str]:
+    """What still blocks a GTM agent: every section needs at least 1 cited item, and 3
+    competitors need positioning. Buying signals are optional. Empty means ready."""
+    problems = [] if pack["company"]["offering"] else ["company.offering"]
+    for field_name in ("market", "sales"):
+        values = cast(dict[str, list[str]], pack[field_name])  # type: ignore[literal-required]
+        problems += [f"{field_name}.{key}" for key, ids in values.items()
+                     if key != "buying_signals" and not ids]
+    described = [c for c in pack["competitors"] if c["positioning"]]
+    if len(described) < checklist.MIN_COMPETITORS:
+        problems.append(f"competitors ({len(described)} of {checklist.MIN_COMPETITORS} described)")
+    return problems

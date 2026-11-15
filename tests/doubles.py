@@ -26,15 +26,18 @@ class WorldModel:
     """Extraction double: returns prepared items for each supplied source URL.
 
     `items` maps a URL to item templates without source_id. `resolve` answers the
-    website-confirmation call. `override` can replace any answer (for retry tests).
+    website-confirmation call. The ReAct reason call follows the suggested template unless
+    `reason` is given. `override` can replace any answer (for retry tests).
     """
 
     def __init__(self, items: dict[str, list[JsonObject]] | None = None,
                  resolve: JsonObject | None = None,
-                 override: Callable[[str, JsonObject, int], JsonObject | None] | None = None) -> None:
+                 override: Callable[[str, JsonObject, int], JsonObject | None] | None = None,
+                 reason: Callable[[JsonObject], JsonObject] | None = None) -> None:
         self.items = items or {}
         self.resolve = resolve or {"status": "not_found", "candidates": []}
         self.override = override
+        self.reason = reason
         self.calls: list[tuple[str, JsonObject]] = []
 
     def json(self, system: str, prompt: str) -> JsonObject:
@@ -46,6 +49,11 @@ class WorldModel:
                 return answer
         if "official website" in system:
             return self.resolve
+        if "plan the next web search" in system:
+            if self.reason is not None:
+                return self.reason(payload)
+            suggested = payload.get("suggested") or {}
+            return {"thought": f"Fill {suggested.get('gap')} next.", **suggested}
         items: list[JsonObject] = []
         for source in payload["sources"]:
             for template in self.items.get(source["url"], []):

@@ -51,6 +51,7 @@ class RoundRecord(TypedDict):
     model_calls: int
     dropped: list[str]
     error: str | None
+    thought: str
 
 
 class StoredSource(TypedDict):
@@ -222,10 +223,11 @@ class PostgresStore:
         with self._connect() as conn, conn.transaction():
             conn.execute(
                 "INSERT INTO research.rounds (run_id, number, gap, query, site, model_calls,"
-                " dropped, error) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+                " dropped, error, thought) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
                 (run_id, round_record["number"], round_record["gap"], round_record["query"],
                  round_record["site"], round_record["model_calls"],
-                 self._json(round_record["dropped"]), round_record["error"]),
+                 self._json(round_record["dropped"]), round_record["error"],
+                 round_record.get("thought", "")),
             )
             for entry in sources:
                 source = entry["source"]
@@ -287,7 +289,7 @@ class PostgresStore:
     def list_rounds(self, run_id: str) -> list[RoundRecord]:
         with self._connect() as conn:
             rows = conn.execute(
-                "SELECT number, gap, query, site, model_calls, dropped, error"
+                "SELECT number, gap, query, site, model_calls, dropped, error, thought"
                 " FROM research.rounds WHERE run_id = %s ORDER BY number", (run_id,),
             ).fetchall()
         return [cast(RoundRecord, dict(row)) for row in rows]
