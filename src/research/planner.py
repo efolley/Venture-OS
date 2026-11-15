@@ -29,7 +29,10 @@ def _candidates(field: str, missing: list[str], name: str, company_host: str,
     if field == "company":
         return [
             Step("company", "company.offering", f"{name} product what it does", company_host),
+            Step("company", "company.mission", f"{name} about us mission vision", company_host),
+            Step("company", "company.problem", f"{name} problem it solves for customers", company_host),
             Step("company", "company.offering", f"{name} company overview"),
+            Step("company", "company.mission", f"{name} company mission statement"),
         ]
     if field == "market":
         return [

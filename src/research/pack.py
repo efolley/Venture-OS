@@ -64,8 +64,9 @@ def fields(
     pricing_checked: set[str], known_websites: dict[str, str],
 ) -> tuple[CompanyField, dict[str, list[str]], list[Competitor], dict[str, list[str]]]:
     company: CompanyField = {
-        "name": name, "website": website, "offering": _ids(evidence, "company.offering"),
-    }
+        "name": name, "website": website,
+        **{key: _ids(evidence, f"company.{key}") for key in ("offering", "mission", "vision", "problem")},
+    }  # type: ignore[typeddict-item]
     market = {key: _ids(evidence, f"market.{key}") for key in ("category", "size_growth", "trends")}
     sales = {key: _ids(evidence, f"sales.{key}") for key in (
         "target_customer", "buyer_role", "pricing_model", "channel", "buying_signals")}
@@ -146,7 +147,8 @@ def validate_pack(pack: JsonObject) -> None:
         _require(item.get("id") not in evidence_ids, "duplicate evidence id")
         evidence_ids.add(cast(str, item["id"]))
     company = cast(JsonObject, pack.get("company"))
-    _id_list(company.get("offering"), evidence_ids, "company.offering")
+    for key in ("offering", "mission", "vision", "problem"):
+        _id_list(company.get(key), evidence_ids, f"company.{key}")
     for field in ("market", "sales"):
         values = pack.get(field)
         _require(isinstance(values, dict), f"{field} must be an object")
@@ -170,9 +172,10 @@ def schema() -> JsonObject:
 
 
 def gtm_gaps(pack: EvidencePack) -> list[str]:
-    """What still blocks a GTM agent: every section needs at least 1 cited item, and 3
-    competitors need positioning. Buying signals are optional. Empty means ready."""
-    problems = [] if pack["company"]["offering"] else ["company.offering"]
+    """What still blocks a GTM agent: every section needs at least 1 cited item, the company
+    needs offering, mission, and problem, and 3 competitors need positioning. Buying signals
+    and vision are optional. Empty means ready."""
+    problems = [f"company.{key}" for key in checklist.COMPANY_REQUIRED if not pack["company"][key]]
     for field_name in ("market", "sales"):
         values = cast(dict[str, list[str]], pack[field_name])  # type: ignore[literal-required]
         problems += [f"{field_name}.{key}" for key, ids in values.items()

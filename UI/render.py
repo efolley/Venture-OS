@@ -1,4 +1,4 @@
-"""Turn an evidence pack (schema v3) into Markdown. Presentation only; no processing.
+"""Turn an evidence pack (schema v4) into Markdown. Presentation only; no processing.
 
 Page text is untrusted, so every string from the pack is escaped before rendering.
 """
@@ -9,7 +9,8 @@ FIELD_LABELS = {
     "company": "Company", "market": "Market", "competitors": "Competitors", "sales": "Sales",
 }
 ITEM_LABELS = {
-    "offering": "What they sell", "category": "Category", "size_growth": "Size or growth",
+    "offering": "What they sell", "mission": "Mission", "vision": "Vision",
+    "problem": "Problem they solve", "category": "Category", "size_growth": "Size or growth",
     "trends": "Trends", "target_customer": "Target customer", "buyer_role": "Buyer role",
     "pricing_model": "Pricing model", "channel": "Sales channel", "buying_signals": "Buying signals",
 }
@@ -57,9 +58,10 @@ def pack_markdown(pack: dict) -> str:
         coverage_table(pack["coverage"]),
         "",
         "#### Company",
-        "",
-        *_cite(company["offering"], evidence),
     ]
+    for key in ("offering", "mission", "vision", "problem"):
+        out += ["", f"**{ITEM_LABELS[key]}**", ""]
+        out += _cite(company.get(key, []), evidence)
     for field in ("market", "sales"):
         out += ["", f"#### {FIELD_LABELS[field]}"]
         for key, ids in pack[field].items():

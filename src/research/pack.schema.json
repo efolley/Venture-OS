@@ -1,22 +1,25 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ventureos.local/schemas/research-evidence-pack-v3.json",
+  "$id": "https://ventureos.local/schemas/research-evidence-pack-v4.json",
   "title": "Research agent evidence pack",
-  "description": "Schema v3. Every value in company, market, competitors, and sales is a list of evidence IDs.",
+  "description": "Schema v4. Every value in company, market, competitors, and sales is a list of evidence IDs.",
   "type": "object",
   "required": ["schema_version", "run_id", "parent_run_id", "status", "company", "market", "competitors", "sales", "evidence", "sources", "coverage", "limits_hit", "uncertainties", "rejected_sources"],
   "properties": {
-    "schema_version": {"const": 3},
+    "schema_version": {"const": 4},
     "run_id": {"type": "string"},
     "parent_run_id": {"type": ["string", "null"]},
     "status": {"enum": ["complete", "partial"]},
     "company": {
       "type": "object",
-      "required": ["name", "website", "offering"],
+      "required": ["name", "website", "offering", "mission", "vision", "problem"],
       "properties": {
         "name": {"type": "string"},
         "website": {"type": "string"},
-        "offering": {"$ref": "#/$defs/ids"}
+        "offering": {"$ref": "#/$defs/ids"},
+        "mission": {"$ref": "#/$defs/ids"},
+        "vision": {"$ref": "#/$defs/ids"},
+        "problem": {"$ref": "#/$defs/ids"}
       }
     },
     "market": {
@@ -122,6 +125,6 @@
   },
   "$defs": {
     "ids": {"type": "array", "items": {"type": "string"}},
-    "tag": {"enum": ["company.offering", "market.category", "market.size_growth", "market.trends", "competitors.alternative", "competitors.positioning", "competitors.pricing", "sales.target_customer", "sales.buyer_role", "sales.pricing_model", "sales.channel", "sales.buying_signals"]}
+    "tag": {"enum": ["company.offering", "company.mission", "company.vision", "company.problem", "market.category", "market.size_growth", "market.trends", "competitors.alternative", "competitors.positioning", "competitors.pricing", "sales.target_customer", "sales.buyer_role", "sales.pricing_model", "sales.channel", "sales.buying_signals"]}
   }
 }

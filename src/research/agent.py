@@ -33,6 +33,9 @@ SOURCE_CHARS = 20000
 PROMPT_SOURCE_CHARS = 6000
 MAX_FIRST_PARTY_PAGES = 3  # general company pages (home, product, about)
 MAX_FIRST_PARTY_SALES_PAGES = 2  # extra company pages for each of: pricing, customers
+MAX_FIRST_PARTY_ABOUT_PAGES = 2  # about, mission, or story pages, for mission and vision
+_ABOUT_PATH = re.compile(r"/(?:about(?:-us)?|company|mission|vision|our-story|story|who-we-are|"
+                         r"manifesto|values)(?:\b|/|-|$)", re.IGNORECASE)
 MAX_SEARCHES_PER_ROUND = 2  # a round that keeps no pages retries once with the next template
 _PRICING_PATH = re.compile(r"/(?:pricing|plans?)(?:\b|/|-)", re.IGNORECASE)
 _CUSTOMER_PATH = re.compile(r"/(?:customers?|case-stud\w*|enterprise|sales|partners?)(?:\b|/|-)",
@@ -58,6 +61,8 @@ def _page_slot(url: str) -> str:
         return "pricing"
     if _CUSTOMER_PATH.search(path):
         return "customers"
+    if _ABOUT_PATH.search(path):
+        return "about"
     return "general"
 MAX_PAGES_PER_SITE = 2
 _MARKET_REPORT = re.compile(r"market|industry|forecast|outlook|cagr|report|trends", re.IGNORECASE)
@@ -81,8 +86,9 @@ REASON_SYSTEM = (
     "it), gap (1 entry from missing, all in the given field), query (a web search query under "
     "200 characters that names the company or competitor, without site: operators), and site "
     "(a bare domain from allowed_sites to search only that site, or empty for the open web). Do "
-    "not repeat an earlier query. Prefer the company's own site for offering, pricing, "
-    "customers, and channel; prefer comparison and review pages for competitors; prefer news "
+    "not repeat an earlier query. Prefer the company's own site for offering, mission, vision, "
+    "the problem it solves, pricing, customers, and channel (its about or company page for "
+    "mission and vision); prefer comparison and review pages for competitors; prefer news "
     "and analyst pages for market size, trends, and funding. For market items, search for the "
     "category from what_they_sell (for example 'issue tracking software market size') rather "
     "than the company name, which may be a common word."
@@ -623,7 +629,8 @@ class ResearchAgent:
                 slot = _page_slot(url)
                 used = sum(1 for s in same_site if _page_slot(s["url"]) == slot)
                 limit = {"general": MAX_FIRST_PARTY_PAGES,
-                         "signals": MAX_FIRST_PARTY_SIGNAL_PAGES}.get(slot, MAX_FIRST_PARTY_SALES_PAGES)
+                         "signals": MAX_FIRST_PARTY_SIGNAL_PAGES,
+                         "about": MAX_FIRST_PARTY_ABOUT_PAGES}.get(slot, MAX_FIRST_PARTY_SALES_PAGES)
                 if used >= limit:
                     reason = ("company website page limit reached" if slot == "general"
                               else f"company {slot} page limit reached")

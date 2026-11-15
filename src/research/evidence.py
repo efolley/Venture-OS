@@ -15,7 +15,7 @@ MAX_EXCERPT = 400
 MIN_STATEMENT = 15
 MAX_STATEMENT = 400
 # Tags about the researched company itself must cite its own site when one was collected.
-FIRST_PARTY_TAGS = ("company.offering", "sales.pricing_model")
+FIRST_PARTY_TAGS = ("company.offering", "company.mission", "company.vision", "sales.pricing_model")
 _ENTITY_STOP = {
     "the", "a", "an", "it", "its", "this", "that", "these", "they", "their", "in", "on",
     "as", "at", "by", "for", "according", "source", "company", "users", "customers", "we",
@@ -169,8 +169,9 @@ def check_item(
     if not tags and competitor and all(n.startswith("dropped competitors.") for n in notes):
         raise DroppedItem("; ".join(notes))
     if not tags:
-        raise ValueError("no usable tags remain; company.offering and sales.pricing_model "
-                         "must cite the company's own website, and competitor positioning and "
+        raise ValueError("no usable tags remain; company.offering, company.mission, "
+                         "company.vision, and sales.pricing_model must cite the company's own "
+                         "website, and competitor positioning and "
                          "pricing cannot cite a forum.")
     skip = [*company.split("|"), *([competitor["name"]] if competitor else [])]
     missing = unsupported_entities(norm(statement), quote, skip)
