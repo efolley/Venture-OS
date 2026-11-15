@@ -1,0 +1,858 @@
+{
+  "schema_version": 4,
+  "run_id": "3f192824-d90a-4ba6-b148-cf6cb548a7dc",
+  "parent_run_id": null,
+  "status": "complete",
+  "company": {
+    "name": "Notion",
+    "website": "https://notion.com/",
+    "offering": [
+      "e1",
+      "e3"
+    ],
+    "mission": [
+      "e23"
+    ],
+    "vision": [],
+    "problem": [
+      "e4"
+    ]
+  },
+  "market": {
+    "category": [
+      "e16"
+    ],
+    "size_growth": [
+      "e9"
+    ],
+    "trends": [
+      "e10",
+      "e11"
+    ]
+  },
+  "competitors": [
+    {
+      "name": "Coda",
+      "website": "https://coda.io",
+      "evidence_ids": [
+        "e12",
+        "e20",
+        "e22"
+      ],
+      "positioning": [
+        "e22"
+      ],
+      "pricing": [
+        "e20"
+      ],
+      "pricing_status": "found"
+    },
+    {
+      "name": "ClickUp",
+      "website": "https://clickup.com",
+      "evidence_ids": [
+        "e15",
+        "e17",
+        "e21"
+      ],
+      "positioning": [
+        "e17"
+      ],
+      "pricing": [
+        "e21"
+      ],
+      "pricing_status": "found"
+    },
+    {
+      "name": "Confluence",
+      "website": "https://www.atlassian.com/software/confluence",
+      "evidence_ids": [
+        "e13",
+        "e18",
+        "e19"
+      ],
+      "positioning": [
+        "e19"
+      ],
+      "pricing": [
+        "e18"
+      ],
+      "pricing_status": "found"
+    },
+    {
+      "name": "Obsidian",
+      "website": "https://obsidian.md",
+      "evidence_ids": [
+        "e14"
+      ],
+      "positioning": [],
+      "pricing": [],
+      "pricing_status": "not_checked"
+    }
+  ],
+  "sales": {
+    "target_customer": [
+      "e6",
+      "e7",
+      "e8"
+    ],
+    "buyer_role": [
+      "e6"
+    ],
+    "pricing_model": [
+      "e2",
+      "e7",
+      "e8"
+    ],
+    "channel": [
+      "e2",
+      "e5"
+    ],
+    "buying_signals": [
+      "e5"
+    ]
+  },
+  "evidence": [
+    {
+      "id": "e1",
+      "statement": "Notion describes its product as a blended all-in-one workspace for tasks, roadmaps, and design repositories.",
+      "excerpt": "As a first step, we are blending much of your workflow into an all-in-one workspace. Want a task list? A product roadmap? A design repository?",
+      "basis": "fact",
+      "tags": [
+        "company.offering"
+      ],
+      "source_id": "s4",
+      "url": "https://www.notion.com/about",
+      "retrieved_at": "2026-11-15T20:04:18.718405+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 3
+    },
+    {
+      "id": "e2",
+      "statement": "Notion offers an Enterprise plan with custom pricing that is sold through a Contact Sales path.",
+      "excerpt": "Enterprise Custom pricing For organizations to operate with scalability, control, and security. Contact Sales",
+      "basis": "fact",
+      "tags": [
+        "sales.channel",
+        "sales.pricing_model"
+      ],
+      "source_id": "s7",
+      "url": "https://www.notion.com/pricing",
+      "retrieved_at": "2026-11-15T20:04:19.184980+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 3
+    },
+    {
+      "id": "e3",
+      "statement": "Notion says it is one secure AI workspace where enterprise teams plan, collaborate, and build.",
+      "excerpt": "One secure AI workspace where enterprise teams plan, collaborate, and build faster together.",
+      "basis": "fact",
+      "tags": [
+        "company.offering"
+      ],
+      "source_id": "s6",
+      "url": "https://www.notion.com/enterprise",
+      "retrieved_at": "2026-11-15T20:04:18.720995+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 3
+    },
+    {
+      "id": "e4",
+      "statement": "Notion says teams duct-tape work together with emails, copy/paste, and open tabs, which it aims to replace.",
+      "excerpt": "We duct-tape everything together with emails, copy/paste, and countless open tabs.",
+      "basis": "fact",
+      "tags": [
+        "company.problem"
+      ],
+      "source_id": "s4",
+      "url": "https://www.notion.com/about",
+      "retrieved_at": "2026-11-15T20:04:18.718405+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 3
+    },
+    {
+      "id": "e5",
+      "statement": "Notion's enterprise page offers a demo request and says 98% of Forbes Cloud 100 teams use Notion.",
+      "excerpt": "Request a demo Illustration Trusted by 98% of the Forbes Cloud 100 OpenAIMatchGroupFigmaVercelRampVolvo",
+      "basis": "fact",
+      "tags": [
+        "sales.channel",
+        "sales.buying_signals"
+      ],
+      "source_id": "s6",
+      "url": "https://www.notion.com/enterprise",
+      "retrieved_at": "2026-11-15T20:04:18.720995+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 3
+    },
+    {
+      "id": "e6",
+      "statement": "Notion's enterprise page targets enterprise teams and cites product teams as a user group.",
+      "excerpt": "Simplify your product development. Build better products faster by streamlining your entire development process in one connected hub.",
+      "basis": "fact",
+      "tags": [
+        "sales.buyer_role",
+        "sales.target_customer"
+      ],
+      "source_id": "s6",
+      "url": "https://www.notion.com/enterprise",
+      "retrieved_at": "2026-11-15T20:04:18.720995+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 3
+    },
+    {
+      "id": "e7",
+      "statement": "Notion's Plus plan costs $10 per member per month and is for small teams and professionals.",
+      "excerpt": "Plus $10per member / month For small teams and professionals to work together.",
+      "basis": "fact",
+      "tags": [
+        "sales.pricing_model",
+        "sales.target_customer"
+      ],
+      "source_id": "s7",
+      "url": "https://www.notion.com/pricing",
+      "retrieved_at": "2026-11-15T20:04:19.184980+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 3
+    },
+    {
+      "id": "e8",
+      "statement": "Notion's Business plan costs $20 per member per month and is for growing businesses.",
+      "excerpt": "$20per member / month For growing businesses to streamline teamwork.",
+      "basis": "fact",
+      "tags": [
+        "sales.pricing_model",
+        "sales.target_customer"
+      ],
+      "source_id": "s7",
+      "url": "https://www.notion.com/pricing",
+      "retrieved_at": "2026-11-15T20:04:19.184980+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 3
+    },
+    {
+      "id": "e9",
+      "statement": "The global knowledge management software market was valued at USD 20.1 billion in 2024 and is projected to reach USD 62.2 billion by 2033.",
+      "excerpt": "The global knowledge management software market size was valued at USD 20.1 billion in 2024 and is projected to grow from USD 25.0 billion in 2026 to USD 62.2 billion by 2033, at a CAGR of 13.6% from 2025 to 2033.",
+      "basis": "fact",
+      "tags": [
+        "market.size_growth"
+      ],
+      "source_id": "s9",
+      "url": "https://www.grandviewresearch.com/industry-analysis/knowledge-management-software-market-report",
+      "retrieved_at": "2026-11-15T20:04:34.550632+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 6
+    },
+    {
+      "id": "e10",
+      "statement": "Cloud-based deployment held the largest share of knowledge management software revenue in 2024.",
+      "excerpt": "By deployment mode, the cloud-based deployment segment held the largest revenue share of 65.50% in 2024 in 2024.",
+      "basis": "fact",
+      "tags": [
+        "market.trends"
+      ],
+      "source_id": "s9",
+      "url": "https://www.grandviewresearch.com/industry-analysis/knowledge-management-software-market-report",
+      "retrieved_at": "2026-11-15T20:04:34.550632+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 6
+    },
+    {
+      "id": "e11",
+      "statement": "Market growth is driven by demand for agile, cloud-native platforms for information discovery and collaboration.",
+      "excerpt": "The market growth is driven by the growing need for agile, cloud-native platforms that enable dynamic information discovery, seamless collaboration, and intelligent decision-making across complex enterprise ecosystems.",
+      "basis": "fact",
+      "tags": [
+        "market.trends"
+      ],
+      "source_id": "s9",
+      "url": "https://www.grandviewresearch.com/industry-analysis/knowledge-management-software-market-report",
+      "retrieved_at": "2026-11-15T20:04:34.550632+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 6
+    },
+    {
+      "id": "e12",
+      "statement": "An alternatives guide names Coda as outperforming on lightweight app-like docs.",
+      "excerpt": "If you need docs that act like lightweight apps, Coda ($10–30/Doc Maker/month) outpowers Notion's formulas and automations.",
+      "basis": "fact",
+      "tags": [
+        "competitors.alternative"
+      ],
+      "source_id": "s12",
+      "url": "https://clonepartner.com/blog/notion-alternatives-2026-pricing-migration-and-tco-compared",
+      "retrieved_at": "2026-11-15T20:04:34.709167+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Coda",
+        "website": "https://coda.io"
+      },
+      "round": 6
+    },
+    {
+      "id": "e13",
+      "statement": "An alternatives guide names Confluence as fitting engineering orgs that run on Jira.",
+      "excerpt": "If your engineering org runs on Jira, Confluence ($5.42–10.44/user/month) slots in without friction.",
+      "basis": "fact",
+      "tags": [
+        "competitors.alternative"
+      ],
+      "source_id": "s12",
+      "url": "https://clonepartner.com/blog/notion-alternatives-2026-pricing-migration-and-tco-compared",
+      "retrieved_at": "2026-11-15T20:04:34.709167+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Confluence",
+        "website": "https://www.atlassian.com/software/confluence"
+      },
+      "round": 6
+    },
+    {
+      "id": "e14",
+      "statement": "An alternatives guide names Obsidian as keeping data as local Markdown files.",
+      "excerpt": "If your work is thinking and writing, Obsidian ($0–8.17/user/month) keeps your data as local Markdown files you own forever.",
+      "basis": "fact",
+      "tags": [
+        "competitors.alternative"
+      ],
+      "source_id": "s12",
+      "url": "https://clonepartner.com/blog/notion-alternatives-2026-pricing-migration-and-tco-compared",
+      "retrieved_at": "2026-11-15T20:04:34.709167+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Obsidian",
+        "website": "https://obsidian.md"
+      },
+      "round": 6
+    },
+    {
+      "id": "e15",
+      "statement": "An alternatives guide names ClickUp as stronger for task management and automation.",
+      "excerpt": "If you live in databases and project boards, ClickUp ($7–12/user/month) gives you stronger task management and automation.",
+      "basis": "fact",
+      "tags": [
+        "competitors.alternative"
+      ],
+      "source_id": "s12",
+      "url": "https://clonepartner.com/blog/notion-alternatives-2026-pricing-migration-and-tco-compared",
+      "retrieved_at": "2026-11-15T20:04:34.709167+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "ClickUp",
+        "website": "https://clickup.com"
+      },
+      "round": 6
+    },
+    {
+      "id": "e16",
+      "statement": "The report sizes the knowledge management software market.",
+      "excerpt": "Knowledge Management Software Market (2025 - 2033) Size, Share & Trends Analysis Report",
+      "basis": "fact",
+      "tags": [
+        "market.category"
+      ],
+      "source_id": "s9",
+      "url": "https://www.grandviewresearch.com/industry-analysis/knowledge-management-software-market-report",
+      "retrieved_at": "2026-11-15T20:04:34.550632+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 6
+    },
+    {
+      "id": "e17",
+      "statement": "ClickUp positions itself as the everything app for work.",
+      "excerpt": "ClickUp is the everything app for work. Software, AI Agents, and humans converge in one platform to maximize productivity.",
+      "basis": "fact",
+      "tags": [
+        "competitors.positioning"
+      ],
+      "source_id": "s15",
+      "url": "https://clickup.com/ai-llm-info-page",
+      "retrieved_at": "2026-11-15T20:04:57.141026+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "ClickUp",
+        "website": "https://clickup.com"
+      },
+      "round": 9
+    },
+    {
+      "id": "e18",
+      "statement": "Confluence's Standard plan costs $5.78 per user per month.",
+      "excerpt": "Standard Everything you need to get started $5.78 per user / month",
+      "basis": "fact",
+      "tags": [
+        "competitors.pricing"
+      ],
+      "source_id": "s21",
+      "url": "https://www.atlassian.com/software/confluence/pricing",
+      "retrieved_at": "2026-11-15T20:04:58.882052+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Confluence",
+        "website": "https://www.atlassian.com/software/confluence"
+      },
+      "round": 9
+    },
+    {
+      "id": "e19",
+      "statement": "Confluence's pricing page describes pages as living documents used to create, share, and edit knowledge.",
+      "excerpt": "Pages are used to create, share, and edit knowledge. These are living documents you can create and update for almost anything",
+      "basis": "fact",
+      "tags": [
+        "competitors.positioning"
+      ],
+      "source_id": "s21",
+      "url": "https://www.atlassian.com/software/confluence/pricing",
+      "retrieved_at": "2026-11-15T20:04:58.882052+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Confluence",
+        "website": "https://www.atlassian.com/software/confluence"
+      },
+      "round": 9
+    },
+    {
+      "id": "e20",
+      "statement": "Coda says it charges only for Doc Makers in paid workspaces, while editors and viewers are free.",
+      "excerpt": "With Coda’s unique Maker billing model, we only charge for Doc Makers in paid workspaces. Editors and viewers are entirely free!",
+      "basis": "fact",
+      "tags": [
+        "competitors.pricing"
+      ],
+      "source_id": "s19",
+      "url": "https://help.coda.io/hc/en-us/articles/39555725230989-Billing-and-pricing-basics",
+      "retrieved_at": "2026-11-15T20:04:58.876597+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Coda",
+        "website": "https://coda.io"
+      },
+      "round": 9
+    },
+    {
+      "id": "e21",
+      "statement": "ClickUp lists its per-user price at $7 per month billed yearly.",
+      "excerpt": "yearly price:$7Per user/month, billed yearly",
+      "basis": "fact",
+      "tags": [
+        "competitors.pricing"
+      ],
+      "source_id": "s16",
+      "url": "https://clickup.com/pricing",
+      "retrieved_at": "2026-11-15T20:04:57.143891+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "ClickUp",
+        "website": "https://clickup.com"
+      },
+      "round": 9
+    },
+    {
+      "id": "e22",
+      "statement": "Coda describes itself as the collaborative, all-in-one platform that brings teams and tools together.",
+      "excerpt": "Coda is the collaborative, all-in-one platform that brings teams and tools together.",
+      "basis": "fact",
+      "tags": [
+        "competitors.positioning"
+      ],
+      "source_id": "s24",
+      "url": "https://coda.io/product",
+      "retrieved_at": "2026-11-15T20:05:13.113730+00:00",
+      "published_at": null,
+      "competitor": {
+        "name": "Coda",
+        "website": "https://coda.io"
+      },
+      "round": 12
+    },
+    {
+      "id": "e23",
+      "statement": "Notion says it was created to break away from today's work tools and bring back ideas from early computing pioneers.",
+      "excerpt": "That’s where Notion comes in. We want to break away from today’s tools—and bring back some of the ideas of those early pioneers.",
+      "basis": "inference",
+      "tags": [
+        "company.mission"
+      ],
+      "source_id": "s4",
+      "url": "https://www.notion.com/about",
+      "retrieved_at": "2026-11-15T20:04:18.718405+00:00",
+      "published_at": null,
+      "competitor": null,
+      "round": 12
+    }
+  ],
+  "sources": [
+    {
+      "id": "s1",
+      "url": "https://www.notion.com/templates/category/company-mission-vision",
+      "title": "Best Company Mission / Vision Templates from Notion | Notion Marketplace",
+      "kind": "first_party",
+      "retrieved_at": "2026-11-15T20:04:15.360715+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s2",
+      "url": "https://www.notion.com/templates/category/free-company-mission-vision-templates",
+      "title": "Free Company Mission / Vision Templates from Notion | Notion Marketplace",
+      "kind": "first_party",
+      "retrieved_at": "2026-11-15T20:04:15.361760+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s3",
+      "url": "https://www.notion.com/templates/collections/top-7-company-mission-vision-templates-in-notion",
+      "title": "Top 7 Company Mission / Vision Templates | Notion Template Marketplace",
+      "kind": "first_party",
+      "retrieved_at": "2026-11-15T20:04:15.362892+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s4",
+      "url": "https://www.notion.com/about",
+      "title": "Why we built Notion – About",
+      "kind": "first_party",
+      "retrieved_at": "2026-11-15T20:04:18.718405+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s5",
+      "url": "https://www.notion.com/personal",
+      "title": "Your connected workspace for notes, docs & tasks | Notion",
+      "kind": "first_party",
+      "retrieved_at": "2026-11-15T20:04:18.719878+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s6",
+      "url": "https://www.notion.com/enterprise",
+      "title": "Notion for Enterprise",
+      "kind": "first_party",
+      "retrieved_at": "2026-11-15T20:04:18.720995+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s7",
+      "url": "https://www.notion.com/pricing",
+      "title": "Notion Pricing Plans: Free, Plus, Business, & Enterprise.",
+      "kind": "first_party",
+      "retrieved_at": "2026-11-15T20:04:19.184980+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s8",
+      "url": "https://www.notion.com/pricing/v2-plans",
+      "title": "Notion Pricing Plans: Free, Plus, Business, & Enterprise.",
+      "kind": "first_party",
+      "retrieved_at": "2026-11-15T20:04:19.188877+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s9",
+      "url": "https://www.grandviewresearch.com/industry-analysis/knowledge-management-software-market-report",
+      "title": "Knowledge Management Software Market Report, 2025-2033",
+      "kind": "market_report",
+      "retrieved_at": "2026-11-15T20:04:34.550632+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s10",
+      "url": "https://www.mordorintelligence.com/industry-reports/knowledge-management-software-market",
+      "title": "Knowledge Management Software Market Forecasts 2031",
+      "kind": "market_report",
+      "retrieved_at": "2026-11-15T20:04:34.552648+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s11",
+      "url": "https://www.marketresearchfuture.com/reports/knowledge-management-software-market-4193",
+      "title": "Knowledge Management Software Market Size, Growth Analysis | 2035",
+      "kind": "market_report",
+      "retrieved_at": "2026-11-15T20:04:34.556248+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s12",
+      "url": "https://clonepartner.com/blog/notion-alternatives-2026-pricing-migration-and-tco-compared",
+      "title": "Notion Alternatives 2026: Pricing, Migration, and TCO Compared | ClonePartner Blog",
+      "kind": "other",
+      "retrieved_at": "2026-11-15T20:04:34.709167+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s13",
+      "url": "https://finance.yahoo.com/news/clickup-adds-ai-assistant-better-140000364.html",
+      "title": "ClickUp adds new AI assistant to better compete with Slack and Notion",
+      "kind": "other",
+      "retrieved_at": "2026-11-15T20:04:34.712692+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s14",
+      "url": "https://www.cbinsights.com/company/notion-labs/alternatives-competitors",
+      "title": "Top Notion Alternatives, Competitors",
+      "kind": "aggregator",
+      "retrieved_at": "2026-11-15T20:04:34.713377+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s15",
+      "url": "https://clickup.com/ai-llm-info-page",
+      "title": "ClickUp AI Workspace – The Everything App for Work",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T20:04:57.141026+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s16",
+      "url": "https://clickup.com/pricing",
+      "title": "ClickUp Pricing and Plans",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T20:04:57.143891+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s17",
+      "url": "https://clickup.com/learn/topic/project-management/tools/clickup",
+      "title": "ClickUp Review for Project Management (2026)",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T20:04:57.146410+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s18",
+      "url": "https://help.coda.io/en/articles/3430685-billing-and-pricing-basics",
+      "title": "Billing and pricing basics – Coda",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T20:04:58.875097+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s19",
+      "url": "https://help.coda.io/hc/en-us/articles/39555725230989-Billing-and-pricing-basics",
+      "title": "Billing and pricing basics – Coda",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T20:04:58.876597+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s20",
+      "url": "https://community.coda.io/t/coda-4-0-pricing-updates-supercharging-doc-makers/43268/1",
+      "title": "Coda 4.0 Pricing Updates: Supercharging Doc Makers - News from Superhuman - Superhuman Community",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T20:04:58.879328+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s21",
+      "url": "https://www.atlassian.com/software/confluence/pricing",
+      "title": "Confluence Pricing: Choose Your Plan | Atlassian",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T20:04:58.882052+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s22",
+      "url": "https://community.atlassian.com/forums/discussion/2671198/confluence-pricing-for-one-person",
+      "title": "Confluence pricing for one person? - Atlassian",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T20:04:58.882325+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s23",
+      "url": "https://www.atlassian.com/software/confluence/standard",
+      "title": "Confluence Standard Plan | Atlassian",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T20:04:58.882973+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s24",
+      "url": "https://coda.io/product",
+      "title": "What is Coda? The all-in-one platform for teams. - Coda",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T20:05:13.113730+00:00",
+      "published_at": null
+    },
+    {
+      "id": "s25",
+      "url": "https://coda.io/blog/tool-consolidation/coda-vs-microsoft-loop",
+      "title": "Why teams prefer Coda to Microsoft Loop",
+      "kind": "competitor",
+      "retrieved_at": "2026-11-15T20:05:13.116828+00:00",
+      "published_at": null
+    }
+  ],
+  "coverage": {
+    "company": {
+      "status": "complete",
+      "missing": []
+    },
+    "market": {
+      "status": "complete",
+      "missing": []
+    },
+    "competitors": {
+      "status": "complete",
+      "missing": []
+    },
+    "sales": {
+      "status": "complete",
+      "missing": []
+    }
+  },
+  "limits_hit": [],
+  "uncertainties": [
+    "Notion's own site did not yield a stated mission or vision statement in the pages checked (about page, enterprise, pricing). Template pages and a skipped mission blog were not readable. company.mission and company.vision are unfilled; do not infer them."
+  ],
+  "rejected_sources": [
+    {
+      "url": "https://www.notion.com/templates/vision-and-mission",
+      "reason": "round page limit reached",
+      "round": 1
+    },
+    {
+      "url": "https://www.notion.com/templates/mission-vision-builder",
+      "reason": "round page limit reached",
+      "round": 1
+    },
+    {
+      "url": "https://www.notion.com",
+      "reason": "round page limit reached",
+      "round": 2
+    },
+    {
+      "url": "https://www.notion.com/help/guides/connected-workspace-for-product-teams-to-collaborate-ideate-and-launch",
+      "reason": "round page limit reached",
+      "round": 2
+    },
+    {
+      "url": "https://www.notion.com/pricing?currency=USD",
+      "reason": "company pricing page limit reached",
+      "round": 3
+    },
+    {
+      "url": "https://www.notion.com/pricing?billing=monthly&locale=en-US",
+      "reason": "company pricing page limit reached",
+      "round": 3
+    },
+    {
+      "url": "https://www.linkedin.com/pulse/enterprise-project-management-software-market-insights-size-9eluf",
+      "reason": "round page limit reached",
+      "round": 5
+    },
+    {
+      "url": "https://www.databridgemarketresearch.com/reports/global-knowledge-management-software-market",
+      "reason": "round page limit reached",
+      "round": 5
+    },
+    {
+      "url": "https://www.notion.com/careers",
+      "reason": "low-value page",
+      "round": 4
+    },
+    {
+      "url": "https://www.notion.com/templates/collections/top-7-mission-statement-templates-in-notion",
+      "reason": "company website page limit reached",
+      "round": 4
+    },
+    {
+      "url": "https://www.notion.com/blog/mission-statement-examples",
+      "reason": "company about page limit reached",
+      "round": 4
+    },
+    {
+      "url": "https://www.cbinsights.com/company/coda-5/alternatives-competitors",
+      "reason": "does not mention the company website",
+      "round": 6
+    },
+    {
+      "url": "https://tracxn.com/d/companies/notion/__kYoz5-1mbA8xt3IQUa2eL3nxRdQL95t4LEG04wL1YW0",
+      "reason": "does not mention the company website",
+      "round": 6
+    },
+    {
+      "url": "https://clickup.com/blog/confluence-vs-clickup",
+      "reason": "round page limit reached",
+      "round": 9
+    },
+    {
+      "url": "https://clickup.com/blog/content-marketing-software",
+      "reason": "round page limit reached",
+      "round": 9
+    },
+    {
+      "url": "https://community.coda.io/t/coda-4-0-pricing-updates-supercharging-doc-makers/43268",
+      "reason": "round page limit reached",
+      "round": 7
+    },
+    {
+      "url": "https://coda.io/@coda/comparing-coda-and-asana/pricing-4",
+      "reason": "round page limit reached",
+      "round": 7
+    },
+    {
+      "url": "https://www.atlassian.com/software/confluence/premium",
+      "reason": "round page limit reached",
+      "round": 8
+    },
+    {
+      "url": "https://support.atlassian.com/confluence-cloud/docs/learn-about-confluence-cloud-plans",
+      "reason": "round page limit reached",
+      "round": 8
+    },
+    {
+      "url": "https://coda.io/product/docs-and-team-hubs",
+      "reason": "page limit for this site reached",
+      "round": 10
+    },
+    {
+      "url": "https://coda.io/solutions/team-size/enterprise",
+      "reason": "page limit for this site reached",
+      "round": 10
+    },
+    {
+      "url": "https://coda.io",
+      "reason": "page limit for this site reached",
+      "round": 10
+    },
+    {
+      "url": "https://www.notion.com/blog/mission-vision-and-values",
+      "reason": "company about page limit reached",
+      "round": 11
+    },
+    {
+      "url": "https://www.notion.com/blog/vision-statement",
+      "reason": "company about page limit reached",
+      "round": 11
+    },
+    {
+      "url": "https://www.notion.com/blog/meet-katy-shields-notions-new-chief-people-officer",
+      "reason": "company website page limit reached",
+      "round": 11
+    },
+    {
+      "url": "https://www.notion.com/blog/how-notion-hires",
+      "reason": "company website page limit reached",
+      "round": 12
+    },
+    {
+      "url": "https://www.notion.com/blog/vision-to-values-template",
+      "reason": "company about page limit reached",
+      "round": 12
+    }
+  ]
+}

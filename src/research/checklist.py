@@ -13,7 +13,10 @@ REQUIRED: dict[str, dict[str, int]] = {
     "market": {"category": 1, "size_growth": 1, "trends": 2},
     "sales": {"target_customer": 1, "buyer_role": 1, "pricing_model": 1, "channel": 1},
 }
-OPTIONAL_TAGS = ("sales.buying_signals",)
+# Company items required for a complete pack. Vision is collected when published, but many
+# companies publish only a mission, so a missing vision does not make the pack partial.
+COMPANY_REQUIRED = ("offering", "mission", "problem")
+OPTIONAL_TAGS = ("sales.buying_signals", "company.vision")
 
 
 def _field(missing: list[str]) -> FieldCoverage:
@@ -22,8 +25,7 @@ def _field(missing: list[str]) -> FieldCoverage:
 
 def company_missing(company: CompanyField) -> list[str]:
     missing = [f"company.{key}" for key in ("name", "website") if not company[key]]
-    if not company["offering"]:
-        missing.append("company.offering")
+    missing += [f"company.{key}" for key in COMPANY_REQUIRED if not company[key]]
     return missing
 
 
