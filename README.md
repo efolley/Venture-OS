@@ -9,14 +9,34 @@ VentureOS is a business operations harness that is designed to coordinate agents
 | # | Agent | Status | Version | Package |
 | -- | --- | --- | --- | --- |
 | 1 | Research | Implemented | V.0.3 | `src/research/` |
-| 2 | GTM orchestrator (market analysis, competitive strategy, challenger salesman, company snapshot) | Implemented | V.0.2 | `src/gtm/` |
+| 2 | GTM orchestrator (market analysis, competitive strategy, challenger salesman, company snapshot) | Implemented | V.0.3 | `src/gtm/` |
 | 3 | PM agent | Planned | | |
 | 4 | Presentation builder | Planned | | |
 | 5 | Product builder | Planned | | |
 | 6 | Executor | Planned | | |
-| | Harness, eval gates, HITL 1 and 2 | Planned | | |
+| | Pipeline: Research to GTM in 1 run (first harness slice) | Implemented | V.0.1 | `src/pipeline/` |
+| | Rest of the harness: eval gates, HITL 1 and 2, routing to later agents | Planned | | |
 
-Research and the GTM orchestrator run separately today: Research produces an evidence pack, and the GTM orchestrator reads that pack from a JSON file. The harness that will chain the agents is planned.
+The pipeline runs Research and then the GTM orchestrator in 1 command, passing the evidence pack straight to GTM, so 1 company name or URL produces the evidence pack and the strategy pack with the company snapshot. The rest of the harness (eval gates, HITL, and the later agents) is planned. The UI runs the same flow: after Research returns a pack, it starts GTM and shows the snapshot, competitive analysis, and sales strategy.
+
+### Progress
+
+- **Works end to end:** company name or URL → Research evidence pack → GTM strategy pack with company snapshot, from the CLI (`python -m pipeline`) and from the UI chat. Verified live on Linear (CLI and UI) and Notion (UI).
+- **Tested:** 113 offline tests pass (21 PostgreSQL tests run only in CI).
+- **Not yet chained:** the PM agent, HITL 1 and 2, eval gates, and agents 4 to 6.
+- **Storage:** without `RESEARCH_DATABASE_URL`, runs live in memory and are lost when the API restarts; GTM results are saved to `runs/gtm/`.
+
+### Output quality (latest review, Notion run)
+
+The output is structurally complete and honest about evidence, but the strategy is still thin. Overall about 6/10: good for demonstrating the mechanics, not yet convincing as strategy.
+
+- **Strong:** every section filled, the real mission found, 14 of 18 recommendations correctly labeled `hypothesis`, each competitive hypothesis with disconfirming evidence and a validation question, 18 recommendations merged into 12 themes.
+- **Contradiction:** sub-agents report "mission not retrieved" while the snapshot shows it, because their evidence filters exclude `company.mission` and `company.problem`.
+- **Market category may be wrong:** Notion was sized as project management software; the sub-agents flag the fit as unconfirmed, but the snapshot's market brief presents it as evidence-based.
+- **ICP restates pricing tiers:** no roles, industries, or pains; the ICP line nearly repeats the target market line.
+- **Pricing-heavy analysis:** all 4 competitive hypotheses are about price or packaging, with close scores (8 to 11 of 20).
+- **Thin competitor evidence:** all competitor prices come from 1 third-party article; Asana's own site was not checked.
+- **Snapshot wording:** the product line is a tagline, "how it helps clients" repeats the problem, and the market brief and landscape lines end with advice although a snapshot should only describe.
 
 ## Architecture
 
@@ -142,7 +162,7 @@ Evidence rules enforced in code: excerpts are 25 to 400 characters and appear ve
 
 `research.pack.gtm_gaps(pack)` lists what still blocks the GTM agents (at least 1 cited item per section and 3 described competitors; buying signals optional).
 
-## Agent 2: GTM orchestrator (V.0.2)
+## Agent 2: GTM orchestrator (V.0.3)
 
 **Input:** a Research evidence pack (schema v4) as a JSON file, plus optional instructions such as a target region or segment. The orchestrator never searches the web.
 
@@ -156,7 +176,7 @@ Each sub-agent sees only the evidence tagged for its purpose, and every recommen
 
 **Merge step.** 1 model call groups overlapping recommendations into themes and de-duplicates gaps. The model only groups existing IDs and never rewrites content; code validates the grouping and falls back to exact de-duplication if it fails.
 
-**Company snapshot.** After the merge step, 1 model call writes the snapshot: company name and URL, mission and vision (1 bullet each), the problem the company solves (1 line), target market and ICP (1 line each), product and how it helps clients (1 line each), a market analysis brief, and the competition landscape. Code decides which evidence and recommendations each line may cite; a line with nothing to cite is `unknown` and is never sent to the model, so the snapshot cannot invent a mission or vision. Invalid output gets 1 retry, then a `fallback` snapshot of `unknown` lines.
+**Company snapshot.** After the merge step, 1 model call writes the snapshot: company name and URL, mission and vision (1 bullet each), the problem the company solves (1 line), target market and ICP (1 line each), product and how it helps clients (1 line each), a market analysis brief, and the competition landscape. Code decides which evidence and recommendations each line may cite; a line with nothing to cite is `unknown` and is never sent to the model, so the snapshot cannot invent a mission or vision. Each line is validated separately: invalid lines get 1 retry with their errors, valid lines are always kept, and lines that still fail become `unknown` (listed in `line_errors`). Only a response that is not usable at all, twice, gives a `fallback` snapshot of `unknown` lines.
 
 **Output:** a strategy pack (schema v4) with the company snapshot, recommendations (each with an ID), themes, ranked hypotheses, de-duplicated gaps, Research gaps, and per-sub-agent results. Status is `complete` when Research is complete, every sub-agent returned at least 1 recommendation, and every required snapshot line is filled (vision is optional); otherwise `partial`.
 
@@ -170,18 +190,18 @@ python3 -m pip install -e '.[research,api,ui,test]'
 
 Copy `.env.example` to `.env` and set `ANTHROPIC_API_KEY` and `TAVILY_API_KEY`. `RESEARCH_MODEL` defaults to `claude-haiku-5-5`; set `RESEARCH_DATABASE_URL` to store runs in PostgreSQL instead of memory. Live runs make billed API calls.
 
-**Research: API and UI.** Start the FastAPI backend, then the Streamlit UI in a second terminal:
+**API and UI.** Start the pipeline backend (all Research endpoints plus GTM), then the Streamlit UI in a second terminal:
 
 ```bash
-PYTHONPATH=src python3 -m research.api
+PYTHONPATH=src python3 -m pipeline.api
 ```
 
 ```bash
 streamlit run UI/app.py
 ```
 
-- **Chat:** send a company name or website. For a name, the agent checks the spelling and proposes websites (reply with a number, name, or website) or, when the pack is partial, asks whether to research only the missing items (reply `yes`). Packs are shown with coverage, cited evidence, and a JSON download.
-- **Data management:** every stored run, with its evidence pack, each round's query and coverage, and kept and rejected sources.
+- **Chat:** send a company name or website. For a name, the agent checks the spelling and proposes websites (reply with a number, name, or website) or, when the pack is partial, asks whether to research only the missing items (reply `yes`). Packs are shown with coverage, cited evidence, and a JSON download. When Research returns a pack, GTM starts automatically and the chat shows the company snapshot, then tabs for competitive analysis (ranked hypotheses), sales strategy, market analysis, and themes and gaps, with a strategy JSON download.
+- **Data management:** every stored run, with its evidence pack, its GTM strategy (or a button to run GTM on it), each round's query and coverage, and kept and rejected sources. GTM results are saved to `runs/gtm/<research run id>.json`.
 
 The backend binds to `127.0.0.1:8000` and has no authentication, so run it on your own machine. Chat sessions are in memory; runs and packs are in the store.
 
@@ -193,12 +213,23 @@ The backend binds to `127.0.0.1:8000` and has no authentication, so run it on yo
 | `GET /api/runs` | Stored runs, newest first |
 | `GET /api/runs/{id}` | 1 run and its evidence pack |
 | `GET /api/runs/{id}/rounds` | Rounds, coverage per round, and sources |
+| `POST /api/gtm/runs` | Send `{"research_run_id", "instructions"}`; runs GTM on that stored pack and returns a job ID |
+| `GET /api/gtm/jobs/{id}` | GTM job status and the strategy pack |
+| `GET /api/gtm/runs/{research_run_id}` | The saved strategy pack for a research run, if any |
 
 **Research: CLI.** Prints the run status and the evidence pack as JSON:
 
 ```bash
 PYTHONPATH=src python3 -m research "Basecamp" --website basecamp.com
 ```
+
+**Full flow: pipeline.** 1 command runs Research, then the GTM orchestrator on its evidence pack:
+
+```bash
+PYTHONPATH=src python3 -m pipeline Linear --website linear.app
+```
+
+It writes `runs/<company>-research.json` (the evidence pack) and `runs/<company>-gtm.json` (the strategy pack with the company snapshot). Add `--instructions` to scope both agents and `--output-dir` to change the folder. Without `--website`, Research may ask you to pick the official website; the pipeline then prints the candidates and stops, so run it again with `--website`. A partial evidence pack is still analyzed, and GTM lists its gaps.
 
 **GTM orchestrator: CLI.** Run it on a saved evidence pack (a JSON download from the UI, or a sample in `data/`):
 
@@ -227,8 +258,9 @@ PYTHONPATH=src python3 scripts/live_smoke.py linear.app baseten.co vercel.com
 ```text
 src/research/            Agent 1: Research (loop, evidence rules, pack schema, store, API, CLI)
 src/research/migrations/ PostgreSQL schema
-src/gtm/                 Agent 2: GTM orchestrator (sub-agents, ranking, merge step, CLI)
-UI/                      Streamlit client for the Research API
+src/gtm/                 Agent 2: GTM orchestrator (sub-agents, ranking, merge step, snapshot, CLI)
+src/pipeline/            First harness slice: runs Research, then GTM, in 1 command
+UI/                      Streamlit client for the pipeline API (Research and GTM)
 data/                    Sample evidence packs used by the GTM tests
 scripts/live_smoke.py    Live Research check (billed, not part of the tests)
 tests/                   Offline tests for both agents
@@ -240,11 +272,21 @@ docs/architecture/       Pipeline picture
 - [x] Research agent: bounded ReAct loop, evidence rules, checklist coverage, re-runs from gaps, storage, API, UI, CLI
 - [x] GTM orchestrator: 3 parallel sub-agents, code-ranked hypotheses, corrective retries, merge step, CLI
 - [x] Company snapshot in the GTM strategy pack (mission, vision, problem, market, ICP, product, market brief, competition landscape)
+- [x] Pipeline: Research to GTM in 1 run (first harness slice)
+- [x] GTM API and UI: the chat runs GTM after Research and shows the snapshot, competitive analysis, and sales strategy
 - [ ] PM agent: snapshot completeness check with HITL 1 (research more or proceed)
-- [ ] Harness that chains the agents, with eval gates between stages
-- [ ] GTM API and UI
+- [ ] Rest of the harness: eval gates between stages, HITL, and the later agents
 - [ ] Presentation builder and Product builder, then HITL 2 approval
 - [ ] Executor in draft and dry-run mode with mock adapters
 - [ ] Email and CRM adapters with duplicate-action prevention
 - [ ] Ship a thin end-to-end slice for 1 company across all agents
 - [ ] Publish a reproducible end-to-end example with cost and outcome data
+
+### TODO: output quality (next, in priority order)
+
+1. [ ] GTM: give the sub-agents company mission, problem, and offering evidence, so they stop reporting the mission as missing.
+2. [ ] GTM snapshot: keep lines descriptive (no advice), require the ICP to name roles or segments rather than pricing tiers, stop "how it helps clients" from repeating the problem, and flag an unconfirmed market fit in the market brief.
+3. [ ] Research: check the market category against what the company sells before sizing the market.
+4. [ ] Research: require competitor evidence from at least 2 independent sources and the competitor's own site.
+5. [ ] GTM: require at least 1 Challenger salesman and 1 Competitive strategy item that is not about pricing (persona, pain, use case, or product gap).
+6. [ ] Merge this branch (pipeline, GTM V.0.3 per-line snapshot validation, UI) into `dev` through a PR once CI passes.

@@ -1,6 +1,7 @@
-"""Streamlit UI for the Research agent. It only sends input to the FastAPI backend and shows output.
+"""Streamlit UI for VentureOS: Research, then the GTM orchestrator. It only sends input to the
+FastAPI backend and shows output.
 
-Run the backend first (python -m research.api), then: streamlit run UI/app.py
+Run the backend first (PYTHONPATH=src python -m pipeline.api), then: streamlit run UI/app.py
 """
 
 import json
@@ -14,10 +15,14 @@ from urllib.request import Request, urlopen
 import streamlit as st
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from render import evidence_rows, pack_markdown  # noqa: E402
+from render import (  # noqa: E402
+    competitive_markdown, evidence_rows, gaps_markdown, pack_markdown,
+    recommendations_markdown, snapshot_markdown, themes_markdown,
+)
 
 API = os.getenv("RESEARCH_API_URL", "http://127.0.0.1:8000").rstrip("/")
 POLL_SECONDS = 1.0
+GTM_POLL_SECONDS = 2.0
 STEP_LABELS = {
     "understand": "Understanding the request", "plan": "Planning the next search",
     "collect": "Collecting pages", "coverage": "Checking coverage", "done": "Done",
@@ -37,7 +42,7 @@ def call(method: str, path: str, body: dict | None = None) -> dict:
         raise RuntimeError(str(detail)) from error
     except URLError as error:
         raise RuntimeError(f"Cannot reach the backend at {API}. Start it with: "
-                           "PYTHONPATH=src python -m research.api") from error
+                           "PYTHONPATH=src python -m pipeline.api") from error
 
 
 def event_line(event: dict) -> str:
@@ -61,17 +66,67 @@ def show_pack(pack: dict, key: str) -> None:
                        mime="application/json", key=f"download-{key}")
 
 
+def show_strategy(strategy: dict, key: str) -> None:
+    st.markdown(snapshot_markdown(strategy))
+    competitive, sales, market, themes = st.tabs(
+        ["Competitive analysis", "Sales strategy", "Market analysis", "Themes and gaps"])
+    with competitive:
+        st.markdown(competitive_markdown(strategy))
+    with sales:
+        st.markdown(recommendations_markdown(strategy, "challenger_salesman"))
+    with market:
+        st.markdown(recommendations_markdown(strategy, "market_analysis"))
+    with themes:
+        st.markdown("**Themes** (ideas the sub-agents agree on)")
+        st.markdown(themes_markdown(strategy))
+        st.markdown("**Gaps** (missing evidence)")
+        st.markdown(gaps_markdown(strategy))
+    st.download_button("Download strategy JSON", json.dumps(strategy, indent=2, ensure_ascii=False),
+                       file_name=f"gtm-strategy-{strategy['input_run_id']}.json",
+                       mime="application/json", key=f"download-gtm-{key}")
+
+
+def run_gtm(research_run_id: str, instructions: str) -> dict:
+    """Start GTM on a stored evidence pack and wait for the strategy pack."""
+    try:
+        job_id = call("POST", "/api/gtm/runs",
+                      {"research_run_id": research_run_id, "instructions": instructions})["job_id"]
+    except RuntimeError as error:
+        return {"kind": "error", "message": f"⚠️ GTM did not start: {error}"}
+    with st.status("Building the GTM strategy (3 sub-agents, merge, snapshot)...",
+                   expanded=False) as status:
+        while True:
+            try:
+                job = call("GET", f"/api/gtm/jobs/{job_id}")
+            except RuntimeError as error:
+                status.update(label="Lost contact with the backend", state="error")
+                return {"kind": "error", "message": f"⚠️ {error}"}
+            if job["status"] != "running":
+                break
+            time.sleep(GTM_POLL_SECONDS)
+        if job["status"] != "done" or not job["strategy"]:
+            status.update(label="GTM failed", state="error")
+            return {"kind": "error", "message": f"⚠️ GTM failed: {job['error'] or 'no result'}"}
+        status.update(label="GTM strategy ready", state="complete")
+    strategy = job["strategy"]
+    return {"kind": "strategy", "message": "Here is the GTM strategy and company snapshot.",
+            "strategy": strategy}
+
+
 def show_reply(message: dict, key: str) -> None:
     st.markdown(message.get("message", "").replace("\n", "  \n"))
     if message.get("pack"):
         show_pack(message["pack"], key)
+    if message.get("strategy"):
+        show_strategy(message["strategy"], key)
 
 
 # ----- chat tab -------------------------------------------------------------------------
 
 def chat_tab() -> None:
-    st.title("Research chat")
-    st.caption("Send a company name or website. The agent asks follow-up questions when it needs to.")
+    st.title("Research and GTM chat")
+    st.caption("Send a company name or website. Research collects the evidence, then the GTM "
+               "orchestrator builds the company snapshot, competitive analysis, and sales strategy.")
     if "session_id" not in st.session_state:
         try:
             st.session_state.session_id = call("POST", "/api/sessions")["session_id"]
@@ -98,6 +153,12 @@ def chat_tab() -> None:
         answer = run_message(prompt, instructions)
         show_reply(answer, f"history-{len(st.session_state.messages)}")
     st.session_state.messages.append({"role": "assistant", **answer})
+    if answer.get("pack"):
+        # Research finished with an evidence pack: hand it to GTM automatically.
+        with st.chat_message("assistant"):
+            strategy = run_gtm(answer["pack"]["run_id"], instructions)
+            show_reply(strategy, f"history-{len(st.session_state.messages)}")
+        st.session_state.messages.append({"role": "assistant", **strategy})
 
 
 def run_message(prompt: str, instructions: str) -> dict:
@@ -163,7 +224,8 @@ def data_tab() -> None:
     except RuntimeError as error:
         st.error(str(error))
         return
-    pack_tab, rounds_tab, sources_tab = st.tabs(["Evidence pack", "Rounds", "Sources"])
+    pack_tab, gtm_tab, rounds_tab, sources_tab = st.tabs(
+        ["Evidence pack", "GTM strategy", "Rounds", "Sources"])
     with pack_tab:
         if detail["pack"]:
             show_pack(detail["pack"], f"data-{run_id}")
@@ -174,6 +236,8 @@ def data_tab() -> None:
                 st.write("Candidates:", run["candidates"])
             if run.get("error"):
                 st.error(run["error"])
+    with gtm_tab:
+        gtm_section(run_id, has_pack=bool(detail["pack"]))
     with rounds_tab:
         for entry in trail["rounds"]:
             title = "Round 0: understand" if entry["number"] == 0 else (
@@ -189,11 +253,38 @@ def data_tab() -> None:
         st.dataframe(trail["sources"], hide_index=True, use_container_width=True)
 
 
+def gtm_section(run_id: str, *, has_pack: bool) -> None:
+    try:
+        result = call("GET", f"/api/gtm/runs/{run_id}")
+    except RuntimeError as error:
+        st.error(str(error))
+        return
+    if result["strategy"]:
+        show_strategy(result["strategy"], f"data-{run_id}")
+        label = "Run GTM again"
+    elif result["running_job_id"]:
+        st.info("A GTM run is in progress for this research run. Refresh in a minute.")
+        return
+    elif not has_pack:
+        st.info("This run has no evidence pack, so there is nothing for GTM to analyze.")
+        return
+    else:
+        st.info("No GTM strategy for this run yet.")
+        label = "Run GTM strategy"
+    if st.button(label, key=f"run-gtm-{run_id}"):
+        answer = run_gtm(run_id, "")
+        if answer.get("kind") == "error":
+            st.error(answer["message"])
+        else:
+            st.rerun()
+
+
 # ----- layout ---------------------------------------------------------------------------
 
-st.set_page_config(page_title="Research agent", page_icon="🔎", layout="wide")
+st.set_page_config(page_title="VentureOS", page_icon="🔎", layout="wide")
 with st.sidebar:
-    st.header("🔎 Research agent")
+    st.header("🔎 VentureOS")
+    st.caption("Research → GTM orchestrator")
     page = st.radio("View", ["Chat", "Data management"], label_visibility="collapsed")
     st.divider()
 if page == "Chat":

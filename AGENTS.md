@@ -9,9 +9,9 @@ Implemented on `dev`:
 | Agent | Package | Version | Source branch |
 | --- | --- | --- | --- |
 | 1 Research | `src/research/` | V.0.3 (`0.3.0`) | `agents/research` |
-| 2 GTM orchestrator | `src/gtm/` | V.0.2 (`0.2.0`) | `agents/GTM_orchestrator` |
+| 2 GTM orchestrator | `src/gtm/` | V.0.3 (`0.3.0`) | `agents/GTM_orchestrator` |
 
-Planned: the harness, PM agent, Presentation builder, Product builder, Executor, eval gates, and both HITL points. The agents run separately today: Research produces an evidence pack, and GTM reads that pack from a file. Never describe planned behavior as working software.
+Also implemented: the pipeline (`src/pipeline/`, V.0.1), the first harness slice, which runs Research and then GTM in 1 command and passes the evidence pack in memory. Planned: the rest of the harness, PM agent, Presentation builder, Product builder, Executor, eval gates, and both HITL points. Never describe planned behavior as working software.
 
 ## Source of truth
 
@@ -37,8 +37,9 @@ The harness is deterministic code, not an LLM agent. It will own routing, retrie
 ## Repository map
 
 - `src/research/`: Research agent (contracts, checklist, planner, sources, evidence, DeepAgents loop, pack and schema, store and migrations, providers, chat, FastAPI backend, CLI).
-- `src/gtm/`: GTM orchestrator (inputs, sub-agents, contracts and ranking, orchestrator, merge step, CLI).
-- `UI/`: Streamlit client for the Research API. It only calls the API and renders output; never put processing in the UI.
+- `src/gtm/`: GTM orchestrator (inputs, sub-agents, contracts and ranking, orchestrator, merge step, snapshot, CLI).
+- `src/pipeline/`: the first harness slice. Deterministic code that runs Research, stops on `clarify` or failure, then runs GTM on the evidence pack. It may import both agents; agents still never import each other except `gtm` reading `research` contracts.
+- `UI/`: Streamlit client for the pipeline API (`src/pipeline/api.py`: Research endpoints plus GTM endpoints). Research never imports GTM; the pipeline API adds GTM next to it. It only calls the API and renders output; never put processing in the UI.
 - `data/`: sample Research evidence packs (`notion.json`, `baseten.json`) used by the GTM tests. Test inputs only, never a production response or fallback.
 - `scripts/live_smoke.py`: live Research check that makes billed calls; not part of the tests.
 - `tests/`: offline tests for both agents.
