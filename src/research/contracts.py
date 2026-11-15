@@ -9,7 +9,7 @@ from typing import Protocol, TypedDict
 
 JsonObject = dict[str, object]
 
-SCHEMA_VERSION = 3
+SCHEMA_VERSION = 4
 BASES: tuple[str, ...] = ("fact", "inference")
 SOURCE_KINDS: tuple[str, ...] = (
     "first_party", "competitor", "market_report", "aggregator", "review", "forum", "reference", "news", "other",
@@ -17,6 +17,9 @@ SOURCE_KINDS: tuple[str, ...] = (
 FIELDS: tuple[str, ...] = ("company", "market", "competitors", "sales")
 TAGS: tuple[str, ...] = (
     "company.offering",
+    "company.mission",
+    "company.vision",
+    "company.problem",
     "market.category",
     "market.size_growth",
     "market.trends",
@@ -31,6 +34,12 @@ TAGS: tuple[str, ...] = (
 )
 TAG_HELP: dict[str, str] = {
     "company.offering": "what the researched company sells",
+    "company.mission": "the researched company's stated mission: what it exists to do (often on "
+                       "its about or company page, for example 'our mission is to ...')",
+    "company.vision": "the researched company's stated vision: the future it wants to create "
+                      "(for example 'we envision a world where ...')",
+    "company.problem": "the problem the researched company says it solves for its customers "
+                       "(for example 'teams waste hours switching between tools')",
     "market.category": "the market category the company competes in",
     "market.size_growth": "a market size, growth rate, or growth signal",
     "market.trends": "a trend shaping this market",
@@ -135,6 +144,9 @@ class CompanyField(TypedDict):
     name: str
     website: str
     offering: list[str]
+    mission: list[str]
+    vision: list[str]
+    problem: list[str]
 
 
 class EvidencePack(TypedDict):
