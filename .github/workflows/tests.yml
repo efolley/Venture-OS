@@ -1,4 +1,4 @@
-name: Research agent
+name: Research agent and GTM orchestrator
 on: [push, pull_request]
 jobs:
   research:

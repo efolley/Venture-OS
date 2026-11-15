@@ -1,0 +1,384 @@
+import json
+import tempfile
+import unittest
+from pathlib import Path
+from threading import Barrier, BrokenBarrierError
+from typing import cast
+from unittest.mock import patch
+
+from gtm import cli
+from gtm.contracts import SUB_AGENTS, validate_sub_agent_result
+from gtm.merge import MERGE_SYSTEM, merge_outputs
+from gtm.inputs import evidence_id_index, load_research_pack, validate_research_pack
+from gtm.orchestrator import GTMOrchestrator
+from research.contracts import JsonObject
+
+
+ROOT = Path(__file__).resolve().parents[1]
+SAMPLES = (ROOT / "data" / "notion.json", ROOT / "data" / "baseten.json")
+
+
+class FakeModel:
+    def __init__(
+        self,
+        *,
+        fail_agent: str = "",
+        invalid_citations: bool = False,
+        invalid_first_attempt: bool = False,
+        with_gaps: bool = False,
+        empty_agent: str = "",
+        merge_reply: object = None,
+        barrier: Barrier | None = None,
+    ) -> None:
+        self.with_gaps = with_gaps
+        self.empty_agent = empty_agent
+        self.systems: list[str] = []
+        self.merge_reply = merge_reply
+        self.merge_requests: list[JsonObject] = []
+        self.fail_agent = fail_agent
+        self.invalid_citations = invalid_citations
+        self.invalid_first_attempt = invalid_first_attempt
+        self.barrier = barrier
+        self.prompts: list[JsonObject] = []
+
+    def json(self, system: str, prompt: str) -> JsonObject:
+        if system == MERGE_SYSTEM:
+            request = cast(JsonObject, json.loads(prompt))
+            self.merge_requests.append(request)
+            if self.merge_reply is not None:
+                return cast(JsonObject, self.merge_reply)
+            return {
+                "themes": [
+                    {"title": item["title"], "recommendation_ids": [item["id"]]}
+                    for item in cast(list[JsonObject], request["recommendations"])
+                ],
+                "gap_groups": [
+                    {"gap_ids": [item["id"]], "keep": item["id"]}
+                    for item in cast(list[JsonObject], request["gaps"])
+                ],
+            }
+        if self.fail_agent and self.fail_agent in system:
+            raise RuntimeError(f"{self.fail_agent} test failure")
+        if self.barrier is not None:
+            try:
+                self.barrier.wait(timeout=3)
+            except BrokenBarrierError as error:
+                raise AssertionError("Sub-agent calls did not run concurrently.") from error
+        payload = cast(JsonObject, json.loads(prompt))
+        self.prompts.append(payload)
+        self.systems.append(system)
+        if self.empty_agent and self.empty_agent in system:
+            return {"recommendations": [], "gaps": ["Not enough evidence."]}
+        available = cast(list[str], payload["available_evidence_ids"])
+        if not available:
+            return {"recommendations": [], "gaps": ["No role-relevant evidence."]}
+        first_attempt = "validation_error" not in payload
+        invalid = self.invalid_citations or (self.invalid_first_attempt and first_attempt)
+        cited = ["not-a-real-id"] if invalid else [available[0]]
+        recommendation: JsonObject = {
+            "title": "Test recommendation",
+            "recommendation": "Test this segment before scaling.",
+            "rationale": "The provided evidence identifies the relevant context.",
+            "basis": "hypothesis",
+            "evidence_ids": cited,
+        }
+        if "Competitive Strategy" in system:
+            recommendation.update(hypothesis_fields(3, 3))
+        gaps = ["No win/loss data."] if self.with_gaps else []
+        return {"recommendations": [recommendation], "gaps": gaps}
+
+
+def hypothesis_fields(pain: int, fit: int) -> JsonObject:
+    return {
+        "sub_scores": {"pain": pain, "gap_size": 3, "competitor_weakness": 3, "fit": fit},
+        "disconfirming_evidence": "No customer interviews yet.",
+        "validation_question": "Who owns this problem today?",
+    }
+
+
+def hypothesis(title: str, pain: int, fit: int, evidence_ids: list[str]) -> JsonObject:
+    return {
+        "title": title,
+        "recommendation": f"{title} opportunity.",
+        "rationale": "Alternatives leave this gap.",
+        "basis": "hypothesis",
+        "evidence_ids": evidence_ids,
+        **hypothesis_fields(pain, fit),
+    }
+
+
+class GTMInputTests(unittest.TestCase):
+    def test_both_sample_packs_validate_and_have_evidence_indexes(self):
+        counts: list[int] = []
+        for path in SAMPLES:
+            with self.subTest(sample=path.name):
+                pack = load_research_pack(path)
+                index = evidence_id_index(pack)
+                self.assertEqual(len(index), len(cast(list[object], pack["evidence"])))
+                counts.append(len(index))
+        self.assertEqual(counts, [19, 9])
+
+    def test_invalid_research_pack_is_rejected(self):
+        pack = load_research_pack(SAMPLES[0])
+        pack["schema_version"] = 2
+        with self.assertRaisesRegex(ValueError, "schema_version"):
+            validate_research_pack(pack)
+
+
+class GTMContractTests(unittest.TestCase):
+    def test_sub_agent_rejects_unknown_evidence_citation(self):
+        result: JsonObject = {
+            "recommendations": [{
+                "title": "Unsupported",
+                "recommendation": "Do something.",
+                "rationale": "No valid source.",
+                "basis": "hypothesis",
+                "evidence_ids": ["unknown"],
+            }],
+        }
+        with self.assertRaisesRegex(ValueError, "unknown evidence IDs"):
+            validate_sub_agent_result(
+                "market_analysis",
+                result,
+                {"e1"},
+            )
+
+    def test_recommendation_requires_at_least_one_citation(self):
+        result: JsonObject = {
+            "recommendations": [{
+                "title": "No source",
+                "recommendation": "Do something.",
+                "rationale": "No source was cited.",
+                "basis": "hypothesis",
+                "evidence_ids": [],
+            }],
+        }
+        with self.assertRaisesRegex(ValueError, "must cite evidence IDs"):
+            validate_sub_agent_result(
+                "challenger_salesman",
+                result,
+                {"e1"},
+            )
+
+
+class GTMRankingTests(unittest.TestCase):
+    def test_code_ranks_hypotheses_and_ignores_model_score_and_rank(self):
+        low = {**hypothesis("Low", 2, 2, ["e1"]), "score": 99, "rank": 1}
+        high = hypothesis("High", 4, 5, ["e1"])
+        result = validate_sub_agent_result(
+            "competitive_strategy",
+            {"recommendations": [low, high], "gaps": []},
+            {"e1"},
+        )
+        ranked = result["recommendations"]
+        self.assertEqual([item["title"] for item in ranked], ["High", "Low"])
+        self.assertEqual([item.get("rank") for item in ranked], [1, 2])
+        self.assertEqual([item.get("score") for item in ranked], [15, 10])
+
+    def test_ties_break_by_pain_then_evidence_count(self):
+        # All 3 score 12: (4+3+3+2), (3+3+3+3) and (3+3+3+3) with more evidence.
+        a = hypothesis("Fewer sources", 3, 3, ["e1"])
+        b = hypothesis("More sources", 3, 3, ["e1", "e2"])
+        c = hypothesis("Most pain", 4, 2, ["e1"])
+        result = validate_sub_agent_result(
+            "competitive_strategy",
+            {"recommendations": [a, b, c]},
+            {"e1", "e2"},
+        )
+        self.assertEqual(
+            [item["title"] for item in result["recommendations"]],
+            ["Most pain", "More sources", "Fewer sources"],
+        )
+
+    def test_hypothesis_needs_valid_sub_scores_and_validation_fields(self):
+        bad_scores = hypothesis("Bad", 3, 3, ["e1"])
+        bad_scores["sub_scores"] = {"pain": 6, "gap_size": 3, "competitor_weakness": 3, "fit": 3}
+        missing_question = hypothesis("Missing", 3, 3, ["e1"])
+        del missing_question["validation_question"]
+        for item, message in ((bad_scores, "integers 1 to 5"), (missing_question, "validation_question")):
+            with self.subTest(message=message), self.assertRaisesRegex(ValueError, message):
+                validate_sub_agent_result(
+                    "competitive_strategy",
+                    {"recommendations": [item]},
+                    {"e1"},
+                )
+
+
+class GTMMergeTests(unittest.TestCase):
+    RECS: list[dict[str, object]] = [
+        {"id": "r1", "agent": "market_analysis", "title": "Self-hosted", "recommendation": "A"},
+        {"id": "r2", "agent": "challenger_salesman", "title": "VPC track", "recommendation": "B"},
+        {"id": "r3", "agent": "competitive_strategy", "title": "Pricing", "recommendation": "C"},
+    ]
+    GAPS = [
+        ("market_analysis", "No win/loss data."),
+        ("challenger_salesman", "No win or loss evidence."),
+        ("competitive_strategy", "No Enterprise pricing."),
+    ]
+
+    def test_overlapping_items_are_grouped_without_rewriting(self):
+        reply = {
+            "themes": [
+                {"title": "Self-hosted deployment", "recommendation_ids": ["r1", "r2"]},
+                {"title": "Pricing", "recommendation_ids": ["r3"]},
+            ],
+            "gap_groups": [
+                {"gap_ids": ["g1", "g2"], "keep": "g1"},
+                {"gap_ids": ["g3"], "keep": "g3"},
+            ],
+        }
+        result = merge_outputs(FakeModel(merge_reply=reply), self.RECS, self.GAPS)
+        self.assertEqual(result["status"], "merged")
+        self.assertEqual(result["themes"][0]["agents"], ["challenger_salesman", "market_analysis"])
+        self.assertEqual(result["gaps"], [
+            "challenger_salesman, market_analysis: No win/loss data.",
+            "competitive_strategy: No Enterprise pricing.",
+        ])
+
+    def test_invalid_grouping_retries_once_then_falls_back(self):
+        reply = {"themes": [{"title": "Missing r3", "recommendation_ids": ["r1", "r2"]}],
+                 "gap_groups": []}
+        model = FakeModel(merge_reply=reply)
+        result = merge_outputs(model, self.RECS, self.GAPS + [("market_analysis", "No win/loss data.")])
+        self.assertEqual(result["status"], "fallback")
+        self.assertEqual(len(model.merge_requests), 2)
+        self.assertIn("validation_error", model.merge_requests[1])
+        self.assertEqual(len(result["themes"]), 3)
+        self.assertEqual(len(result["gaps"]), 3)
+        self.assertIn("exactly 1 theme", result["error"])
+
+    def test_research_gtm_gaps_already_in_coverage_are_not_repeated(self):
+        result = GTMOrchestrator(FakeModel()).run(load_research_pack(SAMPLES[1]))
+        gtm_lines = [gap for gap in result["research_gaps"] if gap.startswith("Research GTM gap")]
+        coverage = [gap for gap in result["research_gaps"] if gap.startswith("Research coverage")]
+        for line in gtm_lines:
+            field = line.removeprefix("Research GTM gap: ").split()[0]
+            self.assertFalse(any(field in item for item in coverage), line)
+
+
+class GTMOrchestratorTests(unittest.TestCase):
+    def test_complete_and_partial_inputs_merge_three_cited_results(self):
+        for path, expected_status in ((SAMPLES[0], "complete"), (SAMPLES[1], "partial")):
+            with self.subTest(sample=path.name):
+                pack = load_research_pack(path)
+                result = GTMOrchestrator(FakeModel()).run(pack)
+                available = set(evidence_id_index(pack))
+                self.assertEqual(result["status"], expected_status)
+                self.assertEqual(set(result["sub_agents"]), set(SUB_AGENTS))
+                self.assertEqual(len(result["recommendations"]), 3)
+                self.assertEqual(result["merge"]["status"], "merged")
+                self.assertEqual(
+                    sorted(i for theme in result["themes"] for i in theme["recommendation_ids"]),
+                    sorted(item["id"] for item in result["recommendations"]),
+                )
+                ranked = [
+                    item for item in result["recommendations"]
+                    if item["agent"] == "competitive_strategy"
+                ]
+                self.assertEqual([(item["rank"], item["score"]) for item in ranked], [(1, 12)])
+                self.assertTrue(all(
+                    set(cast(list[str], recommendation["evidence_ids"])) <= available
+                    for recommendation in result["recommendations"]
+                ))
+                if expected_status == "partial":
+                    self.assertTrue(result["research_gaps"])
+                    self.assertTrue(result["gaps"])
+
+    def test_all_sub_agents_are_called_concurrently(self):
+        model = FakeModel(barrier=Barrier(len(SUB_AGENTS)))
+        result = GTMOrchestrator(model).run(load_research_pack(SAMPLES[0]))
+        self.assertEqual(result["status"], "complete")
+        self.assertEqual(len(model.prompts), len(SUB_AGENTS))
+
+    def test_failed_sub_agent_is_reported_with_partial_strategy(self):
+        model = FakeModel(fail_agent="Market Analysis")
+        result = GTMOrchestrator(model).run(load_research_pack(SAMPLES[0]))
+        self.assertEqual(result["status"], "partial")
+        market = result["sub_agents"]["market_analysis"]
+        self.assertEqual(market["status"], "failed")
+        if market["status"] != "failed":
+            self.fail("Market analysis failure result was not marked failed.")
+        self.assertIn("RuntimeError", market["error"])
+        self.assertEqual(len(result["recommendations"]), 2)
+
+    def test_invalid_model_citations_fail_the_sub_agents_not_the_run(self):
+        result = GTMOrchestrator(FakeModel(invalid_citations=True)).run(
+            load_research_pack(SAMPLES[0])
+        )
+        self.assertEqual(result["status"], "partial")
+        self.assertTrue(all(
+            result["sub_agents"][name]["status"] == "failed"
+            for name in SUB_AGENTS
+        ))
+        for name in SUB_AGENTS:
+            sub_agent = result["sub_agents"][name]
+            if sub_agent["status"] != "failed":
+                self.fail(f"{name} result was not marked failed.")
+            self.assertIn("unknown evidence IDs", sub_agent["error"])
+
+    def test_invalid_output_is_corrected_by_one_retry(self):
+        model = FakeModel(invalid_first_attempt=True)
+        result = GTMOrchestrator(model).run(load_research_pack(SAMPLES[0]))
+        self.assertEqual(result["status"], "complete")
+        self.assertTrue(all(
+            result["sub_agents"][name]["status"] == "complete" for name in SUB_AGENTS
+        ))
+        self.assertEqual(len(model.prompts), 2 * len(SUB_AGENTS))
+        retries = [prompt for prompt in model.prompts if "validation_error" in prompt]
+        self.assertEqual(len(retries), len(SUB_AGENTS))
+        for retry in retries:
+            self.assertIn("unknown evidence IDs", cast(str, retry["validation_error"]))
+            self.assertIn("previous_output", retry)
+
+    def test_sub_agent_gaps_are_reported_but_do_not_force_partial(self):
+        result = GTMOrchestrator(FakeModel(with_gaps=True)).run(load_research_pack(SAMPLES[0]))
+        self.assertEqual(result["status"], "complete")
+        self.assertEqual(len(result["gaps"]), len(SUB_AGENTS))
+
+    def test_sub_agent_with_no_recommendations_makes_strategy_partial(self):
+        model = FakeModel(empty_agent="Challenger Salesman")
+        result = GTMOrchestrator(model).run(load_research_pack(SAMPLES[0]))
+        self.assertEqual(result["status"], "partial")
+        self.assertEqual(result["sub_agents"]["challenger_salesman"]["status"], "complete")
+
+    def test_every_sub_agent_advises_the_researched_company(self):
+        model = FakeModel()
+        GTMOrchestrator(model).run(load_research_pack(SAMPLES[0]))
+        self.assertEqual(len(model.systems), len(SUB_AGENTS))
+        for system in model.systems:
+            self.assertIn("consultant advising the researched company", system)
+            self.assertIn("not for\na competitor or a new entrant", system)
+
+    def test_retry_happens_only_once(self):
+        model = FakeModel(invalid_citations=True)
+        GTMOrchestrator(model).run(load_research_pack(SAMPLES[0]))
+        self.assertEqual(len(model.prompts), 2 * len(SUB_AGENTS))
+
+    def test_instructions_reach_every_sub_agent(self):
+        model = FakeModel()
+        GTMOrchestrator(model).run(
+            load_research_pack(SAMPLES[0]),
+            instructions="Focus on European B2B SaaS teams.",
+        )
+        self.assertEqual(
+            [prompt["instructions"] for prompt in model.prompts],
+            ["Focus on European B2B SaaS teams."] * len(SUB_AGENTS),
+        )
+
+
+class GTMCLITests(unittest.TestCase):
+    def test_cli_writes_merged_strategy_json(self):
+        model = FakeModel()
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "notion-gtm.json"
+            with patch.object(cli, "default_model", return_value=model):
+                status = cli.main([str(SAMPLES[0]), "--output", str(output)])
+            strategy = json.loads(output.read_text(encoding="utf-8"))
+        self.assertEqual(status, 0)
+        self.assertEqual(strategy["company"]["name"], "Notion")
+        self.assertEqual(len(strategy["recommendations"]), 3)
+        self.assertEqual(strategy["status"], "complete")
+
+
+if __name__ == "__main__":
+    unittest.main()
