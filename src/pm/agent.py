@@ -2,7 +2,8 @@
 
 PM's main purpose is to establish 1 use case before anything is built: "Help {ICP} solve
 {core problem} with {MVP solution}", with a short why and the key assumption to test. The
-action plan and the builder briefs derive from it.
+action plan, a 1-pager, and an MVP idea derive from it. PM proposes; a person
+decides what to do next. Nothing is built.
 
 Flow:
 1. Validate the GTM strategy pack.
@@ -15,6 +16,7 @@ Flow:
    anything left unfinished.
 """
 
+import time
 from typing import Literal, cast
 
 from . import baseline as baseline_rules
@@ -51,8 +53,8 @@ class PMAgent:
             "research_request": None,
             "use_case": None,
             "action_plan": [],
-            "presentation_brief": None,
-            "product_brief": None,
+            "one_pager": None,
+            "mvp_idea": None,
             "planner": {"engine": "", "rejected": [], "missing": [], "error": ""},
         }
         if check["status"] == "fail":
@@ -73,6 +75,7 @@ class PMAgent:
                 return result
 
         state = PlanState(pack)
+        started = time.perf_counter()
         planner = cast(dict[str, object], result["planner"])
         engines: list[str] = []
         if self.deep_planner is not None:
@@ -87,17 +90,19 @@ class PMAgent:
             JsonPlanner(self.model).run(state, instructions, progress)
 
         planner["engine"] = "+".join(engines)
+        planner["duration_s"] = round(time.perf_counter() - started, 1)
         planner["rejected"] = state.rejected[-20:]
         planner["missing"] = state.missing()
         actions = sorted(state.actions, key=lambda a: (a["priority"], ("now", "next", "later")
                                                        .index(a["horizon"])))
         result.update(use_case=state.use_case, action_plan=actions,
-                      presentation_brief=state.presentation,
-                      product_brief=state.product)
+                      one_pager=state.one_pager,
+                      mvp_idea=state.mvp_idea)
         gaps_accepted = check["status"] == "fail"  # only reachable with decision "proceed"
         status: PMStatus = "partial" if state.missing() or gaps_accepted else "complete"
         result["status"] = status
-        progress("plan", {"status": status, "actions": len(actions)}, "done")
+        progress("plan", {"status": status, "actions": len(actions),
+                          "rejected": len(state.rejected), "duration_s": planner["duration_s"]}, "done")
         return result
 
 

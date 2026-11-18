@@ -42,12 +42,12 @@ def plan_json(pack: JsonObject, *, bad_ids: bool = False) -> JsonObject:
         "use_case": use_case_json(rec),
         "actions": [{**action, "purpose": purposes[n - 1], "title": f"Action {n}"}
                     for n in range(1, 4)],
-        "presentation_brief": {
+        "one_pager": {
             "headline": "One workspace for team knowledge", "problem": "Scattered tools.",
             "value_proposition": "Less tool switching.", "target_customer": "Growing teams.",
             "key_points": ["One", "Two", "Three"], "proof_points": [f"Fact ({rec})"],
             "call_to_action": "Book a 20-minute call.", "based_on": [rec]},
-        "product_brief": {
+        "mvp_idea": {
             "product_goal": "Show a shared workspace for one team.", "target_user": "Team lead",
             "core_job": "Keep projects and docs together.",
             "must_have_features": [{"name": f"Feature {n}", "why": "Core job.",
@@ -107,8 +107,8 @@ class ScriptedDeepPlanner:
             key_assumption=use_case["key_assumption"], alternatives=use_case["alternatives"])
         for action in cast(list[JsonObject], plan["actions"])[: self.actions]:
             tools["add_action"](**action)
-        tools["set_presentation_brief"](**cast(JsonObject, plan["presentation_brief"]))
-        tools["set_product_brief"](**cast(JsonObject, plan["product_brief"]))
+        tools["set_one_pager"](**cast(JsonObject, plan["one_pager"]))
+        tools["set_mvp_idea"](**cast(JsonObject, plan["mvp_idea"]))
 
 
 class BaselineTests(unittest.TestCase):
@@ -170,8 +170,8 @@ class PlanningTests(unittest.TestCase):
         self.assertEqual(model.requests, [])
         self.assertEqual([a["id"] for a in cast(list[JsonObject], result["action_plan"])],
                          ["a1", "a2", "a3"])
-        self.assertIsNotNone(result["presentation_brief"])
-        self.assertEqual(len(cast(list[object], cast(JsonObject, result["product_brief"])
+        self.assertIsNotNone(result["one_pager"])
+        self.assertEqual(len(cast(list[object], cast(JsonObject, result["mvp_idea"])
                                   ["must_have_features"])), 3)
 
     def test_unfinished_deepagents_plan_is_completed_by_json_planner(self) -> None:
@@ -205,9 +205,9 @@ class PlanningTests(unittest.TestCase):
                                 ({"horizon": "soon"}, "horizon"), ({"based_on": []}, "at least 1")):
             with self.subTest(change=change), self.assertRaisesRegex(ValueError, message):
                 state.add_action({**good, **change})
-        brief = cast(JsonObject, plan_json(state.pack)["product_brief"])
+        brief = cast(JsonObject, plan_json(state.pack)["mvp_idea"])
         with self.assertRaisesRegex(ValueError, "3 to 5 features"):
-            state.set_product({**brief, "must_have_features": []})
+            state.set_mvp_idea({**brief, "must_have_features": []})
 
     def test_json_planner_stops_after_one_retry(self) -> None:
         pack = load()
@@ -252,7 +252,7 @@ class UseCaseTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "use case first"):
             self.state.add_action(cast(list[JsonObject], plan["actions"])[0])
         with self.assertRaisesRegex(ValueError, "use case first"):
-            self.state.set_product(cast(JsonObject, plan["product_brief"]))
+            self.state.set_mvp_idea(cast(JsonObject, plan["mvp_idea"]))
         self.assertEqual(self.state.missing()[0], "use_case")
 
     def test_plan_needs_a_validate_action(self) -> None:

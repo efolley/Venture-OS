@@ -9,7 +9,7 @@ from typing import Literal, Protocol, TypedDict, cast
 JsonObject = dict[str, object]
 
 INPUT_SCHEMA_VERSION = 4  # GTM strategy pack
-RESULT_SCHEMA_VERSION = 1  # PM result
+RESULT_SCHEMA_VERSION = 2  # PM result (v2: one_pager and mvp_idea)
 SUB_AGENTS = ("market_analysis", "competitive_strategy", "challenger_salesman")
 SNAPSHOT_LINES = (
     "mission", "vision", "problem", "target_market", "icp", "product", "client_value",
@@ -79,7 +79,7 @@ class Feature(TypedDict):
     based_on: list[str]
 
 
-class PresentationBrief(TypedDict):
+class OnePager(TypedDict):
     headline: str
     problem: str
     value_proposition: str
@@ -90,7 +90,7 @@ class PresentationBrief(TypedDict):
     based_on: list[str]
 
 
-class ProductBrief(TypedDict):
+class MVPIdea(TypedDict):
     product_goal: str
     target_user: str
     core_job: str

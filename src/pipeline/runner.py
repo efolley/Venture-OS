@@ -14,6 +14,7 @@ It chains the 3 implemented agents and stops early when a step cannot continue:
 """
 
 import re
+import time
 from dataclasses import dataclass, field
 from typing import Literal
 
@@ -51,6 +52,11 @@ def run_pipeline(
 ) -> PipelineResult:
     """Research 1 company, run GTM on its evidence pack, then PM on the strategy pack."""
     progress("pipeline", {"step": "research", "company": company, "website": website}, "running")
+    started = time.perf_counter()
+
+    def seconds() -> float:
+        return round(time.perf_counter() - started, 1)
+
     try:
         result = research.run(company, website, instructions=instructions, progress=progress)
     except Exception as error:  # noqa: BLE001 - report, do not crash the pipeline
@@ -69,7 +75,10 @@ def run_pipeline(
         return base
     base.pack = result.pack
 
+    progress("pipeline", {"step": "research", "status": result.status, "duration_s": seconds()},
+             "done")
     progress("pipeline", {"step": "gtm", "research_status": result.status}, "running")
+    started = time.perf_counter()
     try:
         strategy = gtm.run(dict(result.pack), instructions=instructions)
     except Exception as error:  # noqa: BLE001 - keep the evidence pack
@@ -78,11 +87,13 @@ def run_pipeline(
         return base
     base.strategy = dict(strategy)
     base.status = "complete" if strategy["status"] == "complete" else "partial"
-    progress("pipeline", {"step": "gtm", "status": strategy["status"]}, base.status)
+    progress("pipeline", {"step": "gtm", "status": strategy["status"], "duration_s": seconds()},
+             base.status)
     if pm is None:
         return base
 
     progress("pipeline", {"step": "pm", "decision": decision}, "running")
+    started = time.perf_counter()
     try:
         plan = pm.run(base.strategy, decision=decision, instructions=instructions,
                       progress=progress)
@@ -96,7 +107,7 @@ def run_pipeline(
         base.status = pm_status  # type: ignore[assignment]
     elif pm_status != "complete":
         base.status = "partial"
-    progress("pipeline", {"step": "pm", "status": pm_status}, base.status)
+    progress("pipeline", {"step": "pm", "status": pm_status, "duration_s": seconds()}, base.status)
     return base
 
 

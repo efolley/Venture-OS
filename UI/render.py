@@ -183,7 +183,7 @@ def _ids(ids: list[str]) -> str:
 
 
 def pm_markdown(result: dict) -> str:
-    """The PM result: baseline and HITL 1, or the use case, action plan, and builder briefs."""
+    """The PM result: baseline and HITL 1, or the use case, action plan, 1-pager, and MVP idea."""
     baseline = result["baseline"]
     out = [f"### PM plan: {esc(result['company']['name'])}",
            f"PM status **{esc(result['status'])}** · baseline **{esc(baseline['status'])}**"
@@ -224,9 +224,9 @@ def pm_markdown(result: dict) -> str:
     return "\n".join(out)
 
 
-def presentation_brief_markdown(brief: dict | None) -> str:
+def one_pager_markdown(brief: dict | None) -> str:
     if not brief:
-        return "_No presentation brief._"
+        return "_No 1-pager._"
     return "\n".join([
         f"**{esc(brief['headline'])}**", "",
         f"- **Problem:** {esc(brief['problem'])}",
@@ -238,9 +238,9 @@ def presentation_brief_markdown(brief: dict | None) -> str:
     ])
 
 
-def product_brief_markdown(brief: dict | None) -> str:
+def mvp_idea_markdown(brief: dict | None) -> str:
     if not brief:
-        return "_No product brief._"
+        return "_No MVP idea._"
     return "\n".join([
         f"**Goal:** {esc(brief['product_goal'])}", "",
         f"- **Target user:** {esc(brief['target_user'])}",
@@ -250,5 +250,5 @@ def product_brief_markdown(brief: dict | None) -> str:
           for f in brief["must_have_features"]],
         "- **Out of scope:** " + esc("; ".join(brief["out_of_scope"])),
         "- **Success criteria:**", *[f"  - {esc(item)}" for item in brief["success_criteria"]],
-        f"- **Demo scenario:** {esc(brief['demo_scenario'])}",
+        f"- **How a user tries it:** {esc(brief['demo_scenario'])}",
     ])

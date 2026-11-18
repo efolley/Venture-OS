@@ -1,57 +1,48 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="680" height="900" viewBox="0 0 680 900" role="img">
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="700" viewBox="0 0 680 700" role="img">
 <title>VentureOS agent pipeline</title>
-<desc>Company name or URL goes to the harness, then the Research ReAct agent, then the GTM orchestrator running market analysis, competitive strategy and challenger salesman in parallel, then the PM agent's company snapshot. If the snapshot is incomplete, HITL 1 sends work back to Research or proceeds. Presentation and Product builders run in parallel, HITL 2 approves, and the Executor acts as a mini AI CRM.</desc>
+<desc>A company name or URL goes to the Researcher, then the GTM orchestrator, which runs market analysis, competitive strategy, and challenger salesperson in parallel. The PM agent checks the basics; if something is missing, a person chooses to research more (back to the Researcher) or proceed. The result is an action plan, a 1-pager, and an MVP idea for a person. Nothing is built or sent.</desc>
 <defs>
 <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#5F5E5A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
 <style>
-text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
-.th{font-size:14px;font-weight:500}.ts{font-size:12px}
+text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;text-anchor:middle}
+.th{font-size:14px;font-weight:600}.ts{font-size:12px}
 .arr{stroke:#5F5E5A;stroke-width:1.2;fill:none}
 .gray rect{fill:#F1EFE8;stroke:#5F5E5A}.gray .th{fill:#444441}.gray .ts{fill:#5F5E5A}
 .purple rect{fill:#EEEDFE;stroke:#534AB7}.purple .th{fill:#3C3489}.purple .ts{fill:#534AB7}
-.coral rect{fill:#FAECE7;stroke:#993C1D}.coral .th{fill:#712B13}.coral .ts{fill:#993C1D}
 .teal rect{fill:#E1F5EE;stroke:#0F6E56}.teal .th{fill:#085041}.teal .ts{fill:#0F6E56}
+.coral rect{fill:#FAECE7;stroke:#993C1D}.coral .th{fill:#712B13}.coral .ts{fill:#993C1D}
 .amber rect{fill:#FAEEDA;stroke:#854F0B}.amber .th{fill:#633806}.amber .ts{fill:#854F0B}
-.lbl{fill:#5F5E5A}
+.lbl{fill:#5F5E5A;font-size:12px}
 </style>
 </defs>
-<rect width="680" height="900" fill="#FFFFFF"/>
-<g class="gray"><rect x="220" y="30" width="240" height="44" rx="8" stroke-width="0.5"/><text class="th" x="340" y="52" text-anchor="middle" dominant-baseline="central">Company name or URL</text></g>
-<line x1="340" y1="74" x2="340" y2="102" class="arr" marker-end="url(#arrow)"/>
-<g class="gray"><rect x="220" y="104" width="240" height="56" rx="8" stroke-width="0.5"/><text class="th" x="340" y="122" text-anchor="middle" dominant-baseline="central">Harness (code, not LLM)</text><text class="ts" x="340" y="142" text-anchor="middle" dominant-baseline="central">Routing, budgets, eval gates</text></g>
-<line x1="340" y1="160" x2="340" y2="188" class="arr" marker-end="url(#arrow)"/>
-<g class="purple"><rect x="220" y="190" width="240" height="56" rx="8" stroke-width="0.5"/><text class="th" x="340" y="208" text-anchor="middle" dominant-baseline="central">1 Research agent</text><text class="ts" x="340" y="228" text-anchor="middle" dominant-baseline="central">ReAct until context is enough</text></g>
-<line x1="220" y1="218" x2="182" y2="218" class="arr" marker-end="url(#arrow)"/>
-<g class="teal"><rect x="30" y="190" width="150" height="56" rx="8" stroke-width="0.5"/><text class="th" x="105" y="208" text-anchor="middle" dominant-baseline="central">Evidence store</text><text class="ts" x="105" y="228" text-anchor="middle" dominant-baseline="central">Claims, sources</text></g>
-<line x1="340" y1="246" x2="340" y2="274" class="arr" marker-end="url(#arrow)"/>
-<g class="purple"><rect x="220" y="276" width="240" height="44" rx="8" stroke-width="0.5"/><text class="th" x="340" y="298" text-anchor="middle" dominant-baseline="central">2 GTM orchestrator</text></g>
-<rect x="30" y="342" width="620" height="100" rx="12" fill="none" stroke="#888780" stroke-width="0.5" stroke-dasharray="4 4"/>
-<line x1="340" y1="320" x2="340" y2="362" class="arr" marker-end="url(#arrow)"/>
-<path d="M340 332 L130 332 L130 362" class="arr" marker-end="url(#arrow)"/>
-<path d="M340 332 L550 332 L550 362" class="arr" marker-end="url(#arrow)"/>
-<g class="coral"><rect x="40" y="364" width="180" height="56" rx="8" stroke-width="0.5"/><text class="th" x="130" y="382" text-anchor="middle" dominant-baseline="central">Market analysis</text><text class="ts" x="130" y="402" text-anchor="middle" dominant-baseline="central">Segments, trends</text></g>
-<g class="coral"><rect x="250" y="364" width="180" height="56" rx="8" stroke-width="0.5"/><text class="th" x="340" y="382" text-anchor="middle" dominant-baseline="central">Competitive strategy</text><text class="ts" x="340" y="402" text-anchor="middle" dominant-baseline="central">Ranked hypotheses</text></g>
-<g class="coral"><rect x="460" y="364" width="180" height="56" rx="8" stroke-width="0.5"/><text class="th" x="550" y="382" text-anchor="middle" dominant-baseline="central">Challenger salesman</text><text class="ts" x="550" y="402" text-anchor="middle" dominant-baseline="central">ICP, GTM, outreach</text></g>
-<text class="ts lbl" x="44" y="434">Run in parallel</text>
-<path d="M130 420 L130 452 L340 452" class="arr"/>
-<path d="M550 420 L550 452 L340 452" class="arr"/>
-<line x1="340" y1="420" x2="340" y2="460" class="arr" marker-end="url(#arrow)"/>
-<g class="purple"><rect x="220" y="462" width="240" height="56" rx="8" stroke-width="0.5"/><text class="th" x="340" y="480" text-anchor="middle" dominant-baseline="central">3 PM agent</text><text class="ts" x="340" y="500" text-anchor="middle" dominant-baseline="central">Checks the snapshot</text></g>
-<line x1="340" y1="518" x2="340" y2="544" class="arr" marker-end="url(#arrow)"/>
-<g class="gray"><rect x="240" y="546" width="200" height="44" rx="8" stroke-width="0.5"/><text class="th" x="340" y="568" text-anchor="middle" dominant-baseline="central">All fields filled?</text></g>
-<line x1="440" y1="568" x2="488" y2="568" class="arr" marker-end="url(#arrow)"/>
-<text class="ts lbl" x="452" y="558">no</text>
-<g class="amber"><rect x="490" y="540" width="160" height="56" rx="8" stroke-width="0.5"/><text class="th" x="570" y="558" text-anchor="middle" dominant-baseline="central">HITL 1</text><text class="ts" x="570" y="578" text-anchor="middle" dominant-baseline="central">Research or proceed</text></g>
-<path d="M650 568 L664 568 L664 218 L462 218" class="arr" stroke-dasharray="4 4" marker-end="url(#arrow)"/>
-<text class="ts lbl" x="300" y="606">yes</text>
-<path d="M340 590 L340 616 L205 616 L205 638" class="arr" marker-end="url(#arrow)"/>
-<path d="M340 616 L475 616 L475 638" class="arr" marker-end="url(#arrow)"/>
-<path d="M570 596 L570 616 L475 616" class="arr"/>
-<g class="purple"><rect x="90" y="640" width="230" height="56" rx="8" stroke-width="0.5"/><text class="th" x="205" y="658" text-anchor="middle" dominant-baseline="central">4 Presentation builder</text><text class="ts" x="205" y="678" text-anchor="middle" dominant-baseline="central">1-pager proposal</text></g>
-<g class="purple"><rect x="360" y="640" width="230" height="56" rx="8" stroke-width="0.5"/><text class="th" x="475" y="658" text-anchor="middle" dominant-baseline="central">5 Product builder</text><text class="ts" x="475" y="678" text-anchor="middle" dominant-baseline="central">Mini-MVP, demo GIF</text></g>
-<path d="M205 696 L205 710 L340 710 L340 724" class="arr" marker-end="url(#arrow)"/>
-<path d="M475 696 L475 710 L340 710" class="arr"/>
-<g class="amber"><rect x="250" y="726" width="180" height="44" rx="8" stroke-width="0.5"/><text class="th" x="340" y="748" text-anchor="middle" dominant-baseline="central">HITL 2 approval</text></g>
-<line x1="340" y1="770" x2="340" y2="798" class="arr" marker-end="url(#arrow)"/>
-<g class="purple"><rect x="220" y="800" width="240" height="56" rx="8" stroke-width="0.5"/><text class="th" x="340" y="818" text-anchor="middle" dominant-baseline="central">6 Executor</text><text class="ts" x="340" y="838" text-anchor="middle" dominant-baseline="central">Mini AI CRM</text></g>
+<rect width="680" height="700" fill="#FFFFFF"/>
+
+<g class="gray"><rect x="220" y="20" width="240" height="44" rx="8"/><text class="th" x="340" y="47">Company name or URL</text></g>
+<path class="arr" d="M340 64V96" marker-end="url(#arrow)"/>
+
+<g class="purple"><rect x="170" y="100" width="340" height="60" rx="8"/><text class="th" x="340" y="124">1 Researcher</text><text class="ts" x="340" y="144">searches the web, keeps only quoted, sourced facts</text></g>
+<path class="arr" d="M340 160V192" marker-end="url(#arrow)"/>
+
+<g class="teal"><rect x="170" y="196" width="340" height="60" rx="8"/><text class="th" x="340" y="220">2 GTM orchestrator</text><text class="ts" x="340" y="240">runs 3 specialists in parallel, then a snapshot</text></g>
+<path class="arr" d="M260 256L130 290" marker-end="url(#arrow)"/>
+<path class="arr" d="M340 256V290" marker-end="url(#arrow)"/>
+<path class="arr" d="M420 256L550 290" marker-end="url(#arrow)"/>
+
+<g class="teal"><rect x="30" y="294" width="200" height="56" rx="8"/><text class="th" x="130" y="317">Market analyst</text><text class="ts" x="130" y="336">size, trends, segments</text></g>
+<g class="teal"><rect x="240" y="294" width="200" height="56" rx="8"/><text class="th" x="340" y="317">Competitive strategist</text><text class="ts" x="340" y="336">gaps, ranked in code</text></g>
+<g class="teal"><rect x="450" y="294" width="200" height="56" rx="8"/><text class="th" x="550" y="317">Challenger salesperson</text><text class="ts" x="550" y="336">ideal customer, insight</text></g>
+<path class="arr" d="M130 350L260 386" marker-end="url(#arrow)"/>
+<path class="arr" d="M340 350V386" marker-end="url(#arrow)"/>
+<path class="arr" d="M550 350L420 386" marker-end="url(#arrow)"/>
+
+<g class="coral"><rect x="170" y="390" width="340" height="60" rx="8"/><text class="th" x="340" y="414">3 PM agent</text><text class="ts" x="340" y="434">checks the basics, picks 1 use case</text></g>
+<path class="arr" d="M340 450V482" marker-end="url(#arrow)"/>
+
+<g class="amber"><rect x="170" y="486" width="340" height="60" rx="8"/><text class="th" x="340" y="510">Human check (if something is missing)</text><text class="ts" x="340" y="530">research more, or proceed with gaps</text></g>
+<path class="arr" d="M170 516H90V130H166" marker-end="url(#arrow)"/>
+<text class="lbl" x="58" y="330" transform="rotate(-90 58 330)">research more</text>
+<path class="arr" d="M340 546V588" marker-end="url(#arrow)"/>
+<text class="lbl" x="392" y="572">proceed</text>
+
+<g class="gray"><rect x="120" y="592" width="440" height="76" rx="8"/><text class="th" x="340" y="618">For a person to review and act on</text><text class="ts" x="340" y="638">action plan · 1-pager proposal · MVP idea</text><text class="ts" x="340" y="656">nothing is built or sent</text></g>
 </svg>

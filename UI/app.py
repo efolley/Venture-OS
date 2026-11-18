@@ -17,7 +17,7 @@ import streamlit as st
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from render import (  # noqa: E402
     competitive_markdown, evidence_rows, gaps_markdown, pack_markdown, pm_markdown,
-    presentation_brief_markdown, product_brief_markdown, recommendations_markdown,
+    one_pager_markdown, mvp_idea_markdown, recommendations_markdown,
     snapshot_markdown, themes_markdown,
 )
 
@@ -127,12 +127,12 @@ def show_pm(result: dict, key: str) -> None:
             st.session_state.pending_pm = (run_id, "proceed")
             st.rerun()
         return
-    if result.get("presentation_brief") or result.get("product_brief"):
-        presentation, product = st.tabs(["Presentation brief", "Product brief"])
+    if result.get("one_pager") or result.get("mvp_idea"):
+        presentation, product = st.tabs(["1-pager", "MVP idea"])
         with presentation:
-            st.markdown(presentation_brief_markdown(result.get("presentation_brief")))
+            st.markdown(one_pager_markdown(result.get("one_pager")))
         with product:
-            st.markdown(product_brief_markdown(result.get("product_brief")))
+            st.markdown(mvp_idea_markdown(result.get("mvp_idea")))
     st.download_button("Download PM JSON", json.dumps(result, indent=2, ensure_ascii=False),
                        file_name=f"pm-plan-{result['input_run_id']}.json",
                        mime="application/json", key=f"download-pm-{key}")

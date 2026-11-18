@@ -1,0 +1,224 @@
+# VentureOS walkthrough
+
+This page follows 1 company through a full VentureOS run, from the name you type to the plan you get back. It explains what happens at each step, what you can see in the log, and how to check the result.
+
+The examples come from real runs on Baseten, Linear, and Vercel. Model output differs a little on every run.
+
+## The big picture
+
+```text
+Company name or website
+        |
+        v
+1. Researcher ............ evidence pack (sourced facts)
+        |
+        v
+2. GTM orchestrator ...... strategy pack (3 specialists + company snapshot)
+        |
+        v
+3. PM agent .............. checks the basics
+        |                    missing something? -> a person chooses: research more, or proceed
+        v
+Plan for a person ........ use case, action plan, 1-pager, MVP idea
+```
+
+The pipeline (`src/pipeline/`) is plain code, not an AI agent. It runs the 3 agents in order, passes each result to the next in memory, and stops early when a step cannot continue. Nothing is sent, built, or published. A person reads the result and decides what to do.
+
+A full run takes about 2.5 minutes:
+
+| Step | Typical time |
+| --- | --- |
+| Researcher | 70 to 110 seconds |
+| GTM orchestrator | about 40 seconds |
+| PM agent | about 40 seconds |
+
+## Before you start
+
+You need Python 3.11 or later, an Anthropic API key, and a Tavily API key. Live runs make billed API calls.
+
+```bash
+python3 -m pip install -e '.[research,api,ui,test]'
+```
+
+```bash
+cp .env.example .env
+```
+
+Put `ANTHROPIC_API_KEY` and `TAVILY_API_KEY` in `.env`.
+
+## Step 0: start a run
+
+```bash
+PYTHONPATH=src python3 -m pipeline Baseten --website baseten.co
+```
+
+You can also type the company in the web UI chat (see the README). Both use the same pipeline.
+
+**Tip:** pass `--website`. With a name only, the Researcher checks the spelling, proposes up to 5 official websites, and stops so you can pick 1 (status `clarify`). That stops a run from researching the wrong company.
+
+## Step 1: Researcher
+
+**Goal:** collect facts about the company that a person could check.
+
+**What it does:**
+1. Fixes the website (for example, it adds `https://`).
+2. Runs a loop: decide what is missing, search, read a page, and record facts. An AI agent chooses what to search next. Code checks every step.
+3. Starts with the company's own site (offering, mission, problem, pricing), then the market (category, size, trends), then competitors (3 to 5, with positioning and pricing), then sales (target customer, buyer, channel).
+4. Stops when the checklist is complete or it hits a limit: 12 searches, 36 sources, and 36 model calls.
+
+**The rules that keep it honest:**
+- A fact counts only if its quote appears word for word on the page.
+- Names and numbers in a fact must appear in its quote.
+- Facts from forums count as inferences, not facts.
+- Pages about a different company are rejected.
+
+**In the log:**
+
+```text
+[plan] running {"round": 1, "gap": "company", "query": "Linear about mission vision", "site": "linear.app"}
+[collect] success {"round": 1, "kept": 3, "skipped": 1}
+[coverage] success {"round": 3, "items": 4, "coverage": {"company": {"status": "partial", "missing": ["company.mission"]}, ...}}
+[pipeline] done {"step": "research", "status": "complete", "duration_s": 72.7}
+```
+
+**Output:** `runs/<company>-research.json`, the evidence pack. Each fact has an ID (`e1`, `e2`, and so on), a statement, a quote, and its source URL. In the test runs, packs had 23 to 25 facts.
+
+**If it is incomplete:** the pack is marked `partial`, lists its gaps, and the run continues. It never crashes.
+
+## Step 2: GTM orchestrator
+
+**Goal:** turn facts into go-to-market advice for the company.
+
+**What it does:**
+1. Sends the evidence to 3 specialists at the same time:
+   - **Market analyst:** market size, trends, and which segments to focus on.
+   - **Competitive strategist:** gaps versus competitors. Each idea gets 4 scores (pain, gap size, competitor weakness, and fit), and code adds them up and ranks the ideas.
+   - **Challenger salesperson:** the ideal customer, a fresh insight to lead with, and how to reach them.
+2. Each specialist sees only the facts it needs and must cite fact IDs. A recommendation is labeled `evidence_based` only when a fact directly supports it; otherwise it is labeled `hypothesis`.
+3. A merge step groups overlapping advice into themes.
+4. A snapshot step writes 9 short lines: mission, vision, problem, target market, ideal customer, product, client value, market brief, and competition. A line with no supporting fact is marked `unknown` instead of being guessed.
+
+**In the log:**
+
+```text
+[pipeline] running {"step": "gtm", "research_status": "complete"}
+[pipeline] complete {"step": "gtm", "status": "complete", "duration_s": 37.8}
+```
+
+**Output:** `runs/<company>-gtm.json`, the strategy pack. In the test runs, packs had 16 to 18 recommendations (IDs `r1`, `r2`, and so on) and 8 of 9 snapshot lines filled. Vision was often missing because many companies do not publish one.
+
+## Step 3: PM agent
+
+**Goal:** turn the strategy into 1 clear proposal that a person can act on.
+
+### 3a. Check the basics
+
+Code, not the AI, checks the strategy pack:
+- Research is complete.
+- 8 snapshot lines are filled (vision is optional).
+- All 3 specialists finished.
+- There are at least 2 ranked ideas, 2 sales recommendations, and 1 market recommendation.
+
+### 3b. Human check (only if something is missing)
+
+If a check fails, PM stops and asks a person:
+
+```text
+PM status: hitl_required
+Baseline: fail (missing: research_complete, snapshot.mission, snapshot.competitive_landscape)
+HITL 1: rerun with --decision research (send gaps to Research) or --decision proceed (plan with gaps marked unknown).
+```
+
+- **Research more** (`--decision research`): PM returns the exact gaps for the Researcher, such as `company.mission`. For now, you start that Research run yourself.
+- **Proceed** (`--decision proceed`): PM plans anyway, treats the gaps as unknown, and marks the result `partial`.
+
+In the UI, these are the **Research more** and **Proceed with gaps** buttons.
+
+### 3c. Plan
+
+An AI planner works through tools, and code checks every call before accepting it:
+
+1. **Use case:** 1 sentence built by code: *"Help {customer} solve {problem} with {MVP}."* It comes with why (1 to 3 sentences with sources), the key assumption that is not yet proven, and up to 2 alternatives it considered.
+2. **Action plan:** 3 to 7 steps. Each has a purpose (validate, prepare, or deliver), an owner, a priority, a horizon (now, next, or later), and a success metric. At least 1 step must test the key assumption.
+3. **1-pager:** a headline, problem, value proposition, target customer, 3 to 5 key points, proof points with sources, and a call to action.
+4. **MVP idea:** the product goal, target user, core job, 3 to 5 must-have features, what is out of scope, success criteria, and a short scenario of a user trying it. Nothing is built.
+
+If the planner breaks a rule (too long, wrong ID, wrong count), code rejects the call and says why, and the planner fixes it. If the planner stops early, a single fallback call completes whatever is missing.
+
+**In the log:**
+
+```text
+[baseline] success {"status": "pass", "missing": []}
+[plan] success {"tool": "set_use_case"}
+[plan] success {"tool": "add_action"}
+[plan] success {"tool": "set_one_pager"}
+[plan] success {"tool": "set_mvp_idea"}
+[plan] done {"status": "complete", "actions": 6, "rejected": 0, "duration_s": 40.5}
+```
+
+**Output:** `runs/<company>-pm.json` with `use_case`, `action_plan`, `one_pager`, and `mvp_idea`.
+
+## The result
+
+The end of a run prints a summary:
+
+```text
+GTM (complete): runs/baseten-gtm.json
+Snapshot: complete
+PM (complete): runs/baseten-pm.json
+Use case: Help engineering and machine learning teams at AI-native startups putting models into production solve slow, fragile moves of models from prototype to production that break under real traffic with a pre-launch production readiness check for model endpoints.
+Actions: 5
+```
+
+From the Baseten run:
+- **1-pager headline:** "Get models from prototype to production without the weeks-long fragile launch"
+- **MVP features:** endpoint intake, a launch-style traffic test, a failure report, and a pass/fail summary
+- **First action:** interview teams on prototype-to-production blockers
+
+## How a run can end
+
+| Status | Meaning | What to do |
+| --- | --- | --- |
+| `complete` | Everything ran and passed its checks | Review the plan |
+| `partial` | It finished with gaps, or you chose proceed | Review it; the gaps are listed |
+| `hitl_required` | PM needs your decision (pipeline exit code 5) | Rerun with `--decision proceed` or `--decision research` |
+| `research_requested` | You chose research more (exit code 4) | Run Research again on the listed gaps |
+| `clarify` | The website was unclear | Rerun with `--website` |
+| `research_failed`, `gtm_failed`, `pm_failed` | A step raised an error | Read the message; earlier results are kept |
+
+## How to check a result
+
+1. **Did it finish?** The last `[pipeline]` line says `complete`, and every step has a `duration_s`.
+2. **Is it sourced?** Every ID in `*-pm.json` (such as `r9` or `e8`) exists in `*-gtm.json` or `*-research.json`. Code already enforces this, but spot-check a few.
+3. **Is it honest?** Guesses are labeled `hypothesis`, and the key assumption says what is not yet proven.
+4. **Is it useful?**
+   - The use case is specific.
+   - The use case is not just the company's own product.
+   - The plan tests before it builds.
+   - The 1-pager is written for the prospect, not for your own team.
+
+Offline tests cover the rules without API calls:
+
+```bash
+PYTHONPATH=src python3 -m unittest discover -s tests
+```
+
+## Known limits
+
+- Output changes from run to run. Review each result before you share it.
+- **Research more** lists the gaps, but you start the new Research run yourself.
+- Success metrics are often not numeric yet.
+- Without a database, Research runs live in memory. GTM and PM results are saved as files in `runs/`.
+
+## 15-second demo script
+
+| Time | On screen | Caption |
+| --- | --- | --- |
+| 0 to 2 s | Empty UI chat. Type "baseten.co" and press Enter. | Prepping for a prospect call? |
+| 2 to 5 s | Sped up 10x: progress lines scroll past (Research, then the 3 specialists in parallel). | 3 agents research, analyze, and plan in about 3 minutes |
+| 5 to 8 s | The company snapshot appears. Point at the source IDs on 1 line (e1, e2). | Every claim cited |
+| 8 to 11 s | The use case card. Zoom on the key assumption labeled hypothesis. | 1 clear use case, and what to test first |
+| 11 to 13 s | Click the 1-pager tab, then the MVP idea tab, about 1 second each. | A pitch you can send. An MVP you could build. |
+| 13 to 15 s | End card with the logo. | VentureOS: from a company name to a cited pitch in 3 minutes |
+
+Record from a saved run you have already reviewed. Speed up the waiting rather than cutting it, so viewers see it is real. Keep the GIF 800 pixels wide or less.
