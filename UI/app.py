@@ -114,18 +114,21 @@ def run_gtm(research_run_id: str, instructions: str) -> dict:
             "strategy": strategy}
 
 
+def choose_hitl(run_id: str, decision: str) -> None:
+    """Button callback: runs before the page re-runs, so the choice is never lost."""
+    st.session_state.pending_pm = (run_id, decision)
+
+
 def show_pm(result: dict, key: str) -> None:
     st.markdown(pm_markdown(result))
     if result["status"] == "hitl_required":
         st.caption("HITL 1: choose how to continue.")
         research_col, proceed_col = st.columns(2)
         run_id = result["input_run_id"]
-        if research_col.button("Research more", key=f"hitl-research-{key}"):
-            st.session_state.pending_pm = (run_id, "research")
-            st.rerun()
-        if proceed_col.button("Proceed with gaps", key=f"hitl-proceed-{key}"):
-            st.session_state.pending_pm = (run_id, "proceed")
-            st.rerun()
+        research_col.button("Research more", key=f"hitl-research-{key}",
+                            on_click=choose_hitl, args=(run_id, "research"))
+        proceed_col.button("Proceed with gaps", key=f"hitl-proceed-{key}",
+                           on_click=choose_hitl, args=(run_id, "proceed"))
         return
     if result.get("one_pager") or result.get("mvp_idea"):
         presentation, product = st.tabs(["1-pager", "MVP idea"])
