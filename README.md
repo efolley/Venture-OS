@@ -1,6 +1,12 @@
 # VentureOS
 
-> **Give it a company name. Get back a cited go-to-market strategy, a 1-pager, and an MVP idea a person can act on.**
+> **Do you like a company and want to build a similar startup?**
+> Give it a company name. Get back a cited GTM strategy, a 1-pager, and an MVP idea a person can act on.
+
+<p align="center">
+  <img src="docs/demo.gif" alt="VentureOS demo: asking to research PostHog, picking posthog.com as the website, then scrolling through the cited evidence pack, company snapshot, ranked competitive gaps, use case with a source quote on hover, action plan, 1-pager, and MVP idea" width="800">
+</p>
+<p align="center"><sub>A real run on PostHog, about 3 minutes, sped up to 15 seconds.</sub></p>
 
 VentureOS is a small team of AI agents. It researches a company, works out how the company should go to market, and proposes what to pitch and what to build next. Every claim links back to a real source, and plain code, not the AI, decides what counts as evidence.
 
@@ -8,7 +14,7 @@ It is built for small B2B agencies and technical consultancies getting ready for
 
 **VentureOS proposes; a person decides.** It does not send emails, build products, or take actions on its own.
 
-For a step-by-step tour of a full run, see the [walkthrough](docs/walkthrough.md).
+**See real output before you install anything:** full reports for [Vercel](examples/vercel.md), [Linear](examples/linear.md), and [Baseten](examples/baseten.md). For a step-by-step tour of a run, see the [walkthrough](docs/walkthrough.md).
 
 ## The problem, and who it is for
 
@@ -17,26 +23,37 @@ For a step-by-step tour of a full run, see the [walkthrough](docs/walkthrough.md
 **Who it is for.** Founders and partners at B2B agencies and technical consultancies with about 2 to 30 people, such as AI and dev shops, GTM consultancies, and fractional product teams. They pitch several new prospects a month, and the person who does the research is also the person who sells.
 
 **Why they care:**
+
 - **Time.** A day of prep becomes about 3 minutes, plus 15 minutes of review.
 - **A sharper pitch.** They arrive with 1 specific use case, a 1-pager they can send, and an MVP idea they could build for the client, instead of "we do AI".
 - **Trust.** Every claim links to its source and guesses are labeled as hypotheses, so they do not repeat something made up in front of a client.
 - **Control.** It only proposes. Nothing is sent or built without them.
+
+### Before and after
+
+|                       | Today                                                      | VentureOS                                                                           |
+| --------------------- | ---------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| Prep time             | Half a day to a day of senior time, so it is often skipped | About 3 minutes to run, plus 15 minutes to review                                   |
+| Sources               | Open browser tabs, and chatbot answers without links       | Every fact quotes its source word for word, with the URL                            |
+| What you walk in with | A generic "we do AI" pitch                                 | 1 specific use case, a 1-pager you can send, and a scoped MVP idea                  |
+| Risk                  | Repeating a made-up fact in front of a client              | Guesses are labeled as hypotheses, and links the search never returned are rejected |
 
 ## Example: input and output
 
 **Input:**
 
 ```bash
-PYTHONPATH=src python3 -m pipeline Baseten --website baseten.co
+ventureos-pipeline Baseten --website baseten.co
 ```
 
-**Output** (about 2.5 minutes, from a real run, shortened):
+**Output** (about 2.5 minutes, from a real run, shortened; [full report](examples/baseten.md)):
 
 > **Use case:** Help ML teams at AI-native startups solve slow, fragile prototype-to-production launches that break under real traffic, with a pre-launch production readiness check for model endpoints.
 >
 > **Key assumption (to test):** these teams see launch delay as a top blocker they would pay to fix. *Not yet proven.*
 >
 > **Action plan:**
+>
 > 1. Validate: interview teams on prototype-to-production blockers.
 > 2. Validate: test the ideal customer against the 2-tier sales motion.
 > 3. Validate: test the readiness-check concept with prospects.
@@ -59,16 +76,16 @@ A simple script (the "pipeline") runs 3 agents, one after another:
 
 1. **Researcher.** Searches the web and reads the company's site, its market, and its competitors. It keeps only facts it can quote word for word from a real page. It stops when it has enough, or when it runs out of budget.
    *You get:* an evidence pack, which is a list of sourced facts.
-
 2. **GTM orchestrator.** Gives the evidence to 3 specialists who work in parallel, like a small consulting team:
+
    - **Market analyst:** how big the market is, where it is heading, and which segments to focus on.
    - **Competitive strategist:** how the company compares with alternatives, and which gaps are worth going after. Code scores and ranks the gaps.
    - **Challenger salesperson:** who the ideal customer is, what fresh insight to lead with, and how to reach them.
 
    It then merges their advice and writes a 1-page company snapshot covering mission, problem, customers, product, market, and competition.
    *You get:* a strategy pack.
-
 3. **PM agent.** First it checks that the strategy covers the basics, such as mission, customers, and competitors. If something is missing, it **stops and asks you** whether to research more or carry on with the gaps marked unknown. Then it picks 1 use case, written as *"Help {customer} solve {problem} with {MVP}"*, and proposes:
+
    - **An action plan:** 3 to 7 next steps. At least 1 step tests the riskiest assumption.
    - **A 1-pager:** a short proposal you can read, edit, and send.
    - **An MVP idea:** what to build and for whom, the must-have features, and what is out of scope. It describes the MVP but does not build it.
@@ -84,63 +101,88 @@ A simple script (the "pipeline") runs 3 agents, one after another:
 
 ## Status
 
-| # | Agent | Status | Version |
-| -- | --- | --- | --- |
-| 1 | Researcher | Working | V.0.3 |
-| 2 | GTM orchestrator (3 specialists and snapshot) | Working | V.0.4 |
-| 3 | PM agent (human check, plan, 1-pager, MVP idea) | Working | V.0.2 |
-| | Pipeline (runs all 3 in 1 command) | Working | V.0.2 |
+| # | Agent                                                        | Status  | Version |
+| - | ------------------------------------------------------------ | ------- | ------- |
+| 1 | Researcher                                                   | Working | V.0.4   |
+| 2 | GTM orchestrator (3 specialists and snapshot)                | Working | V.0.4   |
+| 3 | PM agent (human check, plan, 1-pager, MVP idea)              | Working | V.0.2   |
+|   | Pipeline (runs all 3 in 1 command, writes a Markdown report) | Working | V.0.3   |
 
 All 3 agents run end to end, from the command line and from the web UI. Known limits:
+
 - Output quality varies from run to run, and the strategy can still be thin. See the TODO list below.
 - If you choose "research more", VentureOS lists the gaps, but you have to start the new Research run yourself.
 - Without a database, Research runs are kept in memory and are lost when the API restarts. GTM and PM results are saved to `runs/`.
 
 ## Quick start
 
-You need Python 3.11 or later, an [Anthropic API key](https://console.anthropic.com/), and a [Tavily API key](https://tavily.com/) for web search. Live runs make billed API calls.
+### 1. Install (once)
+
+You need Python 3.11 or later, an [Anthropic API key](https://console.anthropic.com/), and a [Tavily API key](https://tavily.com/) for web search (Tavily has a free tier). You do not need Node.js. Live runs make billed API calls.
 
 ```bash
-python3 -m pip install -e '.[research,api,ui,test]'
+git clone https://github.com/efolley/Venture-OS.git && cd Venture-OS
+```
+
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+```
+
+```bash
+python3 -m pip install -e '.[research,api,test]'
 ```
 
 ```bash
 cp .env.example .env
 ```
 
-Put your `ANTHROPIC_API_KEY` and `TAVILY_API_KEY` in `.env`. Then run the whole flow for 1 company:
+Open `.env` and fill in `ANTHROPIC_API_KEY` and `TAVILY_API_KEY`.
+
+### 2. Launch the web UI
+
+1 command starts the backend and the web UI. Run it from the project folder, so it finds `.env`:
 
 ```bash
-PYTHONPATH=src python3 -m pipeline Linear --website linear.app
+ventureos-api
 ```
 
-It takes a few minutes and writes 3 files to `runs/`:
+Open http://127.0.0.1:8000, then:
 
-| File | What is in it |
-| --- | --- |
-| `linear-research.json` | The evidence pack, with every sourced fact |
-| `linear-gtm.json` | The strategy pack, with the snapshot and recommendations |
-| `linear-pm.json` | The use case, action plan, 1-pager, and MVP idea |
+1. **Start a run.** Type a company name or website, such as `linear.app`, or click a suggestion. A website is best: with a name only, VentureOS asks you to pick the right website first, and you can click your choice.
+2. **Watch it work** (about 3 minutes). Research shows each round live, then the GTM strategy, then the PM plan, each as a card in the chat.
+3. **Decide if asked.** If the strategy misses the basics, the PM card shows 2 buttons: **Research more** or **Proceed with gaps**.
+4. **Read the plan.** The PM card has the use case, the action plan, and **1-pager** and **MVP idea** tabs. Hover any source ID, such as `e12`, to see its word-for-word quote and link.
+5. **Keep it.** Each card has a **Download JSON** button. **Stored research** in the sidebar lists every run, where you can rerun GTM or PM.
+
+Stop the server with `Ctrl+C`. If port 8000 is taken, use another one: `RESEARCH_API_PORT=8080 ventureos-api`.
+
+### Or: the command line
+
+Run the whole flow for 1 company:
+
+```bash
+ventureos-pipeline Linear --website linear.app
+```
+
+It takes a few minutes and writes 4 files to `runs/`:
+
+| File                     | What is in it                                                                                                 |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| `linear-report.md`     | **Start here.** 1 readable report: use case, action plan, 1-pager, MVP idea, snapshot, and every source |
+| `linear-research.json` | The evidence pack, with every sourced fact                                                                    |
+| `linear-gtm.json`      | The strategy pack, with the snapshot and recommendations                                                      |
+| `linear-pm.json`       | The use case, action plan, 1-pager, and MVP idea                                                              |
 
 If the PM agent stops to ask you (exit code 5), run the same command again with `--decision proceed` or `--decision research`.
 
-### Web UI
+### Good to know
 
-Start the backend:
-
-```bash
-PYTHONPATH=src python3 -m pipeline.api
-```
-
-Then start the UI in a second terminal:
-
-```bash
-streamlit run UI/app.py
-```
-
-Type a company name or website in the chat. The chat shows the research first, then the strategy, then the plan, with a **1-pager** tab and an **MVP idea** tab. When the PM agent needs a decision, it shows 2 buttons: **Research more** and **Proceed with gaps**. The **Data management** tab lists every past run.
-
-The backend listens only on `127.0.0.1` and has no login, so run it only on your own machine.
+- **Where results go.** The command line writes the 4 files above. The web UI saves strategies to `runs/gtm/` and plans to `runs/pm/`, named by the Research run ID. To get a Markdown report from a web UI run, use `ventureos-report` (see the developer details).
+- **Research runs are kept in memory** unless you set `RESEARCH_DATABASE_URL` to a PostgreSQL database, so they disappear from **Stored research** when you stop the server.
+- **Private by default.** The server listens only on `127.0.0.1` and has no login, so run it only on your own machine.
+- **"Backend offline"** in the sidebar means the server is not running, or it stopped. Start `ventureos-api` again and reload the page.
+- **`command not found: ventureos-api`** means the virtual environment is not active. Run `source .venv/bin/activate` first.
+- **After you pull new code,** stop and restart `ventureos-api`. It does not reload on its own.
 
 ### How to test it
 
@@ -150,15 +192,17 @@ The backend listens only on `127.0.0.1` and has no login, so run it only on your
    ```
 2. **Live run** (billed, about 2.5 minutes). Run 1 company and read the log. Each `[pipeline]` line shows how long the step took:
    ```bash
-   PYTHONPATH=src python3 -m pipeline Vercel --website vercel.com --output-dir runs/test
+   ventureos-pipeline Vercel --website vercel.com --output-dir runs/test
    ```
 3. **Human check.** Give the PM agent an incomplete strategy pack. It should stop and ask, with exit code 3 (the full pipeline uses exit code 5 for the same stop):
    ```bash
    PYTHONPATH=src python3 -m pm data/notion-gtm-incomplete.json
    ```
+
    Run it again with `--decision proceed`. You should get a plan marked `partial`.
 
 A good result:
+
 - The use case is not just the company's own product.
 - The plan starts with at least 1 validate step.
 - Every claim has a source ID.
@@ -173,7 +217,7 @@ The [walkthrough](docs/walkthrough.md) explains each step in detail.
 
 - **Input:** a company name or website and optional instructions, such as `EU only`. A re-run also takes the previous run ID and its gaps.
 - **Loop:** a [DeepAgents](https://docs.langchain.com/oss/python/deepagents/overview) ReAct agent on Claude Haiku 5.5 with 5 tools: `coverage_status`, `search_web`, `read_source`, `add_evidence`, and `note_gap`. Code validates every tool call.
-- **Name only:** 1 search and 1 model call fix the spelling and propose up to 5 official websites. The run stops with `clarify` until you pick one.
+- **Name only:** 1 search and 1 model call fix the spelling and propose up to 5 official websites. A website counts only if a search result is on it, or a result's text states it (for example a company profile page that says `Website: linear.app`) and a search limited to that site then returns a page on it (up to 2 such checks). The run stops with `clarify` until you pick one.
 - **Evidence rules:**
   - Excerpts are 25 to 400 characters and appear word for word in their source.
   - Names and numbers in a statement must appear in its excerpt.
@@ -235,7 +279,14 @@ PYTHONPATH=src python3 -m gtm data/notion.json --output runs/notion-gtm.json
 PYTHONPATH=src python3 -m pm data/notion-gtm.json --output runs/notion-pm.json
 ```
 
+Render a Markdown report from saved JSON results (any of the 3 is enough):
+
+```bash
+ventureos-report runs/notion-pm.json --strategy data/notion-gtm.json --output runs/notion-report.md
+```
+
 Pipeline options:
+
 - `--decision proceed|research`
 - `--no-pm` stops after GTM.
 - `--instructions "..."`
@@ -243,12 +294,29 @@ Pipeline options:
 
 Set `RESEARCH_DATABASE_URL` to store Research runs in PostgreSQL.
 
-| Endpoint | Purpose |
-| --- | --- |
-| `POST /api/sessions`, `POST /api/sessions/{id}/messages`, `GET /api/jobs/{id}` | Research chat |
-| `GET /api/runs`, `GET /api/runs/{id}`, `GET /api/runs/{id}/rounds` | Stored Research runs |
-| `POST /api/gtm/runs`, `GET /api/gtm/jobs/{id}`, `GET /api/gtm/runs/{research_run_id}` | GTM on a stored evidence pack |
-| `POST /api/pm/runs`, `GET /api/pm/jobs/{id}`, `GET /api/pm/runs/{research_run_id}` | PM on a saved strategy pack (`decision` is optional) |
+| Endpoint                                                                                    | Purpose                                                |
+| ------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| `POST /api/sessions`, `POST /api/sessions/{id}/messages`, `GET /api/jobs/{id}`        | Research chat                                          |
+| `GET /api/runs`, `GET /api/runs/{id}`, `GET /api/runs/{id}/rounds`                    | Stored Research runs                                   |
+| `POST /api/gtm/runs`, `GET /api/gtm/jobs/{id}`, `GET /api/gtm/runs/{research_run_id}` | GTM on a stored evidence pack                          |
+| `POST /api/pm/runs`, `GET /api/pm/jobs/{id}`, `GET /api/pm/runs/{research_run_id}`    | PM on a saved strategy pack (`decision` is optional) |
+
+</details>
+
+<details>
+<summary>Web UI development</summary>
+
+The web UI is React and TypeScript, built with Vite, in `UI/`. It only calls the API and renders the results. Start the backend, then the dev server with live reload on http://localhost:5173 (it forwards `/api` to port 8000):
+
+```bash
+cd UI && npm install && npm run dev
+```
+
+Build it into the Python package, so `ventureos-api` serves it at `/`. Commit the build together with the source change:
+
+```bash
+cd UI && npm run build
+```
 
 </details>
 
@@ -276,24 +344,36 @@ PYTHONPATH=src python3 scripts/live_smoke.py linear.app baseten.co
 src/research/   Agent 1: Researcher
 src/gtm/        Agent 2: GTM orchestrator and its 3 sub-agents
 src/pm/         Agent 3: PM agent
-src/pipeline/   Runs the 3 agents in order; also the API for the UI
-UI/             Streamlit web UI (display only)
+src/pipeline/   Runs the 3 agents in order, writes the Markdown report; also the API for the UI
+UI/             React web UI (display only); its build is in src/pipeline/static/
+examples/       Full reports from real runs
 data/           Sample packs used by the tests
 tests/          Offline tests
-docs/           Pipeline picture
+docs/           Walkthrough and pipeline picture
 ```
 
 </details>
 
+## FAQ
+
+**Why not just ask ChatGPT or another deep research tool?** Those give you a report, and you have to trust its links. VentureOS keeps a fact only if its quote appears word for word on a page the search actually returned, and plain code (not the model) runs that check. It also stops to ask you before planning on thin evidence, and it ends in something you can use in a sales conversation: 1 use case, a 1-pager, and a scoped MVP idea. It is open source, so you can change the rules, the checklist, and the limits.
+
+**What does a run cost?** Every agent uses Claude Haiku 5.5 by default, Anthropic's lowest-cost current model. Research is capped at 12 searches and 36 model calls; GTM and PM add more calls on top. Token cost per run is not measured yet.
+
+**Can it be wrong?** Yes. A quote can be real and still be read too generously, and output differs on every run. That is why guesses are labeled as hypotheses, every claim shows its source, and a person reviews the result before using it.
+
 ## Roadmap
 
-- [x] Researcher, GTM orchestrator, and PM agent working end to end
-- [x] Human check before planning (research more or proceed)
-- [x] PM output as an action plan, a 1-pager, and an MVP idea for a person
+- [X] Researcher, GTM orchestrator, and PM agent working end to end
+- [X] Human check before planning (research more or proceed)
+- [X] PM output as an action plan, a 1-pager, and an MVP idea for a person
+- [X] Example outputs for well-known companies in [`examples/`](examples/)
+- [X] 1 Markdown report per run, with every cited ID resolved to its source
 - [ ] "Research more" restarts Research on the gaps automatically
-- [ ] Simple setup: file storage by default and a one-command start
-- [ ] Example outputs for well-known companies in `examples/`
-- [ ] Download the 1-pager and MVP idea as Markdown
+- [x] 1 command starts the backend and the web UI
+- [ ] Simple setup: file storage by default
+- [ ] Download the report from the web UI
+- [ ] Measure and show token cost per run
 
 ### TODO: output quality
 
@@ -302,3 +382,7 @@ docs/           Pipeline picture
 3. [ ] Research: check the market category against what the company sells before sizing the market.
 4. [ ] Research: require competitor evidence from at least 2 independent sources.
 5. [ ] GTM: require at least 1 recommendation that is not about pricing.
+
+## License
+
+[MIT](LICENSE)

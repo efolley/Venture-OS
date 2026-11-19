@@ -1,8 +1,6 @@
-"""Chat flow, FastAPI endpoints, and UI rendering, with provider doubles. No live calls."""
+"""Chat flow and FastAPI endpoints, with provider doubles. No live calls."""
 
-import sys
 import unittest
-from pathlib import Path
 
 from doubles import FULL_ITEMS, FULL_ROUTES, FakeSearch, WorldModel, page
 from research import Limits, MemoryStore, ResearchAgent
@@ -13,9 +11,6 @@ try:
     from research.api import create_app
 except ImportError:  # the api and test extras are optional
     TestClient = None  # type: ignore[assignment,misc]
-
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "UI"))
-from render import esc, pack_markdown  # noqa: E402
 
 AMBIGUOUS = {"official website": [page("https://acmecloud.com/", "Acme Cloud", "Docs tool"),
                                   page("https://acmecloud.io/", "Acme Cloud Hosting", "Hosting")],
@@ -112,6 +107,8 @@ class ChatParsing(unittest.TestCase):
                                ("tell me about Acme Cloud Inc.", "Acme Cloud Inc"),
                                ("find info about the Mercury startup", "Mercury"),
                                ("Research Baseteen for me", "Baseteen"),
+                               ("Research for me Clerk", "Clerk"),
+                               ("research for us the Acme company", "Acme"),
                                ("Research", "Research")):
             self.assertEqual(company_from_message(text), expected, text)
 
@@ -133,17 +130,6 @@ class ChatParsing(unittest.TestCase):
             FakeSearch(routes), MemoryStore())
         result = agent.run("Linear")
         self.assertEqual(result.candidates[0]["website"], "https://linear.app/")
-
-
-class Rendering(unittest.TestCase):
-    def test_pack_markdown_escapes_and_links(self) -> None:
-        store = MemoryStore()
-        agent = ResearchAgent(WorldModel(FULL_ITEMS), FakeSearch(FULL_ROUTES), store)
-        pack = agent.run("Acme Cloud", "acmecloud.com").pack
-        text = pack_markdown(pack)  # type: ignore[arg-type]
-        self.assertIn("Beta Docs", text)
-        self.assertIn("(https://techcrunch.com/acme-cloud-market)", text)
-        self.assertEqual(esc("[x](javascript:alert)"), "\\[x\\]\\(javascript:alert\\)")
 
 
 if __name__ == "__main__":

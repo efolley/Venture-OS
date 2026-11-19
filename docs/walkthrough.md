@@ -34,10 +34,14 @@ A full run takes about 2.5 minutes:
 
 ## Before you start
 
-You need Python 3.11 or later, an Anthropic API key, and a Tavily API key. Live runs make billed API calls.
+You need Python 3.11 or later, an Anthropic API key, and a Tavily API key. You do not need Node.js. Live runs make billed API calls. Run these once from the project folder:
 
 ```bash
-python3 -m pip install -e '.[research,api,ui,test]'
+python3 -m venv .venv && source .venv/bin/activate
+```
+
+```bash
+python3 -m pip install -e '.[research,api,test]'
 ```
 
 ```bash
@@ -48,13 +52,23 @@ Put `ANTHROPIC_API_KEY` and `TAVILY_API_KEY` in `.env`.
 
 ## Step 0: start a run
 
+There are 2 ways to run the same pipeline. Pick 1.
+
+**Web UI.** Start the server from the project folder, then open http://127.0.0.1:8000:
+
 ```bash
-PYTHONPATH=src python3 -m pipeline Baseten --website baseten.co
+ventureos-api
 ```
 
-You can also type the company in the web UI chat (see the README). Both use the same pipeline.
+Type `baseten.co` in the chat, or click a suggestion, and press Enter. The chat shows each step as it happens. Stop the server with `Ctrl+C` when you are done.
 
-**Tip:** pass `--website`. With a name only, the Researcher checks the spelling, proposes up to 5 official websites, and stops so you can pick 1 (status `clarify`). That stops a run from researching the wrong company.
+**Command line.** Run 1 command and read the log:
+
+```bash
+ventureos-pipeline Baseten --website baseten.co
+```
+
+**Tip:** give a website, not just a name. With a name only, the Researcher checks the spelling, proposes up to 5 official websites, and stops so you can pick 1 (status `clarify`). In the web UI, click your choice. On the command line, run again with `--website`. That stops a run from researching the wrong company.
 
 ## Step 1: Researcher
 
@@ -83,7 +97,9 @@ You can also type the company in the web UI chat (see the README). Both use the 
 
 **Output:** `runs/<company>-research.json`, the evidence pack. Each fact has an ID (`e1`, `e2`, and so on), a statement, a quote, and its source URL. In the test runs, packs had 23 to 25 facts.
 
-**If it is incomplete:** the pack is marked `partial`, lists its gaps, and the run continues. It never crashes.
+**In the web UI:** a "Researching the web" line with a timer, and each round as it happens, such as "Round 2: searching for market" and "Round 2: kept 3 pages, skipped 1". When it finishes, the evidence pack card shows the coverage of company, market, competitors, and sales, the key facts with their IDs, and the full evidence table.
+
+**If it is incomplete:** the pack is marked `partial`, lists its gaps, and the run continues. It never crashes. In the web UI, a **Research the missing items** button starts a second Research run on just those gaps.
 
 ## Step 2: GTM orchestrator
 
@@ -104,6 +120,8 @@ You can also type the company in the web UI chat (see the README). Both use the 
 [pipeline] running {"step": "gtm", "research_status": "complete"}
 [pipeline] complete {"step": "gtm", "status": "complete", "duration_s": 37.8}
 ```
+
+**In the web UI:** "Building the GTM strategy" with a timer, then the strategy card. It shows the 9-line snapshot and 4 tabs: **Competitive analysis** (ideas ranked by score, each with a question to validate it), **Sales strategy**, **Market analysis**, and **Themes and gaps**.
 
 **Output:** `runs/<company>-gtm.json`, the strategy pack. In the test runs, packs had 16 to 18 recommendations (IDs `r1`, `r2`, and so on) and 8 of 9 snapshot lines filled. Vision was often missing because many companies do not publish one.
 
@@ -132,7 +150,7 @@ HITL 1: rerun with --decision research (send gaps to Research) or --decision pro
 - **Research more** (`--decision research`): PM returns the exact gaps for the Researcher, such as `company.mission`. For now, you start that Research run yourself.
 - **Proceed** (`--decision proceed`): PM plans anyway, treats the gaps as unknown, and marks the result `partial`.
 
-In the UI, these are the **Research more** and **Proceed with gaps** buttons.
+In the web UI, the PM card shows the question with 2 buttons: **Research more** and **Proceed with gaps**. Click 1 and PM runs again with your answer. After **Research more**, start the new Research run in the chat yourself.
 
 ### 3c. Plan
 
@@ -156,11 +174,13 @@ If the planner breaks a rule (too long, wrong ID, wrong count), code rejects the
 [plan] done {"status": "complete", "actions": 6, "rejected": 0, "duration_s": 40.5}
 ```
 
-**Output:** `runs/<company>-pm.json` with `use_case`, `action_plan`, `one_pager`, and `mvp_idea`.
+**In the web UI:** the PM card shows the use case, the action plan as a timeline (validate, prepare, deliver), and **1-pager** and **MVP idea** tabs. Hover any source ID, such as `e12` or `r5`, to see the quote and link, or the recommendation, behind it.
+
+**Output:** `runs/<company>-pm.json` with `use_case`, `action_plan`, `one_pager`, and `mvp_idea`. Web UI runs save to `runs/gtm/<run id>.json` and `runs/pm/<run id>.json` instead.
 
 ## The result
 
-The end of a run prints a summary:
+On the command line, the end of a run prints a summary:
 
 ```text
 GTM (complete): runs/baseten-gtm.json
@@ -168,7 +188,12 @@ Snapshot: complete
 PM (complete): runs/baseten-pm.json
 Use case: Help engineering and machine learning teams at AI-native startups putting models into production solve slow, fragile moves of models from prototype to production that break under real traffic with a pre-launch production readiness check for model endpoints.
 Actions: 5
+Report: runs/baseten-report.md
 ```
+
+In the web UI, the result stays in the chat, and **Stored research** in the sidebar lists every run with its evidence, strategy, plan, rounds, and sources. Each card has a download button for its JSON.
+
+`runs/<company>-report.md` puts everything in 1 readable file: the use case, action plan, 1-pager, MVP idea, snapshot, ranked hypotheses, and gaps, with a Sources section that turns every cited ID into its quote and URL. See the [full Baseten report](../examples/baseten.md).
 
 From the Baseten run:
 - **1-pager headline:** "Get models from prototype to production without the weeks-long fragile launch"
@@ -181,15 +206,15 @@ From the Baseten run:
 | --- | --- | --- |
 | `complete` | Everything ran and passed its checks | Review the plan |
 | `partial` | It finished with gaps, or you chose proceed | Review it; the gaps are listed |
-| `hitl_required` | PM needs your decision (pipeline exit code 5) | Rerun with `--decision proceed` or `--decision research` |
+| `hitl_required` | PM needs your decision (pipeline exit code 5) | Click a button in the web UI, or rerun with `--decision proceed` or `--decision research` |
 | `research_requested` | You chose research more (exit code 4) | Run Research again on the listed gaps |
-| `clarify` | The website was unclear | Rerun with `--website` |
+| `clarify` | The website was unclear | Click the right website in the web UI, or rerun with `--website` |
 | `research_failed`, `gtm_failed`, `pm_failed` | A step raised an error | Read the message; earlier results are kept |
 
 ## How to check a result
 
-1. **Did it finish?** The last `[pipeline]` line says `complete`, and every step has a `duration_s`.
-2. **Is it sourced?** Every ID in `*-pm.json` (such as `r9` or `e8`) exists in `*-gtm.json` or `*-research.json`. Code already enforces this, but spot-check a few.
+1. **Did it finish?** In the web UI, every step has a green check. On the command line, the last `[pipeline]` line says `complete`, and every step has a `duration_s`.
+2. **Is it sourced?** Every ID in `*-pm.json` (such as `r9` or `e8`) exists in `*-gtm.json` or `*-research.json`. Code already enforces this, but spot-check a few: open the quote and URL in the Sources section of `*-report.md`.
 3. **Is it honest?** Guesses are labeled `hypothesis`, and the key assumption says what is not yet proven.
 4. **Is it useful?**
    - The use case is specific.
@@ -208,7 +233,7 @@ PYTHONPATH=src python3 -m unittest discover -s tests
 - Output changes from run to run. Review each result before you share it.
 - **Research more** lists the gaps, but you start the new Research run yourself.
 - Success metrics are often not numeric yet.
-- Without a database, Research runs live in memory. GTM and PM results are saved as files in `runs/`.
+- Without a database, Research runs live in memory and disappear from **Stored research** when the server stops. GTM and PM results are saved as files in `runs/`.
 
 ## 15-second demo script
 

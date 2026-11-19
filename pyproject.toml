@@ -1,18 +1,21 @@
 [build-system]
-requires = ["setuptools>=61"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "ventureos-research"
-version = "0.3.0"
-description = "VentureOS Research agent and GTM orchestrator: evidence packs and evidence-linked GTM strategy"
+name = "ventureos"
+version = "0.4.0"
+description = "Give it a company name, get a cited go-to-market strategy, a 1-pager, and an MVP idea. 3 Claude agents; code verifies every citation."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+keywords = ["ai-agents", "claude", "deepagents", "go-to-market", "research-agent", "llm"]
 requires-python = ">=3.11"
 dependencies = []
 
 [project.optional-dependencies]
 research = ["anthropic>=1.0", "deepagents>=0.7", "langchain-anthropic>=1.0", "psycopg[binary]>=3.2,<4", "python-dotenv>=1.0,<2"]
 api = ["fastapi>=0.110,<1", "uvicorn>=0.29,<1"]
-ui = ["streamlit>=1.35,<2"]
 test = ["httpx>=0.27,<1"]
 
 [project.scripts]
@@ -20,10 +23,16 @@ ventureos-research = "research.__main__:main"
 ventureos-research-api = "research.api:main"
 ventureos-gtm = "gtm.cli:main"
 ventureos-pipeline = "pipeline.__main__:main"
+ventureos-api = "pipeline.api:main"
+ventureos-report = "pipeline.report:main"
 ventureos-pm = "pm.__main__:main"
+
+[project.urls]
+Repository = "https://github.com/efolley/Venture-OS"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
 research = ["pack.schema.json", "migrations/*.sql"]
+pipeline = ["static/*", "static/assets/*"]
