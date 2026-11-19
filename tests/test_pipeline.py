@@ -10,6 +10,7 @@ from unittest.mock import patch
 from doubles import FULL_ITEMS, FULL_ROUTES, FakeSearch, WorldModel, page
 from gtm.orchestrator import GTMOrchestrator
 from pipeline import __main__ as cli
+from pipeline.report import report_markdown
 from pipeline.runner import run_pipeline, slug
 from research import MemoryStore, ResearchAgent
 from research.contracts import JsonObject
@@ -128,9 +129,46 @@ class PipelineTests(unittest.TestCase):
             planned = cli.main(["Acme Cloud", "--website", "acmecloud.com",
                                 "--output-dir", directory, "--decision", "proceed"])
             plan = json.loads((Path(directory) / "acme-cloud-pm.json").read_text())
+            report = (Path(directory) / "acme-cloud-report.md").read_text()
         self.assertEqual((waiting, planned), (5, 0))
         self.assertEqual(pm["status"], "hitl_required")
         self.assertTrue(plan["use_case"]["statement"].startswith("Help "))
+        self.assertIn(plan["use_case"]["statement"], report)
+        self.assertIn("## Action plan", report)
+        self.assertIn("## Sources", report)
+
+
+class ReportTests(unittest.TestCase):
+    def test_report_resolves_cited_ids_and_keeps_tables_intact(self) -> None:
+        research = {"company": {"name": "Acme"}, "status": "complete", "evidence": [
+            {"id": "e1", "statement": "Acme sells A | B.", "excerpt": "We sell A | B.\nToday.",
+             "basis": "fact", "url": "https://acme.com/about"}]}
+        strategy = {"company": {"name": "Acme"}, "status": "complete", "gaps": [],
+                    "recommendations": [{"id": "r1", "agent": "market_analysis", "title": "Focus",
+                                         "recommendation": "Go upmarket.", "basis": "hypothesis",
+                                         "evidence_ids": ["e1"]}],
+                    "snapshot": {"lines": {"mission": {"status": "found", "text": "Make A.",
+                                                       "basis": "evidence_based",
+                                                       "evidence_ids": ["e1"]}}}}
+        report = report_markdown(None, strategy, research)
+        self.assertIn("# VentureOS report: Acme", report)
+        self.assertIn("- **Mission:** Make A. `e1`", report)
+        self.assertIn("- **Vision:** _unknown_", report)
+        self.assertIn('| `e1` | Acme sells A \\| B. | "We sell A \\| B. Today." | '
+                      "<https://acme.com/about> |", report)
+        self.assertIn("| `r1` | Market analyst |", report)
+
+    def test_report_shows_the_hitl_question(self) -> None:
+        pm = {"company": {"name": "Acme"}, "status": "hitl_required",
+              "baseline": {"missing": ["snapshot.mission"]},
+              "hitl": {"question": "Research more or proceed?"}}
+        report = report_markdown(pm)
+        self.assertIn("Missing: snapshot.mission.", report)
+        self.assertIn("**Question:** Research more or proceed?", report)
+
+    def test_report_needs_a_result(self) -> None:
+        with self.assertRaises(ValueError):
+            report_markdown()
 
 
 try:
@@ -199,6 +237,23 @@ class PipelineApiTests(unittest.TestCase):
         self.assertEqual(saved["decision"], "proceed")
         self.assertTrue((self.results / "pm" / f"{run_id}.json").exists())
 
+    def test_web_ui_is_served_next_to_the_api(self) -> None:
+        static = self.results / "static"
+        (static / "assets").mkdir(parents=True)
+        (static / "index.html").write_text("<!doctype html><title>VentureOS</title>")
+        (static / "assets" / "app.js").write_text("console.log(1)")
+        client = TestClient(create_app(ResearchAgent(WorldModel(FULL_ITEMS), FakeSearch(FULL_ROUTES), self.store),
+                                       self.store, GTMOrchestrator(FakeModel()), run_inline=True,
+                                       results_dir=self.results, static_dir=static))
+        page = client.get("/")
+        self.assertEqual(page.status_code, 200)
+        self.assertIn("<title>VentureOS</title>", page.text)
+        self.assertEqual(client.get("/assets/app.js").status_code, 200)
+        self.assertEqual(client.get("/api/health").json()["status"], "ok")
+        without = TestClient(create_app(ResearchAgent(WorldModel(FULL_ITEMS), FakeSearch(FULL_ROUTES), self.store),
+                                        self.store, GTMOrchestrator(FakeModel()), static_dir=None))
+        self.assertEqual(without.get("/").status_code, 404)
+
     def test_gtm_needs_a_known_run_with_a_pack(self) -> None:
         missing = "00000000-0000-0000-0000-000000000000"
         self.assertEqual(self.client.post("/api/gtm/runs",
@@ -206,35 +261,6 @@ class PipelineApiTests(unittest.TestCase):
         self.assertEqual(self.client.post("/api/gtm/runs",
                                           json={"research_run_id": "not-a-uuid"}).status_code, 404)
         self.assertEqual(self.client.get("/api/gtm/jobs/nope").status_code, 404)
-
-
-class StrategyRenderTests(unittest.TestCase):
-    def test_strategy_renders_escaped_snapshot_and_ranked_hypotheses(self) -> None:
-        import sys
-        sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "UI"))
-        from render import competitive_markdown, snapshot_markdown
-
-        pack = research_agent().run("Acme Cloud", "acmecloud.com").pack
-        strategy = cast(JsonObject, dict(GTMOrchestrator(FakeModel()).run(dict(cast(dict, pack)))))
-        strategy["snapshot"]["company"]["name"] = "Acme *Cloud*"  # type: ignore[index]
-        text = snapshot_markdown(strategy)
-        self.assertIn("Acme \\*Cloud\\*", text)
-        self.assertIn("Mission:", text)
-        self.assertIn("| 1 | 12/20 |", competitive_markdown(strategy))
-
-    def test_pm_result_renders_use_case_and_hitl(self) -> None:
-        import sys
-        sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "UI"))
-        from render import pm_markdown
-
-        pack = research_agent().run("Acme Cloud", "acmecloud.com").pack
-        strategy = dict(GTMOrchestrator(FakeModel()).run(dict(cast(dict, pack))))
-        waiting = PMAgent(FakePMModel()).run(strategy)
-        self.assertIn("HITL 1", pm_markdown(waiting))
-        planned = PMAgent(FakePMModel()).run(strategy, decision="proceed")
-        text = pm_markdown(planned)
-        self.assertIn("#### Use case", text)
-        self.assertIn("validate", text)
 
 
 if __name__ == "__main__":

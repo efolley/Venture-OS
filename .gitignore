@@ -52,3 +52,7 @@ coverage.xml
 # Agent runtime output
 logs/
 runs/
+
+# Web UI dependencies (the build in src/pipeline/static/ is committed)
+node_modules/
+*.tsbuildinfo

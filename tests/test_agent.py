@@ -64,6 +64,38 @@ class AgentLoop(unittest.TestCase):
                          ["https://basecamp.com/", "https://basecampoutdoor.com/"])
         self.assertEqual(self.store.get_run(result.run_id)["status"], "clarify")  # type: ignore[index]
 
+    def test_website_stated_on_a_profile_page_is_confirmed_by_a_site_search(self) -> None:
+        profile = page("https://tavily.com/knowledge/company/abc", "Linear",
+                       "Linear ID: abc Website: www.linear.app Legal name: Linear Orbit, Inc.")
+        routes = {"official website": [profile,
+                                       page("https://leadiq.com/c/linear-a/1", "Linear A", "x")],
+                  "Linear": [page("https://linear.app/about", "About Linear", "Linear home")]}
+        model = WorldModel(resolve={"corrected_name": "Linear", "candidates": [
+            {"name": "Linear", "website": "https://linear.app", "reason": "stated on profile"},
+            {"name": "Linear A", "website": "https://leadiq.com", "reason": "directory"}]})
+        result = self.agent(routes, model).run("Linear")
+        self.assertEqual([c["website"] for c in result.candidates],
+                         ["https://linear.app/", "https://leadiq.com/"])
+        self.assertEqual(self.search.calls[1], ("Linear", ["linear.app"]))
+
+    def test_stated_website_without_search_results_is_rejected(self) -> None:
+        profile = page("https://tavily.com/knowledge/company/abc", "Linear", "Website: linear.app")
+        model = WorldModel(resolve={"corrected_name": "Linear", "candidates": [
+            {"name": "Linear", "website": "linear.app", "reason": "stated"}]})
+        result = self.agent({"official website": [profile]}, model).run("Linear")
+        self.assertNotIn("https://linear.app/", [c["website"] for c in result.candidates])
+        self.assertEqual(self.search.calls[1], ("Linear", ["linear.app"]))
+
+    def test_invented_website_is_rejected_without_searching(self) -> None:
+        routes = {"official website": [page("https://basecamp.com/", "Basecamp", "Project tool")]}
+        model = WorldModel(resolve={"candidates": [
+            {"name": "Basecamp", "website": "https://basecamp.com", "reason": "software"},
+            {"name": "Invented", "website": "https://not-in-results.com", "reason": "x"},
+            {"name": "Lookalike", "website": "https://notbasecamp.com", "reason": "x"}]})
+        result = self.agent(routes, model).run("Basecamp")
+        self.assertEqual([c["website"] for c in result.candidates], ["https://basecamp.com/"])
+        self.assertEqual(len(self.search.calls), 1)
+
     def test_name_only_proposes_corrected_name_and_websites(self) -> None:
         routes = {"official website": [page("https://www.acmecloud.com/", "Acme Cloud", "home"),
                                        page("https://g2.com/acme", "Acme Cloud reviews", "x")],

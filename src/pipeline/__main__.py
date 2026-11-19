@@ -1,8 +1,10 @@
-"""Run the full flow for 1 company: Research, then the GTM orchestrator.
+"""Run the full flow for 1 company: Research, the GTM orchestrator, then the PM agent.
 
-Writes the evidence pack and the strategy pack (with the company snapshot) as JSON:
+Writes each result as JSON, plus 1 readable Markdown report:
   <output-dir>/<company>-research.json
   <output-dir>/<company>-gtm.json
+  <output-dir>/<company>-pm.json
+  <output-dir>/<company>-report.md
 """
 
 import argparse
@@ -18,6 +20,7 @@ from research.logs import setup_logging
 from research.providers import TavilySearch, default_model
 from research.store import default_store
 
+from .report import report_markdown
 from .runner import default_pm, run_pipeline, slug
 
 EXIT_CODES = {"complete": 0, "partial": 0, "clarify": 3, "research_failed": 2, "gtm_failed": 1,
@@ -97,6 +100,10 @@ def main(argv: list[str] | None = None) -> int:
             use_case = cast(JsonObject, result.pm["use_case"])
             print(f"Use case: {use_case['statement']}")
             print(f"Actions: {len(cast(list[object], result.pm['action_plan']))}")
+    if result.strategy is not None or result.pm is not None:
+        path = args.output_dir / f"{name}-report.md"
+        path.write_text(report_markdown(result.pm, result.strategy, result.pack), encoding="utf-8")
+        print(f"Report: {path}")
     return EXIT_CODES[result.status]
 
 

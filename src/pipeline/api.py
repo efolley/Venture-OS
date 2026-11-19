@@ -5,7 +5,8 @@ The UI talks only to this backend. Research stays unaware of GTM: this module bu
 Research app and adds GTM endpoints next to it. A GTM run reads the stored evidence pack
 for a Research run and writes the strategy pack to `runs/gtm/<research run id>.json`; a PM
 run reads that strategy pack and writes `runs/pm/<research run id>.json`, so results survive
-a restart. Bind to loopback only: there is no auth.
+a restart. When the built web UI is present (`src/pipeline/static/`, built from `UI/`), it is
+served at `/`, so 1 command starts everything. Bind to loopback only: there is no auth.
 """
 
 import json
@@ -30,6 +31,7 @@ from research.store import Store
 
 DEFAULT_RESULTS_DIR = Path("runs") / "gtm"
 DEFAULT_PM_RESULTS_DIR = Path("runs") / "pm"
+STATIC_DIR = Path(__file__).resolve().parent / "static"
 
 
 class GTMRequest(BaseModel):
@@ -61,6 +63,7 @@ def create_app(
     run_inline: bool = False,
     results_dir: Path = DEFAULT_RESULTS_DIR,
     pm_results_dir: Path = DEFAULT_PM_RESULTS_DIR,
+    static_dir: Path | None = STATIC_DIR,
 ) -> FastAPI:
     """Build the Research app and add GTM and PM endpoints. run_inline=True is for tests."""
     app = create_research_app(agent, store, run_inline=run_inline)
@@ -198,6 +201,11 @@ def create_app(
         return {"research_run_id": run_id, "running_job_id": job_id,
                 "result": cast(object, load_pm(run_id))}
 
+    if static_dir is not None and (static_dir / "index.html").is_file():
+        # Mounted last so every /api route above wins.
+        from fastapi.staticfiles import StaticFiles
+
+        app.mount("/", StaticFiles(directory=static_dir, html=True), name="ui")
     return app
 
 
@@ -223,6 +231,8 @@ def main() -> None:
     import uvicorn
 
     port = int(os.getenv("RESEARCH_API_PORT", "8000"))
+    if (STATIC_DIR / "index.html").is_file():
+        print(f"VentureOS is running: open http://127.0.0.1:{port}", flush=True)
     uvicorn.run(_default_app(), host="127.0.0.1", port=port)
 
 

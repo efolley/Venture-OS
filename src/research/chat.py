@@ -22,7 +22,8 @@ _WEBSITE = re.compile(r"^(?:https?://\S+|(?:[\w-]+\.)+[A-Za-z]{2,}(?:/\S*)?)$")
 _REQUEST_PREFIX = re.compile(
     r"^(?:please\s+)?(?:can you\s+|could you\s+)?(?:research|look up|lookup|find|search|analy[sz]e|"
     r"investigate|check|tell me about|what about|info(?:rmation)? (?:on|about)|find info(?:rmation)? "
-    r"(?:on|about))\s+(?:(?:information|info|data)\s+(?:on|about|for)\s+)?(?:the\s+)?",
+    r"(?:on|about))\s+(?:for\s+(?:me|us)\s+)?(?:(?:information|info|data)\s+(?:on|about|for)\s+)?"
+    r"(?:the\s+)?",
     re.IGNORECASE,
 )
 _COMPANY_SUFFIX = re.compile(

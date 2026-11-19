@@ -8,11 +8,11 @@ Implemented on `dev`:
 
 | Agent | Package | Version | Source branch |
 | --- | --- | --- | --- |
-| 1 Research | `src/research/` | V.0.3 (`0.3.0`) | `agents/research` |
+| 1 Research | `src/research/` | V.0.4 (`0.4.0`) | `agents/research` |
 | 2 GTM orchestrator | `src/gtm/` | V.0.4 (`0.4.0`) | `agents/GTM_orchestrator` |
 | 3 PM agent | `src/pm/` | V.0.2 (`0.2.0`) | `agents/pm` |
 
-Also implemented: the pipeline (`src/pipeline/`, V.0.2), which runs Research, GTM, and PM in 1 command, passes each result in memory, and stops at HITL when PM's baseline fails. Planned: automatic Research re-run on a `research` decision, simpler setup, and example outputs (see the README roadmap). Presentation builder, Product builder, HITL 2, and Executor were removed from the architecture. Never describe planned behavior as working software.
+Also implemented: the pipeline (`src/pipeline/`, V.0.3), which runs Research, GTM, and PM in 1 command, passes each result in memory, stops at HITL when PM's baseline fails, and writes 1 Markdown report per run (`src/pipeline/report.py`) that resolves every cited ID to its source. Example reports from real runs are in `examples/`. Planned: automatic Research re-run on a `research` decision, simpler setup, report download in the UI, and token cost per run (see the README roadmap). Presentation builder, Product builder, HITL 2, and Executor were removed from the architecture. Never describe planned behavior as working software.
 
 ## Source of truth
 
@@ -38,8 +38,9 @@ The pipeline ends with the PM result. The pipeline is deterministic code, not an
 - `src/research/`: Research agent (contracts, checklist, planner, sources, evidence, DeepAgents loop, pack and schema, store and migrations, providers, chat, FastAPI backend, CLI).
 - `src/gtm/`: GTM orchestrator (inputs, sub-agents, contracts and ranking, orchestrator, merge step, snapshot, CLI).
 - `src/pm/`: PM agent (contracts, baseline, use case and planner tools, DeepAgents and JSON planners, CLI). It reads the GTM strategy pack as JSON and imports no other agent.
-- `src/pipeline/`: the pipeline. Deterministic code that runs Research, stops on `clarify` or failure, runs GTM on the evidence pack, then PM on the strategy pack, stopping at HITL 1 when needed. It may import all agents; agents still never import each other except `gtm` reading `research` contracts.
-- `UI/`: Streamlit client for the pipeline API (`src/pipeline/api.py`: Research endpoints plus GTM and PM endpoints). Research never imports GTM or PM; the pipeline API adds them next to it. It only calls the API and renders output; never put processing in the UI.
+- `src/pipeline/`: the pipeline. Deterministic code that runs Research, stops on `clarify` or failure, runs GTM on the evidence pack, then PM on the strategy pack, stopping at HITL 1 when needed. `report.py` formats the JSON results as Markdown and adds no new claims. It may import all agents; agents still never import each other except `gtm` reading `research` contracts.
+- `UI/`: React and TypeScript client (Vite) for the pipeline API (`src/pipeline/api.py`: Research endpoints plus GTM and PM endpoints). Research never imports GTM or PM; the pipeline API adds them next to it. It only calls the API and renders output; never put processing in the UI. `npm run build` writes to `src/pipeline/static/`, which is committed and served by `ventureos-api` at `/`, so users need no Node.js. After changing `UI/src/`, rebuild and commit the build. For development, run `npm run dev` in `UI/` (port 5173, proxies `/api` to port 8000). React escapes all text; never render data with `dangerouslySetInnerHTML`, and only link `https://` URLs.
+- `examples/`: Markdown reports from real runs (Vercel, Linear, Baseten), rendered with `ventureos-report`. Regenerate them from new runs rather than editing them by hand.
 - `data/`: sample Research evidence packs (`notion.json`, `baseten.json`) used by the GTM tests. Test inputs only, never a production response or fallback.
 - `scripts/live_smoke.py`: live Research check that makes billed calls; not part of the tests.
 - `tests/`: offline tests for both agents.
@@ -67,11 +68,11 @@ The pipeline ends with the PM result. The pipeline is deterministic code, not an
 
 ## Versioning
 
-Each agent has its own version: V.0.1 for its first release, plus 0.1 for every update published to GitHub. Research: `src/research/__init__.py` and `pyproject.toml`. GTM: `src/gtm/__init__.py`. PM: `src/pm/__init__.py`. Update the agent's version line in README.md and the table above when an agent is merged or updated on `dev`.
+Each agent has its own version: V.0.1 for its first release, plus 0.1 for every update published to GitHub. Research: `src/research/__init__.py` and `pyproject.toml`. GTM: `src/gtm/__init__.py`. PM: `src/pm/__init__.py`. Pipeline: `src/pipeline/__init__.py`. Update the agent's version line in README.md and the table above when an agent is merged or updated on `dev`.
 
 ## Workflow and verification
 
-- Python 3.11+. Extras: `research` (anthropic, deepagents, langchain-anthropic, psycopg, python-dotenv), `api` (FastAPI, uvicorn), `ui` (Streamlit), `test` (httpx).
+- Python 3.11+. Extras: `research` (anthropic, deepagents, langchain-anthropic, psycopg, python-dotenv), `api` (FastAPI, uvicorn), `test` (httpx). The web UI needs Node.js only to rebuild it.
 - Use digits for counts and avoid em dashes in documentation.
 - Do not commit or push unless the user authorizes it.
 
