@@ -10,35 +10,15 @@
 
 VentureOS is a small team of AI agents. It researches a company, works out how the company should go to market, and proposes what to pitch and what to build next. Every claim links back to a real source, and plain code, not the AI, decides what counts as evidence.
 
-It is built for small B2B agencies and technical consultancies getting ready for a client conversation. Research and writing that would normally take a day comes back in a few minutes.
+**Examples:** full reports for [Vercel](examples/vercel.md), [Linear](examples/linear.md), and [Baseten](examples/baseten.md). For a step-by-step tour of a run, see the [walkthrough](docs/walkthrough.md).
 
-**VentureOS proposes; a person decides.** It does not send emails, build products, or take actions on its own.
+## Overview
 
-**See real output before you install anything:** full reports for [Vercel](examples/vercel.md), [Linear](examples/linear.md), and [Baseten](examples/baseten.md). For a step-by-step tour of a run, see the [walkthrough](docs/walkthrough.md).
+**The problem.** Before a first call with a prospect, a small agency or consultancy needs to understand that company: its market, its competitors, who it sells to, and where it is weak. Then it needs to turn that into a concrete idea to pitch.
 
-## The problem, and who it is for
+**Users.** Founders and partners at B2B agencies and technical consultancies with about 2 to 30 people, such as AI and dev shops, GTM consultancies, and fractional product teams.
 
-**The problem.** Before a first call with a prospect, a small agency or consultancy needs to understand that company: its market, its competitors, who it sells to, and where it is weak. Then it needs to turn that into a concrete idea to pitch. Done properly, that takes a senior person half a day to a day per prospect, so most teams skip it and turn up with a generic pitch.
-
-**Who it is for.** Founders and partners at B2B agencies and technical consultancies with about 2 to 30 people, such as AI and dev shops, GTM consultancies, and fractional product teams. They pitch several new prospects a month, and the person who does the research is also the person who sells.
-
-**Why they care:**
-
-- **Time.** A day of prep becomes about 3 minutes, plus 15 minutes of review.
-- **A sharper pitch.** They arrive with 1 specific use case, a 1-pager they can send, and an MVP idea they could build for the client, instead of "we do AI".
-- **Trust.** Every claim links to its source and guesses are labeled as hypotheses, so they do not repeat something made up in front of a client.
-- **Control.** It only proposes. Nothing is sent or built without them.
-
-### Before and after
-
-|                       | Today                                                      | VentureOS                                                                           |
-| --------------------- | ---------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| Prep time             | Half a day to a day of senior time, so it is often skipped | About 3 minutes to run, plus 15 minutes to review                                   |
-| Sources               | Open browser tabs, and chatbot answers without links       | Every fact quotes its source word for word, with the URL                            |
-| What you walk in with | A generic "we do AI" pitch                                 | 1 specific use case, a 1-pager you can send, and a scoped MVP idea                  |
-| Risk                  | Repeating a made-up fact in front of a client              | Guesses are labeled as hypotheses, and links the search never returned are rejected |
-
-## Example: input and output
+## Example:
 
 **Input:**
 
@@ -66,7 +46,7 @@ ventureos-pipeline Baseten --website baseten.co
 
 Behind that output sit 25 sourced facts, 16 recommendations from the 3 specialists, and a cited company snapshot. Results vary from run to run, so review each one before you share it.
 
-## How it works
+## Architecture
 
 <p align="center">
   <img src="docs/architecture/agent-pipeline.svg" alt="VentureOS pipeline: Researcher, then GTM orchestrator with 3 parallel specialists, then PM agent with a human check, ending in an action plan, a 1-pager, and an MVP idea for a person" width="620">
@@ -90,7 +70,73 @@ A simple script (the "pipeline") runs 3 agents, one after another:
    - **A 1-pager:** a short proposal you can read, edit, and send.
    - **An MVP idea:** what to build and for whom, the must-have features, and what is out of scope. It describes the MVP but does not build it.
 
-   *You get:* a plan for a person to review and act on.
+   ***Output****:*** a plan for a person to review and act on.
+
+### Technology
+
+**VentureOS is a Python multi-agent system: a React chat UI talks through an API gateway to a FastAPI backend, which queues each chat turn in Kafka for workers that run 3 Claude agents, with PostgreSQL for saved chats and research and Redis for short-term state.**
+
+- **Web UI:** a React and TypeScript chat (Vite) that shows the saved transcript and does no processing.
+- **API gateway:** `ventureos-gateway` (FastAPI and httpx) checks an optional API key, applies rate limits per client, and tags every request with an ID.
+- **Pipeline API:** `ventureos-api` (FastAPI) serves the UI and the chat, run, and job-progress endpoints.
+- **Job queue:** Kafka holds each chat turn, keyed by chat so turns stay in order, with a dead-letter topic for bad messages.
+- **Workers:** `ventureos-worker` runs each turn (Research, then GTM, then PM), and you add workers to run more chats at once.
+- **Research agent:** a DeepAgents ReAct loop on Claude Haiku 5.5 that searches the live web with Tavily and keeps only word-for-word quotes (retrieval without a vector store).
+- **GTM orchestrator:** 3 specialist sub-agents run in parallel, then a merge step and a cited company snapshot, with hypotheses ranked by code.
+- **PM agent:** a baseline check in code and a human check, then a DeepAgents planner whose every tool call code validates.
+- **PostgreSQL:** stores saved chats with their transcripts, and every Research run, source, and evidence item.
+- **Redis:** holds chat locks, job progress, a cache of open chats, and rate-limit counters, all expiring within 24 hours.
+- **Optional infrastructure:** without PostgreSQL, Redis, or Kafka, VentureOS falls back to memory and runs everything in 1 process.
+
+```mermaid
+flowchart TB
+    subgraph client["Client"]
+        ui["Web UI<br/>React + TypeScript"]
+    end
+
+    subgraph edge["Edge"]
+        gw["API gateway<br/>API key · rate limits · request IDs"]
+    end
+
+    subgraph app["Application"]
+        api["Pipeline API<br/>FastAPI · chats, runs, job progress"]
+    end
+
+    subgraph messaging["Messaging"]
+        kafka[["Kafka<br/>ventureos.chat-jobs + DLQ"]]
+    end
+
+    subgraph processing["Processing: workers x N"]
+        direction LR
+        research["Research agent<br/>DeepAgents ReAct"] --> gtm["GTM orchestrator<br/>3 specialists in parallel"] --> pm["PM agent<br/>human check + planner"]
+    end
+
+    subgraph data["Data"]
+        direction LR
+        pg[("PostgreSQL<br/>chats · runs · evidence")]
+        redis[("Redis<br/>locks · jobs · cache · limits")]
+    end
+
+    subgraph external["External APIs"]
+        direction LR
+        claude(["Anthropic<br/>Claude Haiku 5.5"])
+        tavily(["Tavily<br/>web search"])
+    end
+
+    ui -->|HTTPS| gw
+    gw -->|proxy| api
+    api -->|produce turn| kafka
+    kafka -->|consume| research
+    api <--> pg
+    api <--> redis
+    gw <-.-> redis
+    processing <--> pg
+    processing <--> redis
+    processing -->|model calls| claude
+    research -->|search| tavily
+```
+
+See [Tokenomics, evals, and observability](#details-for-developers) in the developer details.
 
 ### Why you can trust the output
 
@@ -187,14 +233,17 @@ If the PM agent stops to ask you (exit code 5), run the same command again with 
 ### How to test it
 
 1. **Offline tests** (free, about 1 second). They check the rules, limits, and the human check without calling any API:
+
    ```bash
    PYTHONPATH=src python3 -m unittest discover -s tests
    ```
 2. **Live run** (billed, about 3 minutes). Run 1 company and read the log. Each `[pipeline]` line shows how long the step took:
+
    ```bash
    ventureos-pipeline Vercel --website vercel.com --output-dir runs/test
    ```
 3. **Human check.** Give the PM agent an incomplete strategy pack. It should stop and ask, with exit code 3 (the full pipeline uses exit code 5 for the same stop):
+
    ```bash
    ventureos-pm data/notion-gtm-incomplete.json
    ```
@@ -259,6 +308,36 @@ The [walkthrough](docs/walkthrough.md) explains each step in detail.
   - `proceed` plans with the gaps marked unknown and marks the result `partial`.
 - **Planner:** a DeepAgents agent with code-checked tools: `read_strategy`, `set_use_case`, `add_action`, `set_one_pager`, `set_mvp_idea`, and `plan_status`. A single JSON call completes anything the agent leaves unfinished. Every item must cite IDs from the strategy pack.
 - **Output:** a PM result, schema v2, with `baseline`, `hitl`, `use_case`, `action_plan`, `one_pager`, and `mvp_idea`.
+
+</details>
+
+<details>
+<summary>Tokenomics, evals, and observability</summary>
+
+- **Multi-agent.** Plain Python code runs 3 Claude agents in a fixed order: a DeepAgents ReAct loop for Research, 3 specialist sub-agents in parallel for GTM, and a planner that works through tools for PM. Code checks every tool call and every output.
+- **Retrieval over the live web.** Research finds pages through Tavily search, and every claim must quote a page that search actually returned, word for word. This is retrieval-augmented generation over the live web; there is no vector store.
+- **Database.** PostgreSQL (for example Supabase) stores Research runs, search rounds, sources, evidence, and chat history. Without it, runs stay in memory. GTM and PM results are saved as JSON files in `runs/`.
+
+**Tokenomics.** Every agent uses Claude Haiku 5.5 by default, and code caps the number of calls:
+
+- **Research:** 12 search rounds, 36 sources, and 36 model calls.
+- **GTM:** 5 to 10 calls (3 specialists, with up to 1 corrective retry each, then a merge and a snapshot).
+- **PM:** a planner with a step limit, plus up to 1 fallback call.
+
+Token counts are logged for single-shot JSON calls: across 88 logged calls, a median of about 3,300 input tokens and an average of about 2,400 output tokens. The DeepAgents loops are not counted yet, so cost per run is not reported. That is on the roadmap.
+
+**Evals.**
+
+- 148 offline tests use stand-in providers and check the rules, limits, citations, the human check, the report, and the API. CI runs them on every push, including the PostgreSQL tests.
+- A billed live check (`scripts/live_smoke.py`) runs real companies.
+- Output quality is reviewed by hand against the [`examples/`](examples/) reports. There is no automated quality eval yet.
+
+**Observability.**
+
+- Each step reports progress with its duration (`duration_s`), and the web UI streams it live.
+- Logs go to the terminal and `logs/research.log`. They never record keys, prompts, page text, or model output.
+- Each Research round is saved with its query, the pages kept or skipped, and the reason for each rejected URL. You can view them under **Stored research**.
+- GTM and PM results record each specialist's status, the planner used, and the planner calls that code rejected, with the reasons.
 
 </details>
 
@@ -370,12 +449,12 @@ docs/           Walkthrough and pipeline picture
 
 ## Roadmap
 
-- [x] Researcher, GTM orchestrator, and PM agent working end to end
-- [x] Human check before planning (research more or proceed)
-- [x] PM output as an action plan, a 1-pager, and an MVP idea for a person
-- [x] Example outputs for well-known companies in [`examples/`](examples/)
-- [x] 1 Markdown report per run, with every cited ID resolved to its source
-- [x] 1 command starts the backend and the web UI
+- [X] Researcher, GTM orchestrator, and PM agent working end to end
+- [X] Human check before planning (research more or proceed)
+- [X] PM output as an action plan, a 1-pager, and an MVP idea for a person
+- [X] Example outputs for well-known companies in [`examples/`](examples/)
+- [X] 1 Markdown report per run, with every cited ID resolved to its source
+- [X] 1 command starts the backend and the web UI
 - [ ] "Research more" restarts Research on the gaps automatically
 - [ ] Simple setup: file storage by default
 - [ ] Download the report from the web UI
