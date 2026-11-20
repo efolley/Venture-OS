@@ -1,0 +1,10 @@
+.git
+.claude
+.venv
+.env
+.env.*
+UI/node_modules
+runs
+logs
+**/__pycache__
+*.egg-info

@@ -52,7 +52,7 @@ Put `ANTHROPIC_API_KEY` and `TAVILY_API_KEY` in `.env`.
 
 ## Step 0: start a run
 
-There are 2 ways to run the same pipeline. Pick 1.
+There are 3 ways to run the same pipeline. Pick 1.
 
 **Web UI.** Start the server from the project folder, then open http://127.0.0.1:8000:
 
@@ -61,6 +61,8 @@ ventureos-api
 ```
 
 Type `baseten.co` in the chat, or click a suggestion, and press Enter. The chat shows each step as it happens. Stop the server with `Ctrl+C` when you are done.
+
+**Full stack with Docker.** `docker compose up --build` starts PostgreSQL, Redis, Kafka, the API, 2 workers, and the API gateway; open http://127.0.0.1:8080. The chat works the same, but your chats survive restarts and the work runs in the workers.
 
 **Command line.** Run 1 command and read the log:
 
@@ -191,7 +193,7 @@ Actions: 5
 Report: runs/baseten-report.md
 ```
 
-In the web UI, the result stays in the chat, and **Stored research** in the sidebar lists every run with its evidence, strategy, plan, rounds, and sources. Each card has a download button for its JSON.
+In the web UI, the result stays in the chat, and the chat is saved: **Chats** in the sidebar lists it, and clicking it reopens the whole transcript, even while a run is still going. You can keep talking in it, for example to answer the human check later. **Stored research** lists every run with its evidence, strategy, plan, rounds, and sources. Each card has a download button for its JSON.
 
 `runs/<company>-report.md` puts everything in 1 readable file: the use case, action plan, 1-pager, MVP idea, snapshot, ranked hypotheses, and gaps, with a Sources section that turns every cited ID into its quote and URL. See the [full Baseten report](../examples/baseten.md).
 
@@ -233,7 +235,7 @@ PYTHONPATH=src python3 -m unittest discover -s tests
 - Output changes from run to run. Review each result before you share it.
 - **Research more** lists the gaps, but you start the new Research run yourself.
 - Success metrics are often not numeric yet.
-- Without a database, Research runs live in memory and disappear from **Stored research** when the server stops. GTM and PM results are saved as files in `runs/`.
+- Without a database, chats and Research runs live in memory and disappear from the sidebar when the server stops. GTM and PM results are saved as files in `runs/`. The Docker setup keeps them in PostgreSQL.
 
 ## 15-second demo script
 

@@ -1,14 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { call, research, runGTM, runPM } from "../api";
-import type { JobEvent, Pack, PMResult, Strategy } from "../types";
+import { createChat, followJob, getChat, sendDecision, sendMessage } from "../api";
+import type { ChatMessage, ChatView, JobEvent, Pack, Strategy } from "../types";
 import { PackView } from "./PackView";
 import { PMView } from "./PMView";
 import { StrategyView } from "./StrategyView";
 import { SourcesProvider } from "./ui";
 
+type Phase = "research" | "gtm" | "pm";
 type Progress = {
-  id: number;
-  role: "progress";
   title: string;
   doneTitle: string;
   lines: string[];
@@ -16,15 +15,7 @@ type Progress = {
   started: number;
   ended?: number;
 };
-type Message =
-  | { id: number; role: "user"; text: string }
-  | { id: number; role: "assistant"; text: string; tone?: "error"; candidates?: { name: string; website: string }[]; quick?: string[] }
-  | { id: number; role: "pack"; text: string; runId: string }
-  | { id: number; role: "strategy"; runId: string }
-  | { id: number; role: "pm"; text: string; runId: string; result: PMResult }
-  | Progress;
-
-type RunData = { pack?: Pack; strategy?: Strategy };
+type Live = { phase: Phase | null; lines: string[]; started: number };
 
 const SUGGESTIONS = [
   { name: "Vercel", site: "vercel.com", hint: "Frontend cloud" },
@@ -32,33 +23,35 @@ const SUGGESTIONS = [
   { name: "Supabase", site: "supabase.com", hint: "Postgres platform" },
   { name: "Notion", site: "notion.so", hint: "Connected workspace" },
 ];
+const PHASE_TITLES: Record<Phase, string> = {
+  research: "Researching the web",
+  gtm: "Building the GTM strategy: 3 specialists, merge, snapshot",
+  pm: "PM: checking the baseline and establishing the use case",
+};
 const STEP_LABELS: Record<string, string> = {
   understand: "Understanding the request",
   plan: "Planning the next search",
   collect: "Collecting pages",
   coverage: "Checking coverage",
+  baseline: "Checking the baseline",
+  hitl: "Human check",
   done: "Done",
   failed: "Failed",
-};
-const PM_MESSAGES: Record<string, string> = {
-  hitl_required: "The strategy pack misses required information. Choose how to continue.",
-  research_requested: "Gaps sent back to Research. Start a new research run in the chat to fill them.",
 };
 
 function eventLine(event: JobEvent): string {
   const data = event.data ?? {};
-  if (event.step === "plan") return `Round ${data.round}: searching for ${data.gap}`;
+  if (event.step === "plan" && data.round !== undefined) return `Round ${data.round}: searching for ${data.gap}`;
+  if (event.step === "plan" && data.tool) return `Planner: ${data.tool}`;
   if (event.step === "collect") return `Round ${data.round}: kept ${data.kept} pages, skipped ${data.skipped}`;
   if (event.step === "coverage") return `Round ${data.round}: ${data.items} new evidence items`;
   return `${STEP_LABELS[event.step] ?? event.step}: ${event.status}`;
 }
 
-let nextId = 1;
-
 function Elapsed({ started, ended }: { started: number; ended?: number }) {
   const [now, setNow] = useState(Date.now());
   useEffect(() => {
-    if (ended) return;
+    if (ended !== undefined) return;
     const timer = setInterval(() => setNow(Date.now()), 500);
     return () => clearInterval(timer);
   }, [ended]);
@@ -90,160 +83,187 @@ function ProgressCard({ item }: { item: Progress }) {
   );
 }
 
+/** A finished step from the transcript, shown like the live progress card it was. */
+function stepProgress(message: ChatMessage): Progress {
+  const seconds = message.payload.duration_s ?? 0;
+  return {
+    title: message.text,
+    doneTitle: message.text,
+    lines: (message.payload.events ?? []).map(eventLine),
+    status: message.payload.status === "failed" ? "failed" : "done",
+    started: 0,
+    ended: seconds * 1000,
+  };
+}
+
 export function Chat({
+  chatId,
   instructions,
   setInstructions,
-  resetKey,
-  onRunsChanged,
+  onChatCreated,
+  onChanged,
 }: {
+  chatId: string | null;
   instructions: string;
   setInstructions: (value: string) => void;
-  resetKey: number;
-  onRunsChanged: () => void;
+  onChatCreated: (chatId: string) => void;
+  onChanged: () => void;
 }) {
-  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [view, setView] = useState<ChatView | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [runs, setRuns] = useState<Record<string, RunData>>({});
-  const [busy, setBusy] = useState(false);
+  const [live, setLive] = useState<Live | null>(null);
+  const [sending, setSending] = useState(false);
   const [draft, setDraft] = useState("");
   const [showInstructions, setShowInstructions] = useState(false);
   const bottom = useRef<HTMLDivElement>(null);
+  const current = useRef<string | null>(chatId); // the chat on screen; older followers stop
+  const following = useRef<string | null>(null);
 
-  const startSession = useCallback(async () => {
-    setError(null);
-    setMessages([]);
-    setRuns({});
-    try {
-      const { session_id } = await call<{ session_id: string }>("POST", "/api/sessions");
-      setSessionId(session_id);
-    } catch (err) {
-      setError((err as Error).message);
-    }
+  const refresh = useCallback(async (id: string) => {
+    const next = await getChat(id);
+    if (current.current === id) setView(next);
+    return next;
   }, []);
 
+  const follow = useCallback(
+    async (id: string, jobId: string) => {
+      if (following.current === jobId) return;
+      following.current = jobId;
+      setLive({ phase: null, lines: [], started: Date.now() });
+      const stopped = () => current.current !== id || following.current !== jobId;
+      try {
+        await followJob(
+          jobId,
+          (event) => {
+            if (stopped()) return;
+            if (event.step === "phase") {
+              const phase = event.data.phase as Phase;
+              // Time the step from the server's clock, so a reopened chat shows the real elapsed time.
+              const started = typeof event.at === "number" ? event.at * 1000 : Date.now();
+              if (event.status === "running") setLive({ phase, lines: [], started });
+              else void refresh(id); // the finished step and its result card are in the transcript now
+              return;
+            }
+            setLive((value) => (value ? { ...value, lines: [...value.lines, eventLine(event)] } : value));
+          },
+          stopped,
+        );
+      } catch (err) {
+        if (!stopped()) setError((err as Error).message);
+      } finally {
+        if (following.current === jobId) {
+          following.current = null;
+          if (current.current === id) {
+            setLive(null);
+            await refresh(id).catch(() => undefined);
+            onChanged();
+          }
+        }
+      }
+    },
+    [refresh, onChanged],
+  );
+
+  // Open the chosen chat, and keep following a turn that is still running.
   useEffect(() => {
-    void startSession();
-  }, [startSession, resetKey]);
+    current.current = chatId;
+    setError(null);
+    setLive(null);
+    if (!chatId) {
+      setView(null);
+      following.current = null;
+      return;
+    }
+    if (view?.chat.id === chatId) return; // just created here: already on screen
+    setView(null);
+    refresh(chatId)
+      .then((next) => {
+        if (next.chat.active_job_id) void follow(chatId, next.chat.active_job_id);
+      })
+      .catch((err) => setError((err as Error).message));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chatId]);
 
   useEffect(() => {
     bottom.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, [messages]);
+  }, [view?.messages.length, live?.phase]);
 
-  const add = (message: Message) => setMessages((list) => [...list, message]);
-  const update = (id: number, change: Partial<Progress>) =>
-    setMessages((list) => list.map((m) => (m.id === id ? ({ ...m, ...change } as Message) : m)));
-  const progress = (title: string, doneTitle: string): number => {
-    const id = nextId++;
-    add({ id, role: "progress", title, doneTitle, lines: [], status: "running", started: Date.now() });
-    return id;
-  };
-  const finish = (id: number, status: "done" | "failed", doneTitle?: string) =>
-    update(id, { status, ended: Date.now(), ...(doneTitle ? { doneTitle } : {}) });
+  const busy = sending || live !== null || Boolean(view?.chat.active_job_id);
 
-  async function planWithPM(runId: string, decision?: "proceed" | "research") {
-    const step = progress(
-      "PM: checking the baseline and establishing the use case",
-      "PM plan ready",
-    );
-    try {
-      const result = await runPM(runId, instructions, decision);
-      const label = { hitl_required: "PM needs your decision", research_requested: "PM sent the gaps back to Research" }[
-        result.status
-      ];
-      finish(step, "done", label);
-      add({ id: nextId++, role: "pm", runId, result, text: PM_MESSAGES[result.status] ?? "Here is the use case and action plan." });
-    } catch (err) {
-      finish(step, "failed", "PM failed");
-      add({ id: nextId++, role: "assistant", tone: "error", text: `PM failed: ${(err as Error).message}` });
-    }
-  }
-
-  async function send(text: string) {
-    const message = text.trim();
-    if (!message || !sessionId || busy) return;
-    setBusy(true);
-    setDraft("");
-    add({ id: nextId++, role: "user", text: message });
-    const step = progress("Researching the web", "Research finished");
-    try {
-      const reply = await research(sessionId, message, instructions, (event) =>
-        setMessages((list) =>
-          list.map((m) => (m.id === step && m.role === "progress" ? { ...m, lines: [...m.lines, eventLine(event)] } : m)),
-        ),
-      );
-      finish(step, reply.kind === "error" ? "failed" : "done", reply.kind === "error" ? "Research failed" : undefined);
-      onRunsChanged();
-      if (reply.kind === "pack" && reply.pack && reply.run_id) {
-        const runId = reply.run_id;
-        const pack = reply.pack;
-        setRuns((all) => ({ ...all, [runId]: { pack } }));
-        add({ id: nextId++, role: "pack", runId, text: reply.message });
-        // Research finished with an evidence pack: hand it to GTM, then to PM.
-        const gtmStep = progress("Building the GTM strategy: 3 specialists, merge, snapshot", "GTM strategy ready");
-        let strategy: Strategy;
-        try {
-          strategy = await runGTM(runId, instructions);
-        } catch (err) {
-          finish(gtmStep, "failed", "GTM failed");
-          add({ id: nextId++, role: "assistant", tone: "error", text: `GTM failed: ${(err as Error).message}` });
-          return;
-        }
-        finish(gtmStep, "done");
-        setRuns((all) => ({ ...all, [runId]: { ...all[runId], strategy } }));
-        add({ id: nextId++, role: "strategy", runId });
-        await planWithPM(runId);
-      } else {
-        const quick = reply.message.includes("Reply yes") ? ["yes"] : undefined;
-        add({
-          id: nextId++,
-          role: "assistant",
-          text: reply.message,
-          tone: reply.kind === "error" ? "error" : undefined,
-          candidates: reply.kind === "clarify" ? reply.candidates : undefined,
-          quick,
-        });
-      }
-    } catch (err) {
-      finish(step, "failed", "Research failed");
-      add({ id: nextId++, role: "assistant", tone: "error", text: (err as Error).message });
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  async function decide(runId: string, decision: "research" | "proceed") {
+  async function run(start: (id: string) => Promise<string>, optimistic: string) {
     if (busy) return;
-    setBusy(true);
-    add({ id: nextId++, role: "user", text: decision === "proceed" ? "Proceed with gaps" : "Research more" });
+    setSending(true);
+    setError(null);
     try {
-      await planWithPM(runId, decision);
+      let id = chatId;
+      if (!id) {
+        id = await createChat();
+        current.current = id;
+        setView({ chat: { id, title: "", pending: null, active_job_id: null }, messages: [] });
+        onChatCreated(id);
+      }
+      const chat = id;
+      setView((value) =>
+        value && value.chat.id === chat
+          ? {
+              ...value,
+              messages: [
+                ...value.messages,
+                { id: `local-${Date.now()}`, seq: 0, role: "user", kind: "text", text: optimistic, run_id: null, payload: {}, created_at: "" },
+              ],
+            }
+          : value,
+      );
+      const jobId = await start(chat);
+      onChanged();
+      void follow(chat, jobId);
+    } catch (err) {
+      setError((err as Error).message);
+      if (chatId) void refresh(chatId).catch(() => undefined);
     } finally {
-      setBusy(false);
+      setSending(false);
     }
   }
 
-  const empty = messages.length === 0;
+  const send = (text: string) => {
+    const message = text.trim();
+    if (!message) return;
+    setDraft("");
+    void run((id) => sendMessage(id, message, instructions), message);
+  };
+  const decide = (runId: string, decision: "proceed" | "research") =>
+    void run((id) => sendDecision(id, runId, decision, instructions), decision === "proceed" ? "Proceed with gaps" : "Research more");
+
+  const messages = view?.messages ?? [];
+  const packs: Record<string, Pack> = {};
+  const strategies: Record<string, Strategy> = {};
+  messages.forEach((m) => {
+    if (m.run_id && m.payload.pack) packs[m.run_id] = m.payload.pack;
+    if (m.run_id && m.payload.strategy) strategies[m.run_id] = m.payload.strategy;
+  });
+  const last = messages[messages.length - 1];
+  const lastPmSeq = Math.max(0, ...messages.filter((m) => m.kind === "pm").map((m) => m.seq));
+  const empty = messages.length === 0 && !live;
+
   const composer = (
     <div className="composer-wrap">
       <form
         className="composer"
         onSubmit={(event) => {
           event.preventDefault();
-          void send(draft);
+          send(draft);
         }}
       >
         <textarea
           rows={1}
           value={draft}
           placeholder={busy ? "Working on it…" : "Company name or website"}
-          disabled={!sessionId}
           maxLength={300}
           onChange={(event) => setDraft(event.target.value)}
           onKeyDown={(event) => {
             if (event.key === "Enter" && !event.shiftKey) {
               event.preventDefault();
-              void send(draft);
+              send(draft);
             }
           }}
           aria-label="Company name or website"
@@ -256,7 +276,7 @@ export function Chat({
           >
             ＋ Instructions{instructions ? `: ${instructions.slice(0, 24)}` : ""}
           </button>
-          <button type="submit" className="send" disabled={busy || !draft.trim() || !sessionId} aria-label="Send">
+          <button type="submit" className="send" disabled={busy || !draft.trim()} aria-label="Send">
             {busy ? <span className="spinner small" /> : "↑"}
           </button>
         </div>
@@ -270,18 +290,42 @@ export function Chat({
           />
         )}
       </form>
-      <p className="fineprint">VentureOS proposes; a person decides. Every claim cites its source. Review before sharing.</p>
+      <p className="fineprint">VentureOS proposes; a person decides. Every claim cites its source. Your chats are saved.</p>
     </div>
   );
+
+  function quickReplies(message: ChatMessage) {
+    if (message !== last || busy) return null;
+    const pending = view?.chat.pending;
+    const candidates = message.kind === "clarify" && pending === "clarify" ? message.payload.candidates ?? [] : [];
+    const quick = message.kind === "pack" && pending === "rerun" ? message.payload.quick ?? [] : [];
+    if (!candidates.length && !quick.length) return null;
+    return (
+      <div className="quick">
+        {candidates.map((candidate, index) => (
+          <button key={candidate.website} className="chip-btn" onClick={() => send(String(index + 1))}>
+            {candidate.name} · {candidate.website}
+          </button>
+        ))}
+        {quick.map((text) => (
+          <button key={text} className="chip-btn" onClick={() => send(text)}>
+            {text === "yes" ? "Research the missing items" : text}
+          </button>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className={`chat ${empty ? "is-empty" : ""}`}>
       {error && (
         <div className="banner">
           {error}{" "}
-          <button className="btn small" onClick={() => void startSession()}>
-            Retry
-          </button>
+          {chatId && (
+            <button className="btn small" onClick={() => void refresh(chatId).then(() => setError(null)).catch((err) => setError((err as Error).message))}>
+              Retry
+            </button>
+          )}
         </div>
       )}
       {empty ? (
@@ -296,7 +340,7 @@ export function Chat({
           {composer}
           <div className="suggestions">
             {SUGGESTIONS.map((item) => (
-              <button key={item.site} className="suggestion" disabled={!sessionId} onClick={() => void send(item.site)}>
+              <button key={item.site} className="suggestion" disabled={busy} onClick={() => send(item.site)}>
                 <strong>{item.name}</strong>
                 <span>{item.hint}</span>
               </button>
@@ -313,64 +357,62 @@ export function Chat({
                     <div className="bubble">{message.text}</div>
                   </div>
                 );
-              if (message.role === "progress")
+              if (message.kind === "step")
                 return (
                   <div key={message.id} className="msg assistant">
-                    <ProgressCard item={message} />
+                    <ProgressCard item={stepProgress(message)} />
                   </div>
                 );
-              const data = "runId" in message ? runs[message.runId] : undefined;
+              const runId = message.run_id ?? "";
               return (
                 <div key={message.id} className="msg assistant">
                   <div className="avatar" aria-hidden />
                   <div className="msg-body">
-                    <SourcesProvider evidence={data?.pack?.evidence} recommendations={data?.strategy?.recommendations}>
-                      {message.role === "assistant" && (
-                        <>
-                          <p className={message.tone === "error" ? "error-text" : "pre"}>{message.text}</p>
-                          {(message.candidates?.length || message.quick) && (
-                            <div className="quick">
-                              {message.candidates?.map((candidate, index) => (
-                                <button key={candidate.website} className="chip-btn" disabled={busy} onClick={() => void send(String(index + 1))}>
-                                  {candidate.name} · {candidate.website}
-                                </button>
-                              ))}
-                              {message.quick?.map((text) => (
-                                <button key={text} className="chip-btn" disabled={busy} onClick={() => void send(text)}>
-                                  {text === "yes" ? "Research the missing items" : text}
-                                </button>
-                              ))}
-                            </div>
-                          )}
-                        </>
+                    <SourcesProvider evidence={packs[runId]?.evidence} recommendations={strategies[runId]?.recommendations}>
+                      {(message.kind === "text" || message.kind === "clarify" || message.kind === "error") && (
+                        <p className={message.kind === "error" ? "error-text" : "pre"}>{message.text}</p>
                       )}
-                      {message.role === "pack" && data?.pack && (
+                      {message.kind === "pack" && message.payload.pack && (
                         <>
                           <p>{message.text}</p>
-                          <PackView pack={data.pack} />
+                          <PackView pack={message.payload.pack} />
                         </>
                       )}
-                      {message.role === "strategy" && data?.strategy && (
+                      {message.kind === "strategy" && message.payload.strategy && (
                         <>
-                          <p>Here is the GTM strategy and company snapshot.</p>
-                          <StrategyView strategy={data.strategy} />
+                          <p>{message.text}</p>
+                          <StrategyView strategy={message.payload.strategy} />
                         </>
                       )}
-                      {message.role === "pm" && (
+                      {message.kind === "pm" && message.payload.result && (
                         <>
                           <p>{message.text}</p>
                           <PMView
-                            result={message.result}
-                            busy={busy}
-                            onDecision={(decision) => void decide(message.runId, decision)}
+                            result={message.payload.result}
+                            busy={busy || message.seq !== lastPmSeq}
+                            onDecision={(decision) => decide(runId, decision)}
                           />
                         </>
                       )}
+                      {quickReplies(message)}
                     </SourcesProvider>
                   </div>
                 </div>
               );
             })}
+            {live && (
+              <div className="msg assistant">
+                <ProgressCard
+                  item={{
+                    title: live.phase ? PHASE_TITLES[live.phase] : "Waiting for a worker",
+                    doneTitle: "",
+                    lines: live.lines,
+                    status: "running",
+                    started: live.started,
+                  }}
+                />
+              </div>
+            )}
             <div ref={bottom} />
           </div>
           {composer}
