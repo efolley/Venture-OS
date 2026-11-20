@@ -7,7 +7,7 @@ every cited ID: evidence IDs (e1, e2, ...) to their quote and URL, and recommend
 
 It only formats the JSON results that the agents already validated; it adds no new claims.
 
-  python -m pipeline.report runs/linear-pm.json --strategy runs/linear-gtm.json \\
+  ventureos-report runs/linear-pm.json --strategy runs/linear-gtm.json \\
       --research runs/linear-research.json --output runs/linear-report.md
 """
 
@@ -228,7 +228,7 @@ def _load(path: Path | None) -> Json | None:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(prog="pipeline.report", description=__doc__,
+    parser = argparse.ArgumentParser(prog="ventureos-report", description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("pm", type=Path, nargs="?", help="PM result JSON")
     parser.add_argument("--strategy", type=Path, help="GTM strategy pack JSON")

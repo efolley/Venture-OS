@@ -19,5 +19,5 @@ These are not polished samples. They show the known limits too: for example, the
 To render a report from your own run's JSON files:
 
 ```bash
-python -m pipeline.report runs/linear-pm.json --strategy runs/linear-gtm.json --research runs/linear-research.json --output runs/linear-report.md
+ventureos-report runs/linear-pm.json --strategy runs/linear-gtm.json --research runs/linear-research.json --output runs/linear-report.md
 ```
