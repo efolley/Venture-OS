@@ -6,6 +6,8 @@ a finished step (Research, GTM, or PM with its progress events), or a result car
 pack, strategy pack, or PM result) that carries its JSON, so a reopened chat shows everything.
 """
 
+from __future__ import annotations  # the stores define a `list` method; keep `list[...]` the builtin
+
 import os
 import threading
 import uuid
