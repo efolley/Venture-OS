@@ -1,14 +1,44 @@
 // The UI only calls the pipeline API and renders what it returns. No processing here.
-import type { JobEvent, PMResult, Reply, Strategy } from "./types";
+import type { ChatJob, ChatSummary, ChatView, JobEvent, PMResult, Strategy } from "./types";
 
 const BASE = (import.meta.env.VITE_API_URL ?? "").replace(/\/$/, "");
+const KEY_STORAGE = "ventureos.apiKey";
+
+/** Thrown when the gateway asks for an API key (HTTP 401). */
+export class ApiKeyError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ApiKeyError";
+  }
+}
+
+export function getApiKey(): string {
+  try {
+    return localStorage.getItem(KEY_STORAGE) ?? "";
+  } catch {
+    return "";
+  }
+}
+
+export function setApiKey(value: string): void {
+  try {
+    if (value) localStorage.setItem(KEY_STORAGE, value);
+    else localStorage.removeItem(KEY_STORAGE);
+  } catch {
+    /* private mode: the key is not kept */
+  }
+}
 
 export async function call<T>(method: "GET" | "POST", path: string, body?: unknown): Promise<T> {
+  const headers: Record<string, string> = {};
+  if (body !== undefined) headers["Content-Type"] = "application/json";
+  const key = getApiKey();
+  if (key) headers["X-API-Key"] = key;
   let response: Response;
   try {
     response = await fetch(`${BASE}${path}`, {
       method,
-      headers: body === undefined ? undefined : { "Content-Type": "application/json" },
+      headers,
       body: body === undefined ? undefined : JSON.stringify(body),
     });
   } catch {
@@ -22,6 +52,7 @@ export async function call<T>(method: "GET" | "POST", path: string, body?: unkno
     } catch {
       /* keep the status text */
     }
+    if (response.status === 401) throw new ApiKeyError(detail);
     throw new Error(detail);
   }
   return response.json() as Promise<T>;
@@ -29,29 +60,51 @@ export async function call<T>(method: "GET" | "POST", path: string, body?: unkno
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-/** Send a chat message to Research and stream its progress events until it finishes. */
-export async function research(
-  sessionId: string,
-  message: string,
+// ---- chats: the server runs Research, then GTM, then PM, and stores the transcript ----
+
+export const createChat = () => call<{ chat_id: string }>("POST", "/api/chats").then((r) => r.chat_id);
+
+export const listChats = () => call<{ chats: ChatSummary[] }>("GET", "/api/chats?limit=100").then((r) => r.chats);
+
+export const getChat = (chatId: string) => call<ChatView>("GET", `/api/chats/${chatId}`);
+
+export const sendMessage = (chatId: string, message: string, instructions: string) =>
+  call<{ job_id: string }>("POST", `/api/chats/${chatId}/messages`, { message, instructions }).then((r) => r.job_id);
+
+export const sendDecision = (
+  chatId: string,
+  runId: string,
+  decision: "proceed" | "research",
   instructions: string,
+) =>
+  call<{ job_id: string }>("POST", `/api/chats/${chatId}/decisions`, { run_id: runId, decision, instructions }).then(
+    (r) => r.job_id,
+  );
+
+/** Follow a chat turn's progress events until it finishes, or until stopped() says to quit. */
+export async function followJob(
+  jobId: string,
   onEvent: (event: JobEvent) => void,
-): Promise<Reply> {
-  const { job_id } = await call<{ job_id: string }>("POST", `/api/sessions/${sessionId}/messages`, {
-    message,
-    instructions,
-  });
+  stopped: () => boolean,
+): Promise<ChatJob | null> {
   let after = 0;
-  for (;;) {
-    const job = await call<{ status: string; events: JobEvent[]; next: number; reply: Reply | null }>(
-      "GET",
-      `/api/jobs/${job_id}?after=${after}`,
-    );
+  while (!stopped()) {
+    let job: ChatJob;
+    try {
+      job = await call<ChatJob>("GET", `/api/chat-jobs/${jobId}?after=${after}`);
+    } catch (err) {
+      if ((err as Error).message === "Unknown job.") return null; // expired: the transcript has the result
+      throw err;
+    }
     job.events.forEach(onEvent);
     after = job.next;
-    if (job.status !== "running") return job.reply ?? { kind: "error", message: "No reply." };
+    if (job.status === "done" || job.status === "failed") return job;
     await sleep(1000);
   }
+  return null;
 }
+
+// ---- stored runs: GTM and PM again on a Research run (the Stored research view) ----
 
 /** Start GTM on a stored evidence pack and wait for the strategy pack. */
 export async function runGTM(runId: string, instructions: string): Promise<Strategy> {

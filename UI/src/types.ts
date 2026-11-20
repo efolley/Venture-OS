@@ -126,7 +126,7 @@ export type PMResult = {
   } | null;
 };
 
-export type JobEvent = { step: string; status: string; data: Record<string, unknown> };
+export type JobEvent = { step: string; status: string; data: Record<string, unknown>; at?: number };
 
 export type Reply = {
   kind: "pack" | "clarify" | "text" | "error";
@@ -134,6 +134,49 @@ export type Reply = {
   run_id?: string;
   pack?: Pack;
   candidates?: { name: string; website: string }[];
+};
+
+export type ChatMessage = {
+  id: string;
+  seq: number;
+  role: "user" | "assistant";
+  kind: "text" | "clarify" | "step" | "pack" | "strategy" | "pm" | "error";
+  text: string;
+  run_id: string | null;
+  payload: {
+    pack?: Pack;
+    strategy?: Strategy;
+    result?: PMResult;
+    candidates?: { name: string; website: string }[];
+    quick?: string[];
+    phase?: "research" | "gtm" | "pm";
+    status?: "done" | "failed";
+    duration_s?: number;
+    events?: JobEvent[];
+  };
+  created_at: string;
+};
+
+export type ChatSummary = {
+  id: string;
+  title: string;
+  active_job_id: string | null;
+  message_count: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ChatView = {
+  chat: { id: string; title: string; pending: "clarify" | "rerun" | null; active_job_id: string | null };
+  messages: ChatMessage[];
+};
+
+export type ChatJob = {
+  id: string;
+  status: "queued" | "running" | "done" | "failed";
+  error: string;
+  events: JobEvent[];
+  next: number;
 };
 
 export type RunSummary = {
