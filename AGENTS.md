@@ -41,9 +41,9 @@ The pipeline ends with the PM result. The pipeline is deterministic code, not an
 - `src/pipeline/`: the pipeline. Deterministic code that runs Research, stops on `clarify` or failure, runs GTM on the evidence pack, then PM on the strategy pack, stopping at HITL 1 when needed. `report.py` formats the JSON results as Markdown and adds no new claims. It may import all agents; agents still never import each other except `gtm` reading `research` contracts.
 - `UI/`: React and TypeScript client (Vite) for the pipeline API (`src/pipeline/api.py`: Research endpoints plus GTM and PM endpoints). Research never imports GTM or PM; the pipeline API adds them next to it. It only calls the API and renders output; never put processing in the UI. `npm run build` writes to `src/pipeline/static/`, which is committed and served by `ventureos-api` at `/`, so users need no Node.js. After changing `UI/src/`, rebuild and commit the build. For development, run `npm run dev` in `UI/` (port 5173, proxies `/api` to port 8000). React escapes all text; never render data with `dangerouslySetInnerHTML`, and only link `https://` URLs.
 - `examples/`: Markdown reports from real runs (Vercel, Linear, Baseten), rendered with `ventureos-report`. Regenerate them from new runs rather than editing them by hand.
-- `data/`: sample Research evidence packs (`notion.json`, `baseten.json`) used by the GTM tests. Test inputs only, never a production response or fallback.
+- `data/`: sample inputs for the tests: Research evidence packs (`notion.json`, `baseten.json`, `linear.json`) for GTM, and GTM strategy packs (`notion-gtm.json`, `notion-gtm-incomplete.json`, `linear-gtm.json`) for PM. Test inputs only, never a production response or fallback.
 - `scripts/live_smoke.py`: live Research check that makes billed calls; not part of the tests.
-- `tests/`: offline tests for both agents.
+- `tests/`: offline tests for the 3 agents, the pipeline, the report, and the API.
 - `docs/architecture/agent-pipeline.svg`: the pipeline picture.
 
 ## Architecture rules
@@ -72,7 +72,8 @@ Each agent has its own version: V.0.1 for its first release, plus 0.1 for every 
 
 ## Workflow and verification
 
-- Python 3.11+. Extras: `research` (anthropic, deepagents, langchain-anthropic, psycopg, python-dotenv), `api` (FastAPI, uvicorn), `test` (httpx). The web UI needs Node.js only to rebuild it.
+- Python 3.11+. Extras: `research` (anthropic, deepagents, langchain-anthropic, psycopg, python-dotenv; also needed by GTM and PM), `api` (FastAPI, uvicorn), `test` (httpx). The web UI needs Node.js only to rebuild it.
+- `RESEARCH_MODEL` sets the model for every agent in the pipeline and API; the standalone PM command reads `PM_MODEL`. Gemini support is experimental: Research falls back to its plain loop and PM to its JSON planner. Keep `.env.example` and the README developer section in sync with these settings.
 - Use digits for counts and avoid em dashes in documentation.
 - Do not commit or push unless the user authorizes it.
 

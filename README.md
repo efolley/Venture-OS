@@ -190,13 +190,13 @@ If the PM agent stops to ask you (exit code 5), run the same command again with 
    ```bash
    PYTHONPATH=src python3 -m unittest discover -s tests
    ```
-2. **Live run** (billed, about 2.5 minutes). Run 1 company and read the log. Each `[pipeline]` line shows how long the step took:
+2. **Live run** (billed, about 3 minutes). Run 1 company and read the log. Each `[pipeline]` line shows how long the step took:
    ```bash
    ventureos-pipeline Vercel --website vercel.com --output-dir runs/test
    ```
 3. **Human check.** Give the PM agent an incomplete strategy pack. It should stop and ask, with exit code 3 (the full pipeline uses exit code 5 for the same stop):
    ```bash
-   PYTHONPATH=src python3 -m pm data/notion-gtm-incomplete.json
+   ventureos-pm data/notion-gtm-incomplete.json
    ```
 
    Run it again with `--decision proceed`. You should get a plan marked `partial`.
@@ -228,7 +228,7 @@ The [walkthrough](docs/walkthrough.md) explains each step in detail.
   - Market: category, size or growth, and at least 2 trends.
   - Competitors: 3 to 5, with positioning and pricing.
   - Sales: target customer, buyer, pricing model, and channel.
-- **Limits:** 12 searches, 36 sources, and 36 model calls. Hitting a limit returns a `partial` pack with its gaps.
+- **Limits:** 12 search rounds, 36 sources, and 36 model calls. Finding the website for a name-only run uses up to 3 more searches. Hitting a limit returns a `partial` pack with its gaps.
 - **Output:** an evidence pack, schema v4 (`src/research/pack.schema.json`).
 
 </details>
@@ -257,7 +257,7 @@ The [walkthrough](docs/walkthrough.md) explains each step in detail.
 - **Human check (HITL):** if the baseline fails and no decision was given, PM stops with `hitl_required`. It lists the missing items and the Research gaps that would fix them.
   - `research` returns those gaps.
   - `proceed` plans with the gaps marked unknown and marks the result `partial`.
-- **Planner:** a DeepAgents agent with code-checked tools: `set_use_case`, `add_action`, `set_one_pager`, `set_mvp_idea`, and `plan_status`. A single JSON call completes anything the agent leaves unfinished. Every item must cite IDs from the strategy pack.
+- **Planner:** a DeepAgents agent with code-checked tools: `read_strategy`, `set_use_case`, `add_action`, `set_one_pager`, `set_mvp_idea`, and `plan_status`. A single JSON call completes anything the agent leaves unfinished. Every item must cite IDs from the strategy pack.
 - **Output:** a PM result, schema v2, with `baseline`, `hitl`, `use_case`, `action_plan`, `one_pager`, and `mvp_idea`.
 
 </details>
@@ -268,15 +268,15 @@ The [walkthrough](docs/walkthrough.md) explains each step in detail.
 Each agent also runs on its own:
 
 ```bash
-PYTHONPATH=src python3 -m research "Basecamp" --website basecamp.com
+ventureos-research Basecamp --website basecamp.com
 ```
 
 ```bash
-PYTHONPATH=src python3 -m gtm data/notion.json --output runs/notion-gtm.json
+ventureos-gtm data/notion.json --output runs/notion-gtm.json
 ```
 
 ```bash
-PYTHONPATH=src python3 -m pm data/notion-gtm.json --output runs/notion-pm.json
+ventureos-pm data/notion-gtm.json --output runs/notion-pm.json
 ```
 
 Render a Markdown report from saved JSON results (any of the 3 is enough):
@@ -292,7 +292,13 @@ Pipeline options:
 - `--instructions "..."`
 - `--output-dir`
 
-Set `RESEARCH_DATABASE_URL` to store Research runs in PostgreSQL.
+Settings, all read from `.env` (see `.env.example`):
+
+- `RESEARCH_MODEL` sets the model for every agent in `ventureos-api` and `ventureos-pipeline` (default `claude-haiku-5-5`). The standalone `ventureos-pm` reads `PM_MODEL` instead. Gemini models are experimental: Research then skips DeepAgents and PM uses its JSON planner only.
+- `RESEARCH_DATABASE_URL` stores Research runs in PostgreSQL.
+- `RESEARCH_API_PORT` changes the port (default 8000).
+
+`ventureos-research-api` starts an older Research-only API without the web UI. Use `ventureos-api` for the full pipeline.
 
 | Endpoint                                                                                    | Purpose                                                |
 | ------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
@@ -358,19 +364,19 @@ docs/           Walkthrough and pipeline picture
 
 **Why not just ask ChatGPT or another deep research tool?** Those give you a report, and you have to trust its links. VentureOS keeps a fact only if its quote appears word for word on a page the search actually returned, and plain code (not the model) runs that check. It also stops to ask you before planning on thin evidence, and it ends in something you can use in a sales conversation: 1 use case, a 1-pager, and a scoped MVP idea. It is open source, so you can change the rules, the checklist, and the limits.
 
-**What does a run cost?** Every agent uses Claude Haiku 5.5 by default, Anthropic's lowest-cost current model. Research is capped at 12 searches and 36 model calls; GTM and PM add more calls on top. Token cost per run is not measured yet.
+**What does a run cost?** Every agent uses Claude Haiku 5.5 by default, Anthropic's lowest-cost current model. Research is capped at 12 search rounds and 36 model calls; GTM and PM add more calls on top. Token cost per run is not measured yet.
 
 **Can it be wrong?** Yes. A quote can be real and still be read too generously, and output differs on every run. That is why guesses are labeled as hypotheses, every claim shows its source, and a person reviews the result before using it.
 
 ## Roadmap
 
-- [X] Researcher, GTM orchestrator, and PM agent working end to end
-- [X] Human check before planning (research more or proceed)
-- [X] PM output as an action plan, a 1-pager, and an MVP idea for a person
-- [X] Example outputs for well-known companies in [`examples/`](examples/)
-- [X] 1 Markdown report per run, with every cited ID resolved to its source
-- [ ] "Research more" restarts Research on the gaps automatically
+- [x] Researcher, GTM orchestrator, and PM agent working end to end
+- [x] Human check before planning (research more or proceed)
+- [x] PM output as an action plan, a 1-pager, and an MVP idea for a person
+- [x] Example outputs for well-known companies in [`examples/`](examples/)
+- [x] 1 Markdown report per run, with every cited ID resolved to its source
 - [x] 1 command starts the backend and the web UI
+- [ ] "Research more" restarts Research on the gaps automatically
 - [ ] Simple setup: file storage by default
 - [ ] Download the report from the web UI
 - [ ] Measure and show token cost per run

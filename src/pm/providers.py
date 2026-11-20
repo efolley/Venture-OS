@@ -18,7 +18,7 @@ class AnthropicModel:
         try:
             import anthropic
         except ImportError as error:
-            raise ValueError("anthropic is not installed. Run: pip install -e '.[pm]'") from error
+            raise ValueError("anthropic is not installed. Run: pip install -e '.[research]'") from error
         self._anthropic = anthropic
         self.model = model or os.getenv("PM_MODEL", DEFAULT_MODEL)
         self.max_tokens = max_tokens
@@ -29,7 +29,7 @@ class AnthropicModel:
             from langchain_anthropic import ChatAnthropic
         except ImportError as error:
             raise ValueError("langchain-anthropic is not installed. "
-                             "Run: pip install -e '.[pm]'") from error
+                             "Run: pip install -e '.[research]'") from error
         return ChatAnthropic(model=self.model, max_tokens=8000, max_retries=6, timeout=120)
 
     def json(self, system: str, prompt: str) -> JsonObject:
