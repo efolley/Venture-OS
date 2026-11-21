@@ -1,5 +1,10 @@
 # VentureOS
-__Currently in_ dev phase: next step is fully actionable harness + loop_
+
+[![Tests](https://github.com/efolley/Venture-OS/actions/workflows/tests.yml/badge.svg?branch=dev)](https://github.com/efolley/Venture-OS/actions/workflows/tests.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](pyproject.toml)
+
+_Currently in development. Next step: a fully actionable harness and loop._
 
 > **Still spending hours researching a prospect before the first call?**
 >
@@ -16,11 +21,13 @@ VentureOS is a small team of AI agents. It researches a company, works out how t
 
 ## Overview
 
-**The problem.** Before a first call with a prospect, a small agency or consultancy needs to understand that company: its market, its competitors, who it sells to, and where it is weak. Then it needs to turn that into a concrete idea to pitch.
+**The problem.** Before a first call with a prospect, a small agency or consultancy needs to understand that company: its market, its competitors, who it sells to, and where it is weak. Then it needs to turn that into a concrete idea to pitch. Done properly, that takes a senior person half a day to a day per prospect, so most teams skip it and turn up with a generic pitch.
 
 **Users.** Founders and partners at B2B agencies and technical consultancies with about 2 to 30 people, such as AI and dev shops, GTM consultancies, and fractional product teams.
 
-## Example:
+**Value.** About 3 minutes to run and 15 minutes to review, instead of a day. Every claim links to its source, guesses are labeled as hypotheses, and nothing is sent or built without you.
+
+## Example
 
 **Input:**
 
@@ -72,7 +79,7 @@ A simple script (the "pipeline") runs 3 agents, one after another:
    - **A 1-pager:** a short proposal you can read, edit, and send.
    - **An MVP idea:** what to build and for whom, the must-have features, and what is out of scope. It describes the MVP but does not build it.
 
-   ***Output****:*** a plan for a person to review and act on.
+   *You get:* a plan for a person to review and act on.
 
 ### Technology
 
@@ -529,6 +536,10 @@ docs/           Walkthrough, pipeline picture, and technical architecture
 3. [ ] Research: check the market category against what the company sells before sizing the market.
 4. [ ] Research: require competitor evidence from at least 2 independent sources.
 5. [ ] GTM: require at least 1 recommendation that is not about pricing.
+
+## Contributing
+
+Contributions are welcome. Start with an issue labeled [`good first issue`](https://github.com/efolley/Venture-OS/labels/good%20first%20issue), and see [CONTRIBUTING.md](CONTRIBUTING.md) for setup and the rules that keep the output trustworthy.
 
 ## License
 

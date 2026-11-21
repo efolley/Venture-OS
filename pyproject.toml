@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "ventureos"
 version = "0.4.0"
-description = "Give it a company name, get a cited go-to-market strategy, a 1-pager, and an MVP idea. 3 Claude agents; code verifies every citation."
+description = "Research any company in about 3 minutes: a sourced GTM read, 1 use case to pitch, a 1-pager, and an MVP idea. 3 Claude agents; code verifies every source."
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]

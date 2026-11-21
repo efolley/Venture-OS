@@ -48,6 +48,8 @@ The pipeline ends with the PM result. The pipeline is deterministic code, not an
 - `scripts/live_smoke.py`: live Research check that makes billed calls; not part of the tests.
 - `tests/`: offline tests for the 3 agents, the pipeline, the report, chats, the gateway, and the API.
 - `docs/architecture/agent-pipeline.svg`: the pipeline picture.
+- `docs/social-preview.png`: the 1280 × 640 link preview, uploaded by hand in the GitHub repo settings (Social preview).
+- `CONTRIBUTING.md`, `.github/ISSUE_TEMPLATE/`: contributor setup and rules, and the bug, output-quality, and feature templates. Keep them consistent with this file.
 - `docs/architecture/technical-architecture.md`: components, chat-turn flow, data, failure handling, security, deployment, and the production-readiness scorecard. Update its scorecard and gaps when infrastructure changes, and keep its claims verified against the code.
 
 ## Architecture rules
