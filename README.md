@@ -14,15 +14,13 @@ _Currently in development. Next step: a fully actionable harness and loop._
 </p>
 <p align="center"><sub>A real run on PostHog, about 3 minutes, sped up to 15 seconds.</sub></p>
 
-VentureOS is a small team of AI agents that help you research the company and re-engineer its GTM and product. You have researcher + GTM + challenger salesman + PM - **all-in-one**.
+VentureOS is a small team of agents that help you research the company and re-engineer its GTM and product. You have researcher + GTM + challenger salesman + PM - **All-In-One**.
 
 ## Overview
 
-**The problem.** Before a first call with a prospect, a small agency or consultancy needs to understand that company: its market, its competitors, who it sells to, and where it is weak. Then it needs to turn that into a concrete idea to pitch. Done properly, that takes a senior person half a day to a day per prospect, so most teams skip it and turn up with a generic pitch.
+**The problem:** Before a first call with a prospect, we need to deep research the company - its market, its competitors, who it sells to, and where it is weak. We spent days to gather and synthesize information and can miss important data, causing generic pitches, messages, or even not the right target persona (ICP)
 
-**Users.** Founders and partners at B2B agencies and technical consultancies with about 2 to 30 people, such as AI and dev shops, GTM consultancies, and fractional product teams.
-
-**Value.** About 3 minutes to run and 15 minutes to review, instead of a day. Every claim links to its source, guesses are labeled as hypotheses, and nothing is sent or built without you.
+**The solution:** Run swarm of agents (and sub-agents) to research the company, it’s market positioning and competitive landscape, GTM, and even product: 3 min and you have a full GTM strategy 1-pager and idea for MVP.
 
 ## Example
 
@@ -32,7 +30,7 @@ VentureOS is a small team of AI agents that help you research the company and re
 ventureos-pipeline Baseten --website baseten.co
 ```
 
-**Output** (about 2.5 minutes, from a real run, shortened; [full report](examples/baseten.md)):
+**Output** (about ~2 min; [full report](examples/baseten.md)):
 
 > **Use case:** Help ML teams at AI-native startups solve slow, fragile prototype-to-production launches that break under real traffic, with a pre-launch production readiness check for model endpoints.
 >
@@ -55,6 +53,8 @@ Behind that output sit 25 sourced facts, 16 recommendations from the 3 specialis
 **Examples:** full reports for [Vercel](examples/vercel.md), [Linear](examples/linear.md), and [Baseten](examples/baseten.md). For a step-by-step tour of a run, see the [walkthrough](docs/walkthrough.md).
 
 ## Architecture
+
+*Full technical architecture [below](#technology)*
 
 <p align="center">
   <img src="docs/architecture/agent-pipeline.svg" alt="VentureOS pipeline: Researcher, then GTM orchestrator with 3 parallel specialists, then PM agent with a human check, ending in an action plan, a 1-pager, and an MVP idea for a person" width="620">
@@ -82,7 +82,7 @@ A simple script (the "pipeline") runs 3 agents, one after another:
 
 ### Technology
 
-**VentureOS is a Python multi-agent system: a React chat UI talks through an API gateway to a FastAPI backend, which queues each chat turn in Kafka for workers that run 3 Claude agents, with PostgreSQL for saved chats and research and Redis for short-term state.**
+**VentureOS is a multi-agent system:** UI talks through an API gateway to a FastAPI backend, which queues each chat turn in Kafka for workers that run 3 Claude agents, with PostgreSQL for saved chats and research and Redis for short-term state:
 
 - **Web UI:** a React and TypeScript chat (Vite) that shows the saved transcript and does no processing.
 - **API gateway:** `ventureos-gateway` (FastAPI and httpx) checks an optional API key, applies rate limits per client, and tags every request with an ID.
@@ -155,13 +155,13 @@ See [Tokenomics, evals, and observability](#details-for-developers) in the devel
 
 ## Status
 
-| # | Agent                                                        | Status  | Version |
-| - | ------------------------------------------------------------ | ------- | ------- |
-| 1 | Researcher                                                   | Working | V.0.4   |
-| 2 | GTM orchestrator (3 specialists and snapshot)                | Working | V.0.4   |
-| 3 | PM agent (human check, plan, 1-pager, MVP idea)              | Working | V.0.2   |
+| # | Agent                                                            | Status  | Version |
+| - | ---------------------------------------------------------------- | ------- | ------- |
+| 1 | Researcher                                                       | Working | V.0.4   |
+| 2 | GTM orchestrator (3 specialists and snapshot)                    | Working | V.0.4   |
+| 3 | PM agent (human check, plan, 1-pager, MVP idea)                  | Working | V.0.2   |
 |   | Pipeline (runs all 3 in 1 command, saved chats, Markdown report) | Working | V.0.4   |
-|   | API gateway (API key, rate limits, request IDs)              | Working | V.0.1   |
+|   | API gateway (API key, rate limits, request IDs)                  | Working | V.0.1   |
 
 All 3 agents run end to end, from the command line and from the web UI. Known limits:
 
@@ -445,12 +445,12 @@ ventureos-worker
 ventureos-gateway
 ```
 
-| Chat endpoint                                                   | Purpose                                                        |
-| --------------------------------------------------------------- | -------------------------------------------------------------- |
-| `POST /api/chats`, `GET /api/chats`, `GET /api/chats/{id}`      | Create, list, and reopen chats with their full transcript      |
-| `POST /api/chats/{id}/messages`                                 | Send a message; returns a job ID                               |
-| `POST /api/chats/{id}/decisions`                                | Answer the human check (`proceed` or `research`) for a run     |
-| `GET /api/chat-jobs/{id}?after=`                                | A turn's status and its progress events since `after`          |
+| Chat endpoint                                                    | Purpose                                                        |
+| ---------------------------------------------------------------- | -------------------------------------------------------------- |
+| `POST /api/chats`, `GET /api/chats`, `GET /api/chats/{id}` | Create, list, and reopen chats with their full transcript      |
+| `POST /api/chats/{id}/messages`                                | Send a message; returns a job ID                               |
+| `POST /api/chats/{id}/decisions`                               | Answer the human check (`proceed` or `research`) for a run |
+| `GET /api/chat-jobs/{id}?after=`                               | A turn's status and its progress events since `after`        |
 
 </details>
 
@@ -538,7 +538,7 @@ docs/           Walkthrough, pipeline picture, and technical architecture
 
 ## Contributing
 
-Contributions are welcome. Start with an issue labeled [`good first issue`](https://github.com/efolley/Venture-OS/labels/good%20first%20issue), and see [CONTRIBUTING.md](CONTRIBUTING.md) for setup and the rules that keep the output trustworthy.
+Contributions are welcome. Start with an issue labeled [`good first issue`](<https://github.com/efolley/Venture-OS/labels/good%20first%20issue>), and see [CONTRIBUTING.md](CONTRIBUTING.md) for setup and the rules that keep the output trustworthy.
 
 ## License
 
