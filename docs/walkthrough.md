@@ -237,22 +237,24 @@ PYTHONPATH=src python3 -m unittest discover -s tests
 - Success metrics are often not numeric yet.
 - Without a database, chats and Research runs live in memory and disappear from the sidebar when the server stops. GTM and PM results are saved as files in `runs/`. The Docker setup keeps them in PostgreSQL.
 
-## 15-second demo
+## 20-second demo
 
-[`docs/demo.gif`](demo.gif) shows a real run on PostHog, about 3 minutes sped up to 15 seconds:
+[`docs/demo.gif`](demo.gif) shows a real run on Clerk through the full Docker stack (gateway, Kafka, workers, PostgreSQL, Redis), about 3 minutes sped up to 20 seconds:
 
 | Time | On screen | Caption |
 | --- | --- | --- |
-| 0 to 2 s | Empty chat. Type "Research for me PostHog" and send. | 1. Ask in plain words |
-| 2 to 3.5 s | VentureOS asks which website to research. Click `posthog.com`. | 2. Pick the right website |
-| 3.5 to 6 s | Sped up: Research rounds, the GTM strategy, then the PM plan. | 3. Research, 3 GTM specialists, PM: about 3 min (sped up) |
-| 6 to 7 s | The evidence pack card. | Evidence pack: every fact quoted from a real page |
-| 7 to 8 s | The company snapshot. | Cited company snapshot: mission, ICP, market, competition |
-| 8 to 9 s | The ranked competitive hypotheses. | Competitive gaps, scored and ranked by code |
-| 9 to 10 s | The use case. | 1 clear use case, with the key assumption to test |
-| 10 to 11.5 s | Hover a source ID to show its quote. | Hover any source ID: the exact quote and its link |
-| 11.5 to 12.5 s | The action plan. | Action plan: validate before you build |
-| 12.5 to 13.5 s | The 1-pager tab. | A 1-pager you can send to the prospect |
-| 13.5 to 15 s | The MVP idea tab. | An MVP idea you could build (described, not built) |
+| 0 to 2 s | Empty chat. Type "Research for me Clerk" and send. | 1. Ask in plain words |
+| 2 to 3.6 s | VentureOS asks which website to research. Click `clerk.com`, not Clerk Hotel Management. | 2. Pick the right website |
+| 3.6 to 6.6 s | Sped up: Research rounds, the GTM strategy, then the PM plan. | 3. Research, GTM, and PM agents run live (3 min, sped up) |
+| 6.6 to 8 s | The evidence pack card. | Evidence pack: every fact quoted from a real page |
+| 8 to 9.3 s | The company snapshot. | Cited company snapshot: mission, ICP, market, competition |
+| 9.3 to 10.6 s | The ranked competitive hypotheses. | Competitive gaps, scored and ranked by code |
+| 10.6 to 11.8 s | The use case. | 1 clear use case, with the key assumption to test |
+| 11.8 to 13.2 s | Hover a source ID to show its quote. | Hover any source ID: the exact quote and its link |
+| 13.2 to 14.4 s | The action plan. | Action plan: validate before you build |
+| 14.4 to 15.6 s | The 1-pager tab. | A 1-pager you can send to the prospect |
+| 15.6 to 17 s | The MVP idea tab. | An MVP idea you could build (described, not built) |
+| 17 to 18.4 s | Start a new chat, then click the saved chat in the sidebar. | Every chat is saved in the sidebar |
+| 18.4 to 20 s | The reopened chat, with its full transcript. | Reopen it any time and keep going |
 
 To record a new one, use a run you have already reviewed. Speed up the waiting rather than cutting it, so viewers see it is real. Keep the GIF 800 pixels wide or less.

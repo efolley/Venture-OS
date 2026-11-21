@@ -10,9 +10,9 @@ _Currently in development. Next step: a fully actionable harness and loop._
 > Type a company name and get a sourced GTM strategy, 1 use case to pitch, a 1-pager to send, and an MVP idea to build.
 
 <p align="center">
-  <img src="docs/demo.gif" alt="VentureOS demo: asking to research PostHog, picking posthog.com as the website, then scrolling through the cited evidence pack, company snapshot, ranked competitive gaps, use case with a source quote on hover, action plan, 1-pager, and MVP idea" width="800">
+  <img src="docs/demo.gif" alt="VentureOS demo: asking to research Clerk, picking clerk.com over Clerk Hotel Management, watching the 3 agents run, then scrolling through the cited evidence pack, company snapshot, ranked competitive gaps, use case with a source quote on hover, action plan, 1-pager, and MVP idea, and finally reopening the saved chat from the sidebar" width="800">
 </p>
-<p align="center"><sub>A real run on PostHog, about 3 minutes, sped up to 15 seconds.</sub></p>
+<p align="center"><sub>A real run on Clerk through the full Docker stack, about 3 minutes, sped up to 20 seconds.</sub></p>
 
 VentureOS is a small team of agents that help you research the company and re-engineer its GTM and product. You have researcher + GTM + challenger salesman + PM - **All-In-One**.
 
