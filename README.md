@@ -21,7 +21,19 @@ VentureOS is a small team of agents that help you research the company and re-en
 
 **The problem:** Before a first call with a prospect, we need to deep research the company - its market, its competitors, who it sells to, and where it is weak. We spent days to gather and synthesize information and can miss important data, causing generic pitches, messages, or even not the right target persona (ICP)
 
-**The solution:** Run swarm of agents (and sub-agents) to research the company, it’s market positioning and competitive landscape, GTM, and even product: 3 min and you have a full GTM strategy 1-pager and idea for MVP.
+**The solution:** Run swarm of agents (and sub-agents) to research the company, its market positioning and competitive landscape, GTM, and even product: 3 min and you have a full GTM strategy 1-pager and idea for MVP.
+
+## Where you win
+
+|                       | By hand                                | With VentureOS                                                   |
+| --------------------- | -------------------------------------- | ---------------------------------------------------------------- |
+| Time per prospect     | 4 to 8 hours of research (estimate)    | About 3 minutes to run, plus about 15 minutes to review (estimate) |
+| Cost per prospect     | 4 to 8 hours × your rate               | 15 minutes × your rate, plus about $0.14 a run ([Tokenomics](#tokenomics)) |
+| What you walk in with | Notes and open browser tabs            | A sourced GTM strategy, 1 use case, a 1-pager, and an MVP idea   |
+
+**Value per prospect = (hours by hand − review hours) × your hourly rate − run cost**
+
+*Illustrative, not a measured result:* with 4 hours by hand, 15 minutes of review, and $100 an hour, (4 − 0.25) × $100 − $0.14 ≈ **$375 of time freed up per prospect**, or about **$3,750 a month** for 10 prospects.
 
 ## Example
 
@@ -147,12 +159,40 @@ flowchart TB
 
 See [Tokenomics, evals, and observability](#details-for-developers) in the developer details. The [technical architecture](docs/architecture/technical-architecture.md) covers the data, failure handling, security, scaling, and a production-readiness scorecard.
 
+### Security and privacy
+
+**This is an MVP, not hardened for public hosting.** Run it on your own machine. It has no user accounts, only an optional shared API key at the gateway, so do not expose it to the internet as is.
+
+- **No accounts, analytics, or telemetry.** Chats store what you type, and researched pages can mention people, such as founders, by name.
+- **What leaves your machine:** your messages and instructions, plus the research and strategy built from public pages, go to the model provider (Anthropic, or Google with a Gemini model). Search queries, which can reflect your instructions, go to Tavily. Keep confidential client details out of chats, and see the [Anthropic](https://www.anthropic.com/legal/privacy) and [Tavily](https://www.tavily.com/privacy) privacy policies.
+- **What is kept:** results stay in `runs/`, and chats in PostgreSQL if configured (otherwise in memory until the server stops), until you delete them. Short-term state in Redis expires within 24 hours, queued chat turns stay in Kafka for its retention period, and logs rotate.
+- **Secrets:** API keys live in `.env`, which git ignores. The app does not intentionally log keys or prompts, but error tracebacks can include content, so check logs before sharing them.
+
+To report a vulnerability, see [SECURITY.md](SECURITY.md).
+
 ### Why you can trust the output
 
 - **Sourced.** Every fact cites the page it came from, and links that the search never returned are rejected.
 - **Honest labels.** Advice is labeled `evidence_based` only when a source directly supports it. Everything else is labeled a `hypothesis`.
 - **Code decides.** The AI proposes, then code checks limits, citations, scores, and rankings before anything is accepted.
 - **No crashes on failure.** If a step runs out of budget or a specialist fails, you still get a usable result marked `partial`.
+
+## Tokenomics
+
+Measured on 3 full runs (PostHog, Supabase, and Resend) on 21 November 2026, each about 3 minutes. Costs are calculated from the measured token and search counts at list prices, not taken from an invoice.
+
+| Per run                  | Usage                                                                                              | Cost |
+| ------------------------ | -------------------------------------------------------------------------------------------------- | ---- |
+| Model (Claude Haiku 5.5) | 34 to 45 calls: about 100,000 new input tokens, 0.7 to 1.2 million read from cache, 40,000 output   | about $0.04 |
+| Web search (Tavily)      | 12 basic searches, 1 credit each                                                                   | about $0.10, or $0 within the 1,000 free credits a month (about 80 runs) |
+| **Total**                |                                                                                                    | **about $0.13 to $0.14** |
+
+- **Prices** ([Anthropic](https://platform.claude.com/docs/en/about-claude/pricing), [Tavily](https://docs.tavily.com/documentation/api-credits), checked 21 November 2026): Claude Haiku 5.5 costs $0.10 per million input tokens, $0.01 per million read from cache, and $0.50 per million output tokens, for prompts up to 100,000 tokens (the largest prompt in these runs was 66,000). Tavily charges $0.008 per credit after the free tier.
+- **Illustrative monthly API cost**, assuming the free Tavily credits are otherwise unused: about $2 for 50 runs, or about $19 for 200 runs.
+- **Bounded by limits in code:** Research stops at 12 search rounds, 36 sources, and 36 model calls, and GTM and PM have their own limits.
+- **Your choice of model:** a larger Claude model, set with `RESEARCH_MODEL`, costs more per run.
+
+The app does not show cost per run yet; that is on the roadmap.
 
 ## Status
 
@@ -344,7 +384,7 @@ The [walkthrough](docs/walkthrough.md) explains each step in detail.
 - **GTM:** 5 to 10 calls (3 specialists, with up to 1 corrective retry each, then a merge and a snapshot).
 - **PM:** a planner with a step limit, plus up to 1 fallback call.
 
-Token counts are logged for single-shot JSON calls: across 88 logged calls, a median of about 3,300 input tokens and an average of about 2,400 output tokens. The DeepAgents loops are not counted yet, so cost per run is not reported. That is on the roadmap.
+Token counts are logged for single-shot JSON calls: across 88 logged calls, a median of about 3,300 input tokens and an average of about 2,400 output tokens. The DeepAgents loops are not counted in the app yet; the measured cost of full runs is in [Tokenomics](#tokenomics).
 
 **Evals.**
 
@@ -511,7 +551,7 @@ docs/           Walkthrough, pipeline picture, and technical architecture
 
 **Why not just ask ChatGPT or another deep research tool?** Those give you a report, and you have to trust its links. VentureOS keeps a fact only if its quote appears word for word on a page the search actually returned, and plain code (not the model) runs that check. It also stops to ask you before planning on thin evidence, and it ends in something you can use in a sales conversation: 1 use case, a 1-pager, and a scoped MVP idea. It is open source, so you can change the rules, the checklist, and the limits.
 
-**What does a run cost?** Every agent uses Claude Haiku 5.5 by default, Anthropic's lowest-cost current model. Research is capped at 12 search rounds and 36 model calls; GTM and PM add more calls on top. Token cost per run is not measured yet.
+**What does a run cost?** Every agent uses Claude Haiku 5.5 by default, Anthropic's lowest-cost current model. A full run costs about $0.13 to $0.14, most of it web search, and Research is capped at 12 search rounds and 36 model calls. See [Tokenomics](#tokenomics).
 
 **Can it be wrong?** Yes. A quote can be real and still be read too generously, and output differs on every run. That is why guesses are labeled as hypotheses, every claim shows its source, and a person reviews the result before using it.
 
