@@ -126,6 +126,7 @@ Schemas are versioned in code: evidence pack v4, strategy pack v4, PM result v2.
 | Redis down at the gateway | Rate limits fail open (requests pass, a warning is logged). |
 | 2 messages at once in 1 chat | The second gets HTTP 409; 1 turn per chat at a time across all workers. |
 | Restart of API or workers | Chats reload from PostgreSQL; a browser reattaches to a running turn by its job ID. |
+| API and workers start at the same moment | Database migrations take turns behind a PostgreSQL advisory lock (`migration_lock` in `src/pipeline/sessions.py`); without it, concurrent `CREATE SCHEMA IF NOT EXISTS` fails. |
 
 **Delivery semantics:** Kafka delivery is at least once. The producer uses `acks=all` with idempotence; the consumer commits only after the turn finishes. See gap R3 for the consequence.
 
@@ -153,8 +154,8 @@ Status: **Ready** (works and is tested for this use), **Partial** (works, with k
 | Concurrency control | Ready | Redis lock per chat, owner-checked release | Stale-job cleanup after a worker crash (R2) |
 | Graceful degradation | Ready | `partial` results, failure cards in the chat, 503 on queue outage, fail-open rate limits | |
 | Configuration | Ready | Environment variables with in-memory fallbacks; `/api/health` names the backends in use | Startup check that fails fast when a configured service is down |
-| Testing and CI | Ready | 172 tests; CI runs them with real PostgreSQL, Redis, and Kafka services | Load tests; a Docker image build in CI |
-| Deployment | Partial | `Dockerfile` and `docker-compose.yml` for 1 machine | Not yet run end to end in Docker; no Kubernetes or cloud manifests; no TLS |
+| Testing and CI | Ready | 174 tests; CI runs them with real PostgreSQL, Redis, and Kafka services, and starts the Docker stack for a smoke test | Load tests |
+| Deployment | Partial | `docker compose up` runs the full stack on 1 machine, verified end to end; health checks on the API and gateway; CI starts the stack and runs `scripts/docker_smoke.sh` on every push | No Kubernetes or cloud manifests; no TLS |
 | Authentication and tenancy | Gap | 1 optional shared API key | User accounts, per-user chats, SSO, audit of who did what (S1) |
 | Observability | Partial | Structured logs with durations; request IDs at the gateway; Research rounds stored with reasons; token counts logged for JSON calls | Request IDs in API and worker logs, tracing, metrics, alerting, dashboards (O1) |
 | Cost control | Partial | Hard caps on searches and model calls per run; per-client rate limits | Token and cost metering per run and per user; budgets (O2) |
@@ -173,7 +174,7 @@ Status: **Ready** (works and is tested for this use), **Partial** (works, with k
 - **O1. Tracing stops at the gateway.** Fix: pass `X-Request-ID` into API and worker logs and the Kafka message, and add OpenTelemetry traces for agent and tool calls.
 - **O2. No cost metering.** Fix: count tokens from every call, including the DeepAgents loops, store them per run, and show them in the UI and report.
 - **E1. No automated quality evals.** Fix: a fixed set of companies with code-scored checks and a scorecard per version.
-- **D1. Docker stack not yet verified, and no TLS.** Fix: run `docker compose up` in CI as a smoke test, and put a TLS-terminating proxy or load balancer in front of the gateway.
+- **D1. No TLS.** Fix: put a TLS-terminating proxy or load balancer in front of the gateway. (The Docker stack itself is now verified and smoke-tested in CI.)
 
 ## 8. Deployment
 
@@ -218,7 +219,7 @@ flowchart LR
 
 ## 10. Testing and verification
 
-- **Offline (every change):** 172 tests with provider doubles and fake Redis and Kafka clients. Run them with `PYTHONPATH=src python3 -m unittest discover -s tests -v`.
+- **Offline (every change):** 174 tests with provider doubles and fake Redis and Kafka clients. Run them with `PYTHONPATH=src python3 -m unittest discover -s tests -v`.
 - **Integration (CI on every push):** the same tests also run against real PostgreSQL 16, Redis 7, and Kafka 3.9 through `RESEARCH_TEST_DATABASE_URL`, `REDIS_TEST_URL`, and `KAFKA_TEST_BOOTSTRAP`. Each integration test uses its own topic and keys.
 - **Live checks (billed, by hand):** `scripts/live_smoke.py` for Research coverage, and full runs whose reports are in `examples/`.
 - **Verified by hand on 19 November 2026** with PostgreSQL, Redis, and Kafka on 1 machine:
@@ -227,4 +228,5 @@ flowchart LR
   - reopening the chat after restarting the API and worker with the Redis cache cleared;
   - answering the human check in that reopened chat;
   - the rate limit (429 with `Retry-After`) and request IDs in the gateway log.
-- **Not yet verified:** the Docker compose stack (Docker was not running), load behavior, and multi-host deployment.
+- **Verified in Docker on 21 November 2026** (Docker Desktop, Compose v2.40): a clean first start of all 7 containers with no restarts; a chat through the gateway, Kafka, and a worker (website question, then a full Linear run: Research 51 s, GTM 37 s, PM human check); the chat reopened after restarting the API, workers, and gateway; the PM result written to the shared `runs/` volume; `scripts/docker_smoke.sh` passing.
+- **Not yet verified:** load behavior and multi-host deployment.

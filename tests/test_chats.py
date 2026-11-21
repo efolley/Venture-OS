@@ -14,12 +14,14 @@ import unittest
 import uuid
 from pathlib import Path
 from typing import Any
+from unittest.mock import patch
 
 from doubles import FULL_ITEMS, FULL_ROUTES, FakeSearch, WorldModel, page
 from gtm.orchestrator import GTMOrchestrator
 from pipeline.chats import ChatService
 from pipeline.jobqueue import TOPIC, KafkaQueue
-from pipeline.sessions import CachedSessionStore, MemorySessionStore, PostgresSessionStore
+from pipeline.sessions import (CachedSessionStore, MemorySessionStore, PostgresSessionStore,
+                               migration_lock)
 from pipeline.shortterm import MemoryShortTerm, RedisShortTerm
 from pipeline.worker import consume, parse_turn
 from pm.agent import PMAgent
@@ -312,6 +314,36 @@ class SessionStoreTests(unittest.TestCase):
             self.assertEqual(len(cached.messages(chat_id)), 2)
         self.assertEqual(backing.reads, before)  # served from the cache
         self.assertEqual(cached.get(chat_id)["title"], "Linear")
+
+    def test_migration_lock_without_a_database_does_nothing(self) -> None:
+        with patch.dict(os.environ, {"RESEARCH_DATABASE_URL": ""}):
+            with migration_lock():
+                pass
+
+    @unittest.skipUnless(os.getenv("RESEARCH_TEST_DATABASE_URL"),
+                         "set RESEARCH_TEST_DATABASE_URL to a disposable PostgreSQL database")
+    def test_concurrent_startups_migrate_one_at_a_time(self) -> None:
+        import psycopg
+
+        dsn = os.environ["RESEARCH_TEST_DATABASE_URL"]
+        with psycopg.connect(dsn, autocommit=True) as conn:
+            conn.execute("DROP SCHEMA IF EXISTS ventureos CASCADE")  # a fresh start, like a new stack
+        errors: list[BaseException] = []
+
+        def start() -> None:
+            try:
+                with migration_lock(dsn):
+                    PostgresSessionStore(dsn).migrate()
+            except BaseException as error:  # noqa: BLE001 - collected for the assertion
+                errors.append(error)
+
+        threads = [threading.Thread(target=start) for _ in range(4)]
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join(30)
+        self.assertEqual(errors, [])
+        self.check(PostgresSessionStore(dsn))
 
     @unittest.skipUnless(os.getenv("RESEARCH_TEST_DATABASE_URL"),
                          "set RESEARCH_TEST_DATABASE_URL to a disposable PostgreSQL database")

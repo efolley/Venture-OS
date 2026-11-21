@@ -216,10 +216,10 @@ Stop the server with `Ctrl+C`. If port 8000 is taken, use another one: `RESEARCH
 With [Docker](https://docs.docker.com/get-docker/), 1 command starts PostgreSQL (saved chats), Redis (short-term state), Kafka (the job queue), the API, 2 workers, and the API gateway. Fill in `.env` first, as in step 1:
 
 ```bash
-docker compose up --build
+docker compose up -d --build --wait
 ```
 
-Open http://127.0.0.1:8080. Chats survive restarts. Stop everything with `docker compose down` (add `-v` to delete the saved data).
+Open http://127.0.0.1:8080. The first build takes a few minutes; later starts take about 30 seconds. Chats survive restarts. To check the stack, run `bash scripts/docker_smoke.sh` (it makes 1 small billed lookup). See the logs with `docker compose logs -f`, and stop everything with `docker compose down` (add `-v` to delete the saved data).
 
 ### Or: the command line
 
@@ -347,7 +347,7 @@ Token counts are logged for single-shot JSON calls: across 88 logged calls, a me
 
 **Evals.**
 
-- 172 offline tests use stand-in providers and check the rules, limits, citations, the human check, the report, chats, the gateway, and the API. CI runs them on every push, including the integration tests against PostgreSQL, Redis, and Kafka.
+- 174 offline tests use stand-in providers and check the rules, limits, citations, the human check, the report, chats, the gateway, and the API. CI runs them on every push, including the integration tests against PostgreSQL, Redis, and Kafka, and smoke-tests the Docker stack.
 - A billed live check (`scripts/live_smoke.py`) runs real companies.
 - Output quality is reviewed by hand against the [`examples/`](examples/) reports. There is no automated quality eval yet.
 
