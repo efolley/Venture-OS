@@ -38,3 +38,20 @@ jobs:
           python-version: '3.11'
       - run: python -m pip install -e '.[research,api,queue,test]'
       - run: python -m unittest discover -s tests -v
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Start the full stack (PostgreSQL, Redis, Kafka, API, 2 workers, gateway)
+        run: |
+          printf 'ANTHROPIC_API_KEY=ci-placeholder\nTAVILY_API_KEY=ci-placeholder\n' > .env
+          docker compose up -d --build --wait --wait-timeout 300
+      - name: Smoke test through the gateway
+        run: bash scripts/docker_smoke.sh
+      - name: Logs on failure
+        if: failure()
+        run: docker compose logs --tail 150
+      - name: Stop the stack
+        if: always()
+        run: docker compose down -v

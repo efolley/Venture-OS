@@ -46,6 +46,7 @@ The pipeline ends with the PM result. The pipeline is deterministic code, not an
 - `examples/`: Markdown reports from real runs (Vercel, Linear, Baseten), rendered with `ventureos-report`. Regenerate them from new runs rather than editing them by hand.
 - `data/`: sample inputs for the tests: Research evidence packs (`notion.json`, `baseten.json`, `linear.json`) for GTM, and GTM strategy packs (`notion-gtm.json`, `notion-gtm-incomplete.json`, `linear-gtm.json`) for PM. Test inputs only, never a production response or fallback.
 - `scripts/live_smoke.py`: live Research check that makes billed calls; not part of the tests.
+- `scripts/docker_smoke.sh`: smoke test for the Docker stack, run after `docker compose up -d --build --wait` (CI runs it with placeholder keys in the `docker` job).
 - `tests/`: offline tests for the 3 agents, the pipeline, the report, chats, the gateway, and the API.
 - `docs/architecture/agent-pipeline.svg`: the pipeline picture.
 - `docs/social-preview.png`: the 1280 × 640 link preview, uploaded by hand in the GitHub repo settings (Social preview).

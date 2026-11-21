@@ -72,6 +72,10 @@ services:
     environment:
       <<: *app-env
       RESEARCH_API_HOST: 0.0.0.0
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=3)"]
+      interval: 5s
+      retries: 30
 
   worker:
     <<: *app
@@ -88,8 +92,12 @@ services:
       GATEWAY_UPSTREAM: http://api:8000
     ports:
       - "127.0.0.1:8080:8080"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/gateway/health', timeout=3)"]
+      interval: 5s
+      retries: 30
     depends_on:
-      api: { condition: service_started }
+      api: { condition: service_healthy }
       redis: { condition: service_healthy }
 
 volumes:

@@ -307,15 +307,16 @@ def load_backends() -> Backends:
     from research.store import default_store
 
     from .runner import default_pm
-    from .sessions import CachedSessionStore, default_session_store
+    from .sessions import CachedSessionStore, default_session_store, migration_lock
     from .shortterm import default_short_term
 
     kafka = bool(os.getenv("KAFKA_BOOTSTRAP_SERVERS"))
     if kafka and not (os.getenv("REDIS_URL") and os.getenv("RESEARCH_DATABASE_URL")):
         raise SystemExit("KAFKA_BOOTSTRAP_SERVERS needs REDIS_URL and RESEARCH_DATABASE_URL too: "
                          "the worker runs in another process and shares state through them.")
-    store = default_store()
-    sessions = default_session_store()
+    with migration_lock():  # the API and workers start together; migrate 1 at a time
+        store = default_store()
+        sessions = default_session_store()
     short_term = default_short_term()
     if not isinstance(short_term, MemoryShortTerm):
         sessions = CachedSessionStore(sessions, short_term)

@@ -11,6 +11,8 @@ from __future__ import annotations  # the stores define a `list` method; keep `l
 import os
 import threading
 import uuid
+from collections.abc import Iterator
+from contextlib import contextmanager
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
@@ -303,6 +305,31 @@ class CachedSessionStore:
         if value is not None:
             cast(JsonObject, value["chat"]).update(changes)
             self.short_term.cache_chat(chat_id, value)
+
+
+MIGRATION_LOCK = 0x76656E74  # any fixed 64-bit number shared by the API and every worker
+
+
+@contextmanager
+def migration_lock(dsn: str | None = None) -> Iterator[None]:
+    """Hold a PostgreSQL advisory lock while migrations run.
+
+    The API and every worker migrate at startup. `CREATE SCHEMA IF NOT EXISTS` and
+    `CREATE TABLE IF NOT EXISTS` are not safe when 2 processes run them at the same moment,
+    so they take turns. Without a database URL this does nothing.
+    """
+    dsn = dsn or os.getenv("RESEARCH_DATABASE_URL", "")
+    if not dsn:
+        yield
+        return
+    import psycopg
+
+    with psycopg.connect(dsn, autocommit=True) as conn:
+        conn.execute("SELECT pg_advisory_lock(%s)", (MIGRATION_LOCK,))
+        try:
+            yield
+        finally:
+            conn.execute("SELECT pg_advisory_unlock(%s)", (MIGRATION_LOCK,))
 
 
 def default_session_store() -> SessionStore:
