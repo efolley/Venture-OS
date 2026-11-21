@@ -7,7 +7,8 @@
 _Currently in development. Next step: a fully actionable harness and loop._
 
 > **Still spending hours researching a prospect before the first call?**
-> Type a company name and get a sourced GTM strategy, 1 use case to pitch, a 1-pager to send, and an MVP idea to build.
+>
+> Just type a company name and let a swarm of agents do the work for you: GTM strategy, use case to pitch with a 1-pager, and an MVP idea to build.
 
 <p align="center">
   <img src="docs/demo.gif" alt="VentureOS demo: asking to research PostHog, picking posthog.com as the website, then scrolling through the cited evidence pack, company snapshot, ranked competitive gaps, use case with a source quote on hover, action plan, 1-pager, and MVP idea" width="800">
