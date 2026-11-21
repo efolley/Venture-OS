@@ -24,7 +24,7 @@ Plan for a person ........ use case, action plan, 1-pager, MVP idea
 
 The pipeline (`src/pipeline/`) is plain code, not an AI agent. It runs the 3 agents in order, passes each result to the next in memory, and stops early when a step cannot continue. Nothing is sent, built, or published. A person reads the result and decides what to do.
 
-A full run takes about 2.5 minutes:
+A full run takes about 3 minutes:
 
 | Step | Typical time |
 | --- | --- |
@@ -80,7 +80,7 @@ ventureos-pipeline Baseten --website baseten.co
 1. Fixes the website (for example, it adds `https://`).
 2. Runs a loop: decide what is missing, search, read a page, and record facts. An AI agent chooses what to search next. Code checks every step.
 3. Starts with the company's own site (offering, mission, problem, pricing), then the market (category, size, trends), then competitors (3 to 5, with positioning and pricing), then sales (target customer, buyer, channel).
-4. Stops when the checklist is complete or it hits a limit: 12 searches, 36 sources, and 36 model calls.
+4. Stops when the checklist is complete or it hits a limit: 12 search rounds, 36 sources, and 36 model calls.
 
 **The rules that keep it honest:**
 - A fact counts only if its quote appears word for word on the page.
@@ -237,15 +237,22 @@ PYTHONPATH=src python3 -m unittest discover -s tests
 - Success metrics are often not numeric yet.
 - Without a database, chats and Research runs live in memory and disappear from the sidebar when the server stops. GTM and PM results are saved as files in `runs/`. The Docker setup keeps them in PostgreSQL.
 
-## 15-second demo script
+## 15-second demo
+
+[`docs/demo.gif`](demo.gif) shows a real run on PostHog, about 3 minutes sped up to 15 seconds:
 
 | Time | On screen | Caption |
 | --- | --- | --- |
-| 0 to 2 s | Empty UI chat. Type "baseten.co" and press Enter. | Prepping for a prospect call? |
-| 2 to 5 s | Sped up 10x: progress lines scroll past (Research, then the 3 specialists in parallel). | 3 agents research, analyze, and plan in about 3 minutes |
-| 5 to 8 s | The company snapshot appears. Point at the source IDs on 1 line (e1, e2). | Every claim cited |
-| 8 to 11 s | The use case card. Zoom on the key assumption labeled hypothesis. | 1 clear use case, and what to test first |
-| 11 to 13 s | Click the 1-pager tab, then the MVP idea tab, about 1 second each. | A pitch you can send. An MVP you could build. |
-| 13 to 15 s | End card with the logo. | VentureOS: from a company name to a cited pitch in 3 minutes |
+| 0 to 2 s | Empty chat. Type "Research for me PostHog" and send. | 1. Ask in plain words |
+| 2 to 3.5 s | VentureOS asks which website to research. Click `posthog.com`. | 2. Pick the right website |
+| 3.5 to 6 s | Sped up: Research rounds, the GTM strategy, then the PM plan. | 3. Research, 3 GTM specialists, PM: about 3 min (sped up) |
+| 6 to 7 s | The evidence pack card. | Evidence pack: every fact quoted from a real page |
+| 7 to 8 s | The company snapshot. | Cited company snapshot: mission, ICP, market, competition |
+| 8 to 9 s | The ranked competitive hypotheses. | Competitive gaps, scored and ranked by code |
+| 9 to 10 s | The use case. | 1 clear use case, with the key assumption to test |
+| 10 to 11.5 s | Hover a source ID to show its quote. | Hover any source ID: the exact quote and its link |
+| 11.5 to 12.5 s | The action plan. | Action plan: validate before you build |
+| 12.5 to 13.5 s | The 1-pager tab. | A 1-pager you can send to the prospect |
+| 13.5 to 15 s | The MVP idea tab. | An MVP idea you could build (described, not built) |
 
-Record from a saved run you have already reviewed. Speed up the waiting rather than cutting it, so viewers see it is real. Keep the GIF 800 pixels wide or less.
+To record a new one, use a run you have already reviewed. Speed up the waiting rather than cutting it, so viewers see it is real. Keep the GIF 800 pixels wide or less.
