@@ -7,7 +7,6 @@
 _Currently in development. Next step: a fully actionable harness and loop._
 
 > **Still spending hours researching a prospect before the first call?**
->
 > Type a company name and get a sourced GTM strategy, 1 use case to pitch, a 1-pager to send, and an MVP idea to build.
 
 <p align="center">
@@ -15,9 +14,7 @@ _Currently in development. Next step: a fully actionable harness and loop._
 </p>
 <p align="center"><sub>A real run on PostHog, about 3 minutes, sped up to 15 seconds.</sub></p>
 
-VentureOS is a small team of AI agents. It researches a company, works out how the company should go to market, and proposes what to pitch and what to build next. Every claim links back to a real source, and plain code, not the AI, decides what counts as evidence. It works like a chat, and every chat is saved, so you can reopen it later and keep going.
-
-**Examples:** full reports for [Vercel](examples/vercel.md), [Linear](examples/linear.md), and [Baseten](examples/baseten.md). For a step-by-step tour of a run, see the [walkthrough](docs/walkthrough.md).
+VentureOS is a small team of AI agents that help you research the company and re-engineer its GTM and product. You have researcher + GTM + challenger salesman + PM - **all-in-one**.
 
 ## Overview
 
@@ -54,6 +51,8 @@ ventureos-pipeline Baseten --website baseten.co
 > **MVP idea:** endpoint intake, a launch-style traffic test, a failure report, and a pass/fail summary. Pricing, training, and support for other providers are out of scope.
 
 Behind that output sit 25 sourced facts, 16 recommendations from the 3 specialists, and a cited company snapshot. Results vary from run to run, so review each one before you share it.
+
+**Examples:** full reports for [Vercel](examples/vercel.md), [Linear](examples/linear.md), and [Baseten](examples/baseten.md). For a step-by-step tour of a run, see the [walkthrough](docs/walkthrough.md).
 
 ## Architecture
 
