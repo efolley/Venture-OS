@@ -10,7 +10,7 @@ __Currently in_ dev phase: next step is fully actionable harness + loop_
 </p>
 <p align="center"><sub>A real run on PostHog, about 3 minutes, sped up to 15 seconds.</sub></p>
 
-VentureOS is a small team of AI agents. It researches a company, works out how the company should go to market, and proposes what to pitch and what to build next. Every claim links back to a real source, and plain code, not the AI, decides what counts as evidence.
+VentureOS is a small team of AI agents. It researches a company, works out how the company should go to market, and proposes what to pitch and what to build next. Every claim links back to a real source, and plain code, not the AI, decides what counts as evidence. It works like a chat, and every chat is saved, so you can reopen it later and keep going.
 
 **Examples:** full reports for [Vercel](examples/vercel.md), [Linear](examples/linear.md), and [Baseten](examples/baseten.md). For a step-by-step tour of a run, see the [walkthrough](docs/walkthrough.md).
 
@@ -138,7 +138,7 @@ flowchart TB
     research -->|search| tavily
 ```
 
-See [Tokenomics, evals, and observability](#details-for-developers) in the developer details.
+See [Tokenomics, evals, and observability](#details-for-developers) in the developer details. The [technical architecture](docs/architecture/technical-architecture.md) covers the data, failure handling, security, scaling, and a production-readiness scorecard.
 
 ### Why you can trust the output
 
@@ -154,13 +154,14 @@ See [Tokenomics, evals, and observability](#details-for-developers) in the devel
 | 1 | Researcher                                                   | Working | V.0.4   |
 | 2 | GTM orchestrator (3 specialists and snapshot)                | Working | V.0.4   |
 | 3 | PM agent (human check, plan, 1-pager, MVP idea)              | Working | V.0.2   |
-|   | Pipeline (runs all 3 in 1 command, writes a Markdown report) | Working | V.0.3   |
+|   | Pipeline (runs all 3 in 1 command, saved chats, Markdown report) | Working | V.0.4   |
+|   | API gateway (API key, rate limits, request IDs)              | Working | V.0.1   |
 
 All 3 agents run end to end, from the command line and from the web UI. Known limits:
 
 - Output quality varies from run to run, and the strategy can still be thin. See the TODO list below.
 - If you choose "research more", VentureOS lists the gaps, but you have to start the new Research run yourself.
-- Without a database, Research runs are kept in memory and are lost when the API restarts. GTM and PM results are saved to `runs/`.
+- Without a database, chats and Research runs are kept in memory and are lost when the API restarts. GTM and PM results are saved to `runs/`. Set `RESEARCH_DATABASE_URL`, or use the Docker setup, to keep them.
 
 ## Quick start
 
@@ -200,9 +201,19 @@ Open http://127.0.0.1:8000, then:
 2. **Watch it work** (about 3 minutes). Research shows each round live, then the GTM strategy, then the PM plan, each as a card in the chat.
 3. **Decide if asked.** If the strategy misses the basics, the PM card shows 2 buttons: **Research more** or **Proceed with gaps**.
 4. **Read the plan.** The PM card has the use case, the action plan, and **1-pager** and **MVP idea** tabs. Hover any source ID, such as `e12`, to see its word-for-word quote and link.
-5. **Keep it.** Each card has a **Download JSON** button. **Stored research** in the sidebar lists every run, where you can rerun GTM or PM.
+5. **Come back to it.** **Chats** in the sidebar lists every chat. Click one to reopen it and keep talking, even while it is still running. Each card has a **Download JSON** button, and **Stored research** lists every run, where you can rerun GTM or PM.
 
 Stop the server with `Ctrl+C`. If port 8000 is taken, use another one: `RESEARCH_API_PORT=8080 ventureos-api`.
+
+### Or: the full stack with Docker
+
+With [Docker](https://docs.docker.com/get-docker/), 1 command starts PostgreSQL (saved chats), Redis (short-term state), Kafka (the job queue), the API, 2 workers, and the API gateway. Fill in `.env` first, as in step 1:
+
+```bash
+docker compose up --build
+```
+
+Open http://127.0.0.1:8080. Chats survive restarts. Stop everything with `docker compose down` (add `-v` to delete the saved data).
 
 ### Or: the command line
 
@@ -226,7 +237,7 @@ If the PM agent stops to ask you (exit code 5), run the same command again with 
 ### Good to know
 
 - **Where results go.** The command line writes the 4 files above. The web UI saves strategies to `runs/gtm/` and plans to `runs/pm/`, named by the Research run ID. To get a Markdown report from a web UI run, use `ventureos-report` (see the developer details).
-- **Research runs are kept in memory** unless you set `RESEARCH_DATABASE_URL` to a PostgreSQL database, so they disappear from **Stored research** when you stop the server.
+- **Chats and Research runs are kept in memory** unless you set `RESEARCH_DATABASE_URL` to a PostgreSQL database, so they disappear from the sidebar when you stop the server.
 - **Private by default.** The server listens only on `127.0.0.1` and has no login, so run it only on your own machine.
 - **"Backend offline"** in the sidebar means the server is not running, or it stopped. Start `ventureos-api` again and reload the page.
 - **`command not found: ventureos-api`** means the virtual environment is not active. Run `source .venv/bin/activate` first.
@@ -330,7 +341,7 @@ Token counts are logged for single-shot JSON calls: across 88 logged calls, a me
 
 **Evals.**
 
-- 148 offline tests use stand-in providers and check the rules, limits, citations, the human check, the report, and the API. CI runs them on every push, including the PostgreSQL tests.
+- 172 offline tests use stand-in providers and check the rules, limits, citations, the human check, the report, chats, the gateway, and the API. CI runs them on every push, including the integration tests against PostgreSQL, Redis, and Kafka.
 - A billed live check (`scripts/live_smoke.py`) runs real companies.
 - Output quality is reviewed by hand against the [`examples/`](examples/) reports. There is no automated quality eval yet.
 
@@ -391,6 +402,53 @@ Settings, all read from `.env` (see `.env.example`):
 </details>
 
 <details>
+<summary>Infrastructure: saved chats, Redis, Kafka, and the API gateway</summary>
+
+```text
+Browser -> Gateway :8080 -> API :8000 -> Kafka topic ventureos.chat-jobs -> Worker(s)
+           (API key,        (chats, runs,                                   (Research -> GTM -> PM)
+            rate limits,     web UI files)
+            request IDs)
+Redis: chat locks, job progress, open chats, rate limits   PostgreSQL: chats, transcripts, Research runs
+```
+
+- **Chats run on the server.** A message becomes 1 turn: Research, then GTM on a new evidence pack, then PM. Every step and result card is appended to the chat's transcript, with its JSON, so a reopened chat shows everything. 1 turn runs at a time per chat (a second message gets HTTP 409).
+- **PostgreSQL** (`RESEARCH_DATABASE_URL`) stores chats in the `ventureos` schema (`sessions`, `messages`) next to the Research runs.
+- **Redis** (`REDIS_URL`) holds short-term state that expires after 24 hours: the lock per chat, job status and progress events, a cache of open chats, and the gateway's rate-limit counters.
+- **Kafka** (`KAFKA_BOOTSTRAP_SERVERS`) queues turns for `ventureos-worker`, keyed by chat so a chat's turns stay in order. A worker commits a turn only after it finishes, records a failed turn in its chat, and sends a message that is not a valid turn to `ventureos.chat-jobs.dlq`. Kafka needs Redis and PostgreSQL too, because the worker is another process.
+- **Gateway** (`ventureos-gateway`, port 8080) forwards everything to the API and adds an optional API key (`GATEWAY_API_KEY`, sent as `X-API-Key`; the web UI asks for it), rate limits per client (`GATEWAY_RATE_LIMIT`, default 120 a minute, and `GATEWAY_MESSAGE_LIMIT`, default 10 new messages a minute), an `X-Request-ID` on every request and log line, a 64 KB body limit, and clear 502/504 errors when the API is down or slow.
+- **All optional.** Without these settings, `ventureos-api` keeps chats and jobs in memory and runs turns itself. `/api/health` names the backends in use.
+
+For the full picture (data, failure handling, security, scaling, and a production-readiness scorecard with known gaps), see the [technical architecture](docs/architecture/technical-architecture.md).
+
+Run the pieces yourself instead of with Docker (each in its own terminal, with the services running):
+
+```bash
+python3 -m pip install -e '.[research,api,queue]'
+```
+
+```bash
+ventureos-api
+```
+
+```bash
+ventureos-worker
+```
+
+```bash
+ventureos-gateway
+```
+
+| Chat endpoint                                                   | Purpose                                                        |
+| --------------------------------------------------------------- | -------------------------------------------------------------- |
+| `POST /api/chats`, `GET /api/chats`, `GET /api/chats/{id}`      | Create, list, and reopen chats with their full transcript      |
+| `POST /api/chats/{id}/messages`                                 | Send a message; returns a job ID                               |
+| `POST /api/chats/{id}/decisions`                                | Answer the human check (`proceed` or `research`) for a run     |
+| `GET /api/chat-jobs/{id}?after=`                                | A turn's status and its progress events since `after`          |
+
+</details>
+
+<details>
 <summary>Web UI development</summary>
 
 The web UI is React and TypeScript, built with Vite, in `UI/`. It only calls the API and renders the results. Start the backend, then the dev server with live reload on http://localhost:5173 (it forwards `/api` to port 8000):
@@ -416,7 +474,7 @@ The tests use fake providers and never call live services:
 PYTHONPATH=src python3 -m unittest discover -s tests -v
 ```
 
-To run the PostgreSQL tests, set `RESEARCH_TEST_DATABASE_URL` to a disposable PostgreSQL database. CI always runs them. A live Research check makes billed calls and is not part of the tests:
+To run the integration tests, point these at disposable services: `RESEARCH_TEST_DATABASE_URL` (PostgreSQL), `REDIS_TEST_URL` (Redis), and `KAFKA_TEST_BOOTSTRAP` (Kafka; the test uses its own topic). CI always runs them. A live Research check makes billed calls and is not part of the tests:
 
 ```bash
 PYTHONPATH=src python3 scripts/live_smoke.py linear.app baseten.co
@@ -431,12 +489,13 @@ PYTHONPATH=src python3 scripts/live_smoke.py linear.app baseten.co
 src/research/   Agent 1: Researcher
 src/gtm/        Agent 2: GTM orchestrator and its 3 sub-agents
 src/pm/         Agent 3: PM agent
-src/pipeline/   Runs the 3 agents in order, writes the Markdown report; also the API for the UI
+src/pipeline/   Runs the 3 agents in order, writes the Markdown report; the API, saved chats, and the worker
+src/gateway/    API gateway: API key, rate limits, request IDs
 UI/             React web UI (display only); its build is in src/pipeline/static/
 examples/       Full reports from real runs
 data/           Sample packs used by the tests
 tests/          Offline tests
-docs/           Walkthrough and pipeline picture
+docs/           Walkthrough, pipeline picture, and technical architecture
 ```
 
 </details>
@@ -457,6 +516,7 @@ docs/           Walkthrough and pipeline picture
 - [X] Example outputs for well-known companies in [`examples/`](examples/)
 - [X] 1 Markdown report per run, with every cited ID resolved to its source
 - [X] 1 command starts the backend and the web UI
+- [X] Saved chats you can reopen, with Redis, a Kafka job queue, and an API gateway
 - [ ] "Research more" restarts Research on the gaps automatically
 - [ ] Simple setup: file storage by default
 - [ ] Download the report from the web UI
