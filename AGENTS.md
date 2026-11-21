@@ -51,6 +51,8 @@ The pipeline ends with the PM result. The pipeline is deterministic code, not an
 - `docs/architecture/agent-pipeline.svg`: the pipeline picture.
 - `docs/social-preview.png`: the 1280 × 640 link preview, uploaded by hand in the GitHub repo settings (Social preview).
 - `CONTRIBUTING.md`, `.github/ISSUE_TEMPLATE/`: contributor setup and rules, and the bug, output-quality, and feature templates. Keep them consistent with this file.
+- `SECURITY.md`: MVP security status, what data leaves the machine, and how to report a vulnerability. Keep it consistent with the README's Security and privacy section.
+- README `## Tokenomics`: cost per run measured on real runs. Re-measure and update it when the model, limits, or search use change.
 - `docs/architecture/technical-architecture.md`: components, chat-turn flow, data, failure handling, security, deployment, and the production-readiness scorecard. Update its scorecard and gaps when infrastructure changes, and keep its claims verified against the code.
 
 ## Architecture rules
